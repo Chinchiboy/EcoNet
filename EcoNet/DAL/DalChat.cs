@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using EcoNet.Models;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Data.Common;
 
@@ -7,6 +8,7 @@ namespace EcoNet.DAL
     public class DalChat
     {
         private readonly DbConnection dbConnection;
+        public List<Chat> ChatList = new List<Chat>();
 
         public DalChat()
         {
@@ -14,7 +16,7 @@ namespace EcoNet.DAL
         }
         public List<Chat> Select()
         {
-            Chat chat = new List<Chat>();
+            Chat c = new Chat();
             using (var conn = dbConnection.GetConnection())
             {
                 using (var cmd = new SqlCommand("SELECT * FROM Chat"
@@ -25,7 +27,7 @@ namespace EcoNet.DAL
                     {
                         while (reader.Read())
                         {
-                            chat.Add(new Chat
+                            c.Add(new Chat
                             {
                                 IdChat = reader.GetInt32(0),
                                 FKAnuncio = reader.GetInt32(1),
@@ -37,7 +39,7 @@ namespace EcoNet.DAL
                     }
                 }
             }
-            return chat;
+            return ChatList;
         }
         public void Add(Chat chat)
         {

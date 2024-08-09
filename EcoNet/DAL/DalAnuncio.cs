@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using EcoNet.Models;
+using Microsoft.Data.SqlClient;
 using System.Data.Common;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -7,13 +8,14 @@ namespace EcoNet.DAL
     public class DalAnuncio
     {
         private readonly DbConnection dbConnection;
+        public List<Anuncio> AnuncioList;
         public DalAnuncio()
         {
             dbConnection = new DbConnection();
         }
         public List<Anuncio> Select()
         {
-            Anuncio anuncio = new List<Anuncio>();
+            Anuncio a = new Anuncio();
             using (var conn = dbConnection.GetConnection())
             {
                 using (var cmd = new SqlCommand("SELECT * FROM Anuncio"
@@ -24,23 +26,23 @@ namespace EcoNet.DAL
                     {
                         while (reader.Read())
                         {
-                            anuncio.Add(new Anuncio
+                            a.Add(new Anuncio
                             {
                                 IdAnuncio = reader.GetInt32(0),
                                 Titulo = reader.GetString(1),
                                 Imagen = reader.IsDBNull(2) ? null : (byte[])reader.GetValue(2),
-                                Descripcion = reader.GetInt32(3),
-                                Precio = reader.GetDateTime(4),
-                                FKBorradoPor = reader.GetDateTime(4),
-                                FKUsuario = reader.GetDateTime(4),
-                                EstaVendido = reader.GetDateTime(4),
+                                Descripcion = reader.GetString(3),
+                                Precio = reader.GetDecimal(4),
+                                FKBorradoPor = reader.GetInt32(5),
+                                FKUsuario = reader.GetInt32(6),
+                                EstaVendido = reader.GetBoolean(7),
                                 
                         });
                         }
                     }
                 }
             }
-            return anuncio;
+            return AnuncioList;
         }
         public void Add(Anuncio anuncio)
         {
@@ -86,7 +88,7 @@ namespace EcoNet.DAL
                 {
                     conn.Open();
                     
-                    var query = $"DELETE FROM Anuncio WHERE IdAnuncio IN ({id})";
+                    var query = $"DELETE FROM Anuncio WHERE IdAnuncio = ({id})";
 
                     using (var cmd = new SqlCommand(query, conn))
                     {
