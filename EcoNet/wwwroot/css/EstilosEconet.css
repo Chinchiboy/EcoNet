@@ -1,0 +1,41 @@
+﻿/*Etiquetas*/
+
+header .container-fluid {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+body {
+    background-color: #FAFAFF;
+}
+
+hr {
+    color: #329F5B;
+    border: none;
+}
+
+
+
+/*Clases*/
+
+.VerdePrincipal {
+    background-color: #329F5B;
+}
+
+.VerdeSecundario {
+    background-color: #58D687;
+}
+
+.VerdeFiltros {
+    background-color: #C0D461;
+}
+
+.AzulDestacado {
+    background-color: #1B98E0;
+}
+
+.conatiner {
+    margin-left 20%;
+    margin-right: 20%;
+}
+
