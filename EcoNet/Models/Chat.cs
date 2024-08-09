@@ -21,5 +21,10 @@ namespace EcoNet.Models
         public virtual Usuario? FkvendedorNavigation { get; set; }
         public virtual ICollection<Mensaje> Mensajes { get; set; }
         public virtual ICollection<Oferta> Oferta { get; set; }
+
+        public static implicit operator Chat(List<Chat> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
