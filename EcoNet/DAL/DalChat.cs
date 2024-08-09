@@ -1,6 +1,7 @@
 ﻿using EcoNet.Models;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 
 namespace EcoNet.DAL
@@ -14,26 +15,25 @@ namespace EcoNet.DAL
         {
             dbConnection = new DbConnection();
         }
+
         public List<Chat> Select()
         {
-            Chat c = new Chat();
+            ChatList = new List<Chat>(); // Asegúrate de inicializar la lista
             using (var conn = dbConnection.GetConnection())
             {
-                using (var cmd = new SqlCommand("SELECT * FROM Chat"
-                    , conn))
+                using (var cmd = new SqlCommand("SELECT * FROM Chat", conn))
                 {
                     conn.Open();
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            c.Add(new Chat
+                            ChatList.Add(new Chat
                             {
                                 IdChat = reader.GetInt32(0),
-                                FKAnuncio = reader.GetInt32(1),
-                                FKVendedor = reader.GetInt32(2),
-                                FKComprador = reader.GetInt32(3),
-
+                                Fkanuncio = reader.IsDBNull(1) ? (int?)null : reader.GetInt32(1),
+                                Fkvendedor = reader.IsDBNull(2) ? (int?)null : reader.GetInt32(2),
+                                Fkcomprador = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3),
                             });
                         }
                     }
@@ -41,52 +41,51 @@ namespace EcoNet.DAL
             }
             return ChatList;
         }
+
         public void Add(Chat chat)
         {
             using (var connection = dbConnection.GetConnection())
             {
                 connection.Open();
-                using (var command = new SqlCommand("INSERT INTO Chat (IdChat, FKAnuncio, FKVendedor, FKComprador) VALUES ( @IdChat, @FKAnuncio, @FKVendedor, @FKComprador)", connection))
+                using (var command = new SqlCommand("INSERT INTO Chat (IdChat, Fkanuncio, Fkvendedor, Fkcomprador) VALUES (@IdChat, @Fkanuncio, @Fkvendedor, @Fkcomprador)", connection))
                 {
-                    command.Parameters.AddWithValue("@IdChat", chat.IdAnuncio);
-                    command.Parameters.AddWithValue("@FKAnuncio", chat.Titulo);
-                    command.Parameters.AddWithValue("@FKVendedor", chat.Imagen);
-                    command.Parameters.AddWithValue("@FKComprador", chat.Descripcion);
-                   
+                    command.Parameters.AddWithValue("@IdChat", chat.IdChat);
+                    command.Parameters.AddWithValue("@Fkanuncio", chat.Fkanuncio.HasValue ? (object)chat.Fkanuncio.Value : DBNull.Value);
+                    command.Parameters.AddWithValue("@Fkvendedor", chat.Fkvendedor.HasValue ? (object)chat.Fkvendedor.Value : DBNull.Value);
+                    command.Parameters.AddWithValue("@Fkcomprador", chat.Fkcomprador.HasValue ? (object)chat.Fkcomprador.Value : DBNull.Value);
                     command.ExecuteNonQuery();
                 }
             }
         }
+
         public void Update(Chat chat)
         {
             using (var connection = dbConnection.GetConnection())
             {
                 connection.Open();
-                using (var command = new SqlCommand("UPDATE Chat SET IdChat = @IdChat, FKAnuncio = @FKAnuncio, FKVendedor = @FKVendedor, FKComprador = @FKComprador WHERE IdChat = @IdChat", connection))
+                using (var command = new SqlCommand("UPDATE Chat SET Fkanuncio = @Fkanuncio, Fkvendedor = @Fkvendedor, Fkcomprador = @Fkcomprador WHERE IdChat = @IdChat", connection))
                 {
                     command.Parameters.AddWithValue("@IdChat", chat.IdChat);
-                    command.Parameters.AddWithValue("@FKAnuncio", chat.FKAnuncio);
-                    command.Parameters.AddWithValue("@FKVendedor", chat.FKVendedor);
-                    command.Parameters.AddWithValue("@FKComprador", chat.FKComprador);
-
+                    command.Parameters.AddWithValue("@Fkanuncio", chat.Fkanuncio.HasValue ? (object)chat.Fkanuncio.Value : DBNull.Value);
+                    command.Parameters.AddWithValue("@Fkvendedor", chat.Fkvendedor.HasValue ? (object)chat.Fkvendedor.Value : DBNull.Value);
+                    command.Parameters.AddWithValue("@Fkcomprador", chat.Fkcomprador.HasValue ? (object)chat.Fkcomprador.Value : DBNull.Value);
+                    command.ExecuteNonQuery();
                 }
             }
         }
+
         public void Delete(int id)
         {
-
             using (var conn = dbConnection.GetConnection())
             {
                 conn.Open();
-
-                var query = $"DELETE FROM Chat WHERE IdChat IN ({id})";
-
+                var query = "DELETE FROM Chat WHERE IdChat = @IdChat";
                 using (var cmd = new SqlCommand(query, conn))
                 {
+                    cmd.Parameters.AddWithValue("@IdChat", id);
                     cmd.ExecuteNonQuery();
                 }
             }
-
         }
     }
 }
