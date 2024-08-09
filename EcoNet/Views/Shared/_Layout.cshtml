@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white HeaderBorder box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EcoNet</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -31,9 +31,9 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="EspaciadoLateral">
         <main role="main" class="pb-3">
-            @RenderBody()
+            @RenderBody() @* Aquí se muestra la página *@
         </main>
     </div>
 

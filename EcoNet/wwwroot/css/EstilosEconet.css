@@ -18,6 +18,11 @@ hr {
 
 /*Clases*/
 
+.EspaciadoLateral {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 .VerdePrincipal {
     background-color: #329F5B;
 }
@@ -34,8 +39,7 @@ hr {
     background-color: #1B98E0;
 }
 
-.conatiner {
-    margin-left 20%;
-    margin-right: 20%;
+.HeaderBorder {
+    border-bottom: solid 1px #329F5B;
 }
 
