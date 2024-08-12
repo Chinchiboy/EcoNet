@@ -3,6 +3,14 @@
 }
 
 <div class="container text-center">
+    <div class="d-flex justify-content-start mb-4">
+        <div id="RecuadroFiltro" class="d-flex flex-wrap gap-2">
+            <button class="btn BotonFiltro" value="Plasticos" onclick="filterSelection('all')">Plasticos</button>
+            <button class="btn BotonFiltro" value="Madera" onclick="filterSelection('cars')">Madera</button>
+            <button class="btn BotonFiltro" value="Metal" onclick="filterSelection('animals')">Metal</button>
+            <button class="btn BotonFiltro" value="Cristal" onclick="filterSelection('fruits')">Cristal</button>
+        </div>
+    </div>
     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
         <!-- Indicadores del carrusel -->
         <div class="carousel-indicators">
