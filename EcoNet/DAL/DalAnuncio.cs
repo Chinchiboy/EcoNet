@@ -18,79 +18,96 @@ namespace EcoNet
             AnuncioList = new List<Anuncio>();
             using (var conn = dbConnection.GetConnection())
             {
-                using (var cmd = new SqlCommand("SELECT * FROM Anuncio", conn))
+                using var cmd = new SqlCommand("SELECT * FROM Anuncio", conn);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    conn.Open();
-                    using (var reader = cmd.ExecuteReader())
+                    AnuncioList.Add(new Anuncio
                     {
-                        while (reader.Read())
-                        {
-                            AnuncioList.Add(new Anuncio
-                            {
-                                IdAnuncio = reader.GetInt32(0),
-                                Titulo = reader.GetString(1),
-                                Imagen = reader.IsDBNull(2) ? null : (byte[])reader.GetValue(2),
-                                Descripcion = reader.GetString(3),
-                                Precio = reader.IsDBNull(4) ? (decimal?)null : reader.GetDecimal(4),
-                                FkborradoPor = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
-                                Fkusuario = reader.IsDBNull(6) ? (int?)null : reader.GetInt32(6),
-                                EstaVendido = reader.GetBoolean(7)
-                            });
-                        }
-                    }
+                        IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
+                        Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
+                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
+                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(6),
+                        EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
+                    });
                 }
             }
             return AnuncioList;
         }
-        public void Add(Anuncio anuncio)
+
+        public Anuncio SelectById(int id)
         {
-            using (var connection = dbConnection.GetConnection())
+            Anuncio anuncio = null;
+
+            using (var conn = dbConnection.GetConnection())
             {
-                connection.Open();
-                using (var command = new SqlCommand("INSERT INTO Anuncio (IdAnuncio, Titulo, Imagen, Descripcion, Precio, FkborradoPor, Fkusuario, EstaVendido) VALUES (@IdAnuncio, @Titulo, @Imagen, @Descripcion, @Precio, @FkborradoPor, @Fkusuario, @EstaVendido)", connection))
+                using var cmd = new SqlCommand("SELECT * FROM Anuncio WHERE IdAnuncio = @IdAnuncio", conn);
+                cmd.Parameters.AddWithValue("@IdAnuncio", id);
+                conn.Open();
+
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
                 {
-                    command.Parameters.AddWithValue("@IdAnuncio", anuncio.IdAnuncio);
-                    command.Parameters.AddWithValue("@Titulo", anuncio.Titulo);
-                    command.Parameters.AddWithValue("@Imagen", anuncio.Imagen);
-                    command.Parameters.AddWithValue("@Descripcion", anuncio.Descripcion);
-                    command.Parameters.AddWithValue("@Precio", anuncio.Precio);
-                    command.Parameters.AddWithValue("@FkborradoPor", anuncio.FkborradoPor);
-                    command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
-                    command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
-                    command.ExecuteNonQuery();
+                    anuncio = new Anuncio
+                    {
+                        IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
+                        Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
+                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
+                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKUsuario")),
+                        EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
+                    };
                 }
             }
+
+            return anuncio;
+        }
+
+        public void Add(Anuncio anuncio)
+        {
+            using var connection = dbConnection.GetConnection();
+            connection.Open();
+            using var command = new SqlCommand("INSERT INTO Anuncio (IdAnuncio, Titulo, Imagen, Descripcion, Precio, FkborradoPor, Fkusuario, EstaVendido) VALUES (@IdAnuncio, @Titulo, @Imagen, @Descripcion, @Precio, @FkborradoPor, @Fkusuario, @EstaVendido)", connection);
+            command.Parameters.AddWithValue("@IdAnuncio", anuncio.IdAnuncio);
+            command.Parameters.AddWithValue("@Titulo", anuncio.Titulo);
+            command.Parameters.AddWithValue("@Imagen", anuncio.Imagen);
+            command.Parameters.AddWithValue("@Descripcion", anuncio.Descripcion);
+            command.Parameters.AddWithValue("@Precio", anuncio.Precio);
+            command.Parameters.AddWithValue("@FkborradoPor", anuncio.FkborradoPor);
+            command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
+            command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
+            command.ExecuteNonQuery();
         }
         public void Update(Anuncio anuncio)
         {
-            using (var connection = dbConnection.GetConnection())
-            {
-                connection.Open();
-                using (var command = new SqlCommand("UPDATE Anuncio SET Titulo = @Titulo, Imagen = @Imagen, Descripcion = @Descripcion, Precio = @Precio, FkborradoPor = @FkborradoPor, Fkusuario = @Fkusuario, EstaVendido = @EstaVendido WHERE IdAnuncio = @IdAnuncio", connection))
-                {
-                    command.Parameters.AddWithValue("@IdAnuncio", anuncio.IdAnuncio);
-                    command.Parameters.AddWithValue("@Titulo", anuncio.Titulo);
-                    command.Parameters.AddWithValue("@Imagen", anuncio.Imagen);
-                    command.Parameters.AddWithValue("@Descripcion", anuncio.Descripcion);
-                    command.Parameters.AddWithValue("@Precio", anuncio.Precio);
-                    command.Parameters.AddWithValue("@FkborradoPor", anuncio.FkborradoPor);
-                    command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
-                    command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
-                    command.ExecuteNonQuery();
-                }
-            }
+            using var connection = dbConnection.GetConnection();
+            connection.Open();
+            using var command = new SqlCommand("UPDATE Anuncio SET Titulo = @Titulo, Imagen = @Imagen, Descripcion = @Descripcion, Precio = @Precio, FkborradoPor = @FkborradoPor, Fkusuario = @Fkusuario, EstaVendido = @EstaVendido WHERE IdAnuncio = @IdAnuncio", connection);
+            command.Parameters.AddWithValue("@IdAnuncio", anuncio.IdAnuncio);
+            command.Parameters.AddWithValue("@Titulo", anuncio.Titulo);
+            command.Parameters.AddWithValue("@Imagen", anuncio.Imagen);
+            command.Parameters.AddWithValue("@Descripcion", anuncio.Descripcion);
+            command.Parameters.AddWithValue("@Precio", anuncio.Precio);
+            command.Parameters.AddWithValue("@FkborradoPor", anuncio.FkborradoPor);
+            command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
+            command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
+            command.ExecuteNonQuery();
         }
         public void Delete(int id)
         {
-            using (var conn = dbConnection.GetConnection())
+            using var conn = dbConnection.GetConnection();
+            conn.Open();
+            var query = $"DELETE FROM Anuncio WHERE IdAnuncio = @IdAnuncio";
+            using (var cmd = new SqlCommand(query, conn))
             {
-                conn.Open();
-                var query = $"DELETE FROM Anuncio WHERE IdAnuncio = @IdAnuncio";
-                using (var cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@IdAnuncio", id);
-                    cmd.ExecuteNonQuery();
-                }
+                cmd.Parameters.AddWithValue("@IdAnuncio", id);
+                cmd.ExecuteNonQuery();
             }
         }
     }

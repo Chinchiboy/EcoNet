@@ -17,34 +17,27 @@ namespace EcoNet.DAL
 
         public List<Particular> Select()
         {
-            var particularList = new List<Particular>();
+            List<Particular> particularList = new List<Particular>();
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT * FROM Particular", conn);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    using (var cmd = new SqlCommand("SELECT * FROM Particular", conn))
+                    particularList.Add(new Particular
                     {
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                particularList.Add(new Particular
-                                {
-                                    IdUsuario = reader.GetInt32(0),
-                                    Dni = reader.GetString(1),
-                                    Nombre = reader.GetString(2),
-                                    Apellidos = reader.GetString(3),
-                                });
-                            }
-                        }
-                    }
+                        IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
+                        Dni = reader.GetString(reader.GetOrdinal("Dni")),
+                        Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                        Apellidos = reader.GetString(reader.GetOrdinal("Apellidos")),
+                    });
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Select: {ex.Message}");
                 throw;
             }
@@ -58,31 +51,24 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT * FROM Particular WHERE IdUsuario = @IdUsuario", conn);
+                cmd.Parameters.AddWithValue("@IdUsuario", id);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
                 {
-                    using (var cmd = new SqlCommand("SELECT * FROM Particular WHERE IdUsuario = @IdUsuario", conn))
+                    particular = new Particular
                     {
-                        cmd.Parameters.AddWithValue("@IdUsuario", id);
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                particular = new Particular
-                                {
-                                    IdUsuario = reader.GetInt32(0),
-                                    Dni = reader.GetString(1),
-                                    Nombre = reader.GetString(2),
-                                    Apellidos = reader.GetString(3),
-                                };
-                            }
-                        }
-                    }
+                        IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
+                        Dni = reader.GetString(reader.GetOrdinal("Dni")),
+                        Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                        Apellidos = reader.GetString(reader.GetOrdinal("Apellidos")),
+                    };
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en SelectById: {ex.Message}");
                 throw;
             }
@@ -97,22 +83,17 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var connection = dbConnection.GetConnection())
-                {
-                    connection.Open();
-                    using (var command = new SqlCommand("INSERT INTO Particular (IdUsuario, Dni, Nombre, Apellidos) VALUES (@IdUsuario, @Dni, @Nombre, @Apellidos)", connection))
-                    {
-                        command.Parameters.AddWithValue("@IdUsuario", particular.IdUsuario);
-                        command.Parameters.AddWithValue("@Dni", particular.Dni);
-                        command.Parameters.AddWithValue("@Nombre", particular.Nombre);
-                        command.Parameters.AddWithValue("@Apellidos", particular.Apellidos);
-                        command.ExecuteNonQuery();
-                    }
-                }
+                using var connection = dbConnection.GetConnection();
+                connection.Open();
+                using var command = new SqlCommand("INSERT INTO Particular (IdUsuario, Dni, Nombre, Apellidos) VALUES (@IdUsuario, @Dni, @Nombre, @Apellidos)", connection);
+                command.Parameters.AddWithValue("@IdUsuario", particular.IdUsuario);
+                command.Parameters.AddWithValue("@Dni", particular.Dni);
+                command.Parameters.AddWithValue("@Nombre", particular.Nombre);
+                command.Parameters.AddWithValue("@Apellidos", particular.Apellidos);
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Add: {ex.Message}");
                 throw;
             }
@@ -125,22 +106,17 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var connection = dbConnection.GetConnection())
-                {
-                    connection.Open();
-                    using (var command = new SqlCommand("UPDATE Particular SET Dni = @Dni, Nombre = @Nombre, Apellidos = @Apellidos WHERE IdUsuario = @IdUsuario", connection))
-                    {
-                        command.Parameters.AddWithValue("@IdUsuario", particular.IdUsuario);
-                        command.Parameters.AddWithValue("@Dni", particular.Dni);
-                        command.Parameters.AddWithValue("@Nombre", particular.Nombre);
-                        command.Parameters.AddWithValue("@Apellidos", particular.Apellidos);
-                        command.ExecuteNonQuery();
-                    }
-                }
+                using var connection = dbConnection.GetConnection();
+                connection.Open();
+                using var command = new SqlCommand("UPDATE Particular SET Dni = @Dni, Nombre = @Nombre, Apellidos = @Apellidos WHERE IdUsuario = @IdUsuario", connection);
+                command.Parameters.AddWithValue("@IdUsuario", particular.IdUsuario);
+                command.Parameters.AddWithValue("@Dni", particular.Dni);
+                command.Parameters.AddWithValue("@Nombre", particular.Nombre);
+                command.Parameters.AddWithValue("@Apellidos", particular.Apellidos);
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Update: {ex.Message}");
                 throw;
             }
@@ -150,19 +126,14 @@ namespace EcoNet.DAL
         {
             try
             {
-                using (var conn = dbConnection.GetConnection())
-                {
-                    conn.Open();
-                    using (var cmd = new SqlCommand("DELETE FROM Particular WHERE IdUsuario = @IdUsuario", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@IdUsuario", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+                using var conn = dbConnection.GetConnection();
+                conn.Open();
+                using var cmd = new SqlCommand("DELETE FROM Particular WHERE IdUsuario = @IdUsuario", conn);
+                cmd.Parameters.AddWithValue("@IdUsuario", id);
+                cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Delete: {ex.Message}");
                 throw;
             }

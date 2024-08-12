@@ -17,35 +17,28 @@ namespace EcoNet.DAL
 
         public List<Oferta> Select()
         {
-            var ofertaList = new List<Oferta>();
+            List<Oferta> ofertaList = new List<Oferta>();
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT * FROM Oferta", conn);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    using (var cmd = new SqlCommand("SELECT * FROM Oferta", conn))
+                    ofertaList.Add(new Oferta
                     {
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                ofertaList.Add(new Oferta
-                                {
-                                    IdOferta = reader.GetInt32(0),
-                                    Precio = reader.IsDBNull(1) ? (decimal?)null : reader.GetDecimal(1),
-                                    Fkchat = reader.IsDBNull(2) ? (int?)null : reader.GetInt32(2),
-                                    Aceptada = reader.IsDBNull(3) ? (bool?)null : reader.GetBoolean(3),
-                                    CreadoPor = reader.IsDBNull(4) ? (int?)null : reader.GetInt32(4),
-                                });
-                            }
-                        }
-                    }
+                        IdOferta = reader.GetInt32(reader.GetOrdinal("IdOferta")),
+                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Fkchat = reader.IsDBNull(reader.GetOrdinal("FKChat")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKChat")),
+                        Aceptada = reader.IsDBNull(reader.GetOrdinal("Aceptada")) ? (bool?)null : reader.GetBoolean(reader.GetOrdinal("Aceptada")),
+                        CreadoPor = reader.IsDBNull(reader.GetOrdinal("CreadoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("CreadorPor")),
+                    });
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Select: {ex.Message}");
                 throw;
             }
@@ -59,32 +52,25 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT * FROM Oferta WHERE IdOferta = @IdOferta", conn);
+                cmd.Parameters.AddWithValue("@IdOferta", id);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
                 {
-                    using (var cmd = new SqlCommand("SELECT * FROM Oferta WHERE IdOferta = @IdOferta", conn))
+                    oferta = new Oferta
                     {
-                        cmd.Parameters.AddWithValue("@IdOferta", id);
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                oferta = new Oferta
-                                {
-                                    IdOferta = reader.GetInt32(0),
-                                    Precio = reader.IsDBNull(1) ? (decimal?)null : reader.GetDecimal(1),
-                                    Fkchat = reader.IsDBNull(2) ? (int?)null : reader.GetInt32(2),
-                                    Aceptada = reader.IsDBNull(3) ? (bool?)null : reader.GetBoolean(3),
-                                    CreadoPor = reader.IsDBNull(4) ? (int?)null : reader.GetInt32(4),
-                                };
-                            }
-                        }
-                    }
+                        IdOferta = reader.GetInt32(reader.GetOrdinal("IdOferta")),
+                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Fkchat = reader.IsDBNull(reader.GetOrdinal("FKChat")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKChat")),
+                        Aceptada = reader.IsDBNull(reader.GetOrdinal("Aceptada")) ? (bool?)null : reader.GetBoolean(reader.GetOrdinal("Aceptada")),
+                        CreadoPor = reader.IsDBNull(reader.GetOrdinal("CreadoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("CreadoPor")),
+                    };
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en SelectById: {ex.Message}");
                 throw;
             }
@@ -99,23 +85,18 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var connection = dbConnection.GetConnection())
-                {
-                    connection.Open();
-                    using (var command = new SqlCommand("INSERT INTO Oferta (IdOferta, Precio, Fkchat, Aceptada, CreadoPor) VALUES (@IdOferta, @Precio, @Fkchat, @Aceptada, @CreadoPor)", connection))
-                    {
-                        command.Parameters.AddWithValue("@IdOferta", oferta.IdOferta);
-                        command.Parameters.AddWithValue("@Precio", oferta.Precio ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@Fkchat", oferta.Fkchat ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor ?? (object)DBNull.Value);
-                        command.ExecuteNonQuery();
-                    }
-                }
+                using var connection = dbConnection.GetConnection();
+                connection.Open();
+                using var command = new SqlCommand("INSERT INTO Oferta (IdOferta, Precio, Fkchat, Aceptada, CreadoPor) VALUES (@IdOferta, @Precio, @Fkchat, @Aceptada, @CreadoPor)", connection);
+                command.Parameters.AddWithValue("@IdOferta", oferta.IdOferta);
+                command.Parameters.AddWithValue("@Precio", oferta.Precio ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Fkchat", oferta.Fkchat ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor ?? (object)DBNull.Value);
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Add: {ex.Message}");
                 throw;
             }
@@ -128,23 +109,18 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var connection = dbConnection.GetConnection())
-                {
-                    connection.Open();
-                    using (var command = new SqlCommand("UPDATE Oferta SET Precio = @Precio, Fkchat = @Fkchat, Aceptada = @Aceptada, CreadoPor = @CreadoPor WHERE IdOferta = @IdOferta", connection))
-                    {
-                        command.Parameters.AddWithValue("@IdOferta", oferta.IdOferta);
-                        command.Parameters.AddWithValue("@Precio", oferta.Precio ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@Fkchat", oferta.Fkchat ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor ?? (object)DBNull.Value);
-                        command.ExecuteNonQuery();
-                    }
-                }
+                using var connection = dbConnection.GetConnection();
+                connection.Open();
+                using var command = new SqlCommand("UPDATE Oferta SET Precio = @Precio, Fkchat = @Fkchat, Aceptada = @Aceptada, CreadoPor = @CreadoPor WHERE IdOferta = @IdOferta", connection);
+                command.Parameters.AddWithValue("@IdOferta", oferta.IdOferta);
+                command.Parameters.AddWithValue("@Precio", oferta.Precio ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Fkchat", oferta.Fkchat ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor ?? (object)DBNull.Value);
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Update: {ex.Message}");
                 throw;
             }
@@ -154,19 +130,14 @@ namespace EcoNet.DAL
         {
             try
             {
-                using (var conn = dbConnection.GetConnection())
-                {
-                    conn.Open();
-                    using (var cmd = new SqlCommand("DELETE FROM Oferta WHERE IdOferta = @IdOferta", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@IdOferta", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+                using var conn = dbConnection.GetConnection();
+                conn.Open();
+                using var cmd = new SqlCommand("DELETE FROM Oferta WHERE IdOferta = @IdOferta", conn);
+                cmd.Parameters.AddWithValue("@IdOferta", id);
+                cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Delete: {ex.Message}");
                 throw;
             }
