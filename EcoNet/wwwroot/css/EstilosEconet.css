@@ -1,6 +1,30 @@
-﻿/*Etiquetas*/
+﻿﻿html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Asegúrate de que el footer tenga un poco de margen o padding */
+footer {
+    padding: 1rem 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e7e7e7;
+}
 
 header .container-fluid {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+footer {
     padding-left: 10%;
     padding-right: 10%;
 }
@@ -18,18 +42,26 @@ hr {
 /*Botones*/
 
 .BotonHeader {
-    font-size: 1.5rem;
-    background-color: #fafaff !important;
-    border: solid 4px #58D687 !important;
+    background-color: #fafaff;
+    font-size: 1.15rem;
+    border: solid 3px #329F5B !important;
     border-radius: 100px !important;
-    width: 15rem;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
+
+    .BotonHeader:hover {
+        background-color: #329F5B;
+        color: #fafaff !important;
+        transform: scale(1.05);
+    }
 
 .Buscador {
     background-color: #D9D9D9 !important;
-    font-size: 1.5rem !important;
+    font-size: 1.1 5rem !important;
     border-radius: 100px !important;
-    width: 25rem !important;
+    width: 20rem !important;
 }
 
 
@@ -104,6 +136,8 @@ form-fields-middle p{
 
 /*Boostrap sobreesrcitos*/
 
+
+
 .navbar-brand {
     font-size: 2.5rem !important;
 }
@@ -117,3 +151,17 @@ form-fields-middle p{
     .carousel-control-next:hover {
         opacity: 1;
     }
+
+
+.box-shadow {
+    box-shadow: 0 .75rem .75rem rgba(0, 0, 0, .05) !important;
+}
+
+/*Responsive*/
+
+/* Ajustes personalizados */
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.25rem; /* Reduce el tamaño del texto del logo en pantallas pequeñas */
+    }
+}

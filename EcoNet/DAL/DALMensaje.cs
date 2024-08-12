@@ -17,35 +17,28 @@ namespace EcoNet.DAL
 
         public List<Mensaje> Select()
         {
-            var mensajeList = new List<Mensaje>();
+            List<Mensaje> mensajeList = new List<Mensaje>();
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT * FROM Mensaje", conn);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    using (var cmd = new SqlCommand("SELECT * FROM Mensaje", conn))
+                    mensajeList.Add(new Mensaje
                     {
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                mensajeList.Add(new Mensaje
-                                {
-                                    IdMensaje = reader.GetInt32(0),
-                                    Texto = reader.GetString(1),
-                                    Fkchat = reader.IsDBNull(2) ? null : reader.GetInt32(2),
-                                    Creador = reader.IsDBNull(3) ? null : reader.GetInt32(3),
-                                    HoraMensaje = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
-                                });
-                            }
-                        }
-                    }
+                        IdMensaje = reader.GetInt32(reader.GetOrdinal("IdMensaje")),
+                        Texto = reader.GetString(reader.GetOrdinal("Texto")),
+                        Fkchat = reader.IsDBNull(reader.GetOrdinal("FKChat")) ? null : reader.GetInt32(reader.GetOrdinal("FKChat")),
+                        Creador = reader.IsDBNull(reader.GetOrdinal("Creador")) ? null : reader.GetInt32(reader.GetOrdinal("Creador")),
+                        HoraMensaje = reader.IsDBNull(reader.GetOrdinal("HoraMensaje")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("HoraMensaje")),
+                    });
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Select: {ex.Message}");
                 throw;
             }
@@ -59,32 +52,25 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT * FROM Mensaje WHERE IdMensaje = @IdMensaje", conn);
+                cmd.Parameters.AddWithValue("@IdMensaje", id);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
                 {
-                    using (var cmd = new SqlCommand("SELECT * FROM Mensaje WHERE IdMensaje = @IdMensaje", conn))
+                    mensaje = new Mensaje
                     {
-                        cmd.Parameters.AddWithValue("@IdMensaje", id);
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                mensaje = new Mensaje
-                                {
-                                    IdMensaje = reader.GetInt32(0),
-                                    Texto = reader.GetString(1),
-                                    Fkchat = reader.IsDBNull(2) ? null : reader.GetInt32(2),
-                                    Creador = reader.IsDBNull(3) ? null : reader.GetInt32(3),
-                                    HoraMensaje = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
-                                };
-                            }
-                        }
-                    }
+                        IdMensaje = reader.GetInt32(reader.GetOrdinal("IdMensaje")),
+                        Texto = reader.GetString(reader.GetOrdinal("Texto")),
+                        Fkchat = reader.IsDBNull(reader.GetOrdinal("FKChat")) ? null : reader.GetInt32(reader.GetOrdinal("FKChat")),
+                        Creador = reader.IsDBNull(reader.GetOrdinal("Creador")) ? null : reader.GetInt32(reader.GetOrdinal("Creador")),
+                        HoraMensaje = reader.IsDBNull(reader.GetOrdinal("HoraMensaje")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("HoraMensaje")),
+                    };
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en SelectById: {ex.Message}");
                 throw;
             }
@@ -99,23 +85,18 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var connection = dbConnection.GetConnection())
-                {
-                    connection.Open();
-                    using (var command = new SqlCommand("INSERT INTO Mensaje (IdMensaje, Texto, Fkchat, Creador, HoraMensaje) VALUES (@IdMensaje, @Texto, @Fkchat, @Creador, @HoraMensaje)", connection))
-                    {
-                        command.Parameters.AddWithValue("@IdMensaje", mensaje.IdMensaje);
-                        command.Parameters.AddWithValue("@Texto", mensaje.Texto);
-                        command.Parameters.AddWithValue("@Fkchat", mensaje.Fkchat ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@Creador", mensaje.Creador ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@HoraMensaje", mensaje.HoraMensaje ?? (object)DBNull.Value);
-                        command.ExecuteNonQuery();
-                    }
-                }
+                using var connection = dbConnection.GetConnection();
+                connection.Open();
+                using var command = new SqlCommand("INSERT INTO Mensaje (IdMensaje, Texto, Fkchat, Creador, HoraMensaje) VALUES (@IdMensaje, @Texto, @Fkchat, @Creador, @HoraMensaje)", connection);
+                command.Parameters.AddWithValue("@IdMensaje", mensaje.IdMensaje);
+                command.Parameters.AddWithValue("@Texto", mensaje.Texto);
+                command.Parameters.AddWithValue("@Fkchat", mensaje.Fkchat ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Creador", mensaje.Creador ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@HoraMensaje", mensaje.HoraMensaje ?? (object)DBNull.Value);
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Add: {ex.Message}");
                 throw;
             }
@@ -128,23 +109,18 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var connection = dbConnection.GetConnection())
-                {
-                    connection.Open();
-                    using (var command = new SqlCommand("UPDATE Mensaje SET Texto = @Texto, Fkchat = @Fkchat, Creador = @Creador, HoraMensaje = @HoraMensaje WHERE IdMensaje = @IdMensaje", connection))
-                    {
-                        command.Parameters.AddWithValue("@IdMensaje", mensaje.IdMensaje);
-                        command.Parameters.AddWithValue("@Texto", mensaje.Texto);
-                        command.Parameters.AddWithValue("@Fkchat", mensaje.Fkchat ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@Creador", mensaje.Creador ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@HoraMensaje", mensaje.HoraMensaje ?? (object)DBNull.Value);
-                        command.ExecuteNonQuery();
-                    }
-                }
+                using var connection = dbConnection.GetConnection();
+                connection.Open();
+                using var command = new SqlCommand("UPDATE Mensaje SET Texto = @Texto, Fkchat = @Fkchat, Creador = @Creador, HoraMensaje = @HoraMensaje WHERE IdMensaje = @IdMensaje", connection);
+                command.Parameters.AddWithValue("@IdMensaje", mensaje.IdMensaje);
+                command.Parameters.AddWithValue("@Texto", mensaje.Texto);
+                command.Parameters.AddWithValue("@Fkchat", mensaje.Fkchat ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Creador", mensaje.Creador ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@HoraMensaje", mensaje.HoraMensaje ?? (object)DBNull.Value);
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Update: {ex.Message}");
                 throw;
             }
@@ -154,19 +130,14 @@ namespace EcoNet.DAL
         {
             try
             {
-                using (var conn = dbConnection.GetConnection())
-                {
-                    conn.Open();
-                    using (var cmd = new SqlCommand("DELETE FROM Mensaje WHERE IdMensaje = @IdMensaje", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@IdMensaje", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+                using var conn = dbConnection.GetConnection();
+                conn.Open();
+                using var cmd = new SqlCommand("DELETE FROM Mensaje WHERE IdMensaje = @IdMensaje", conn);
+                cmd.Parameters.AddWithValue("@IdMensaje", id);
+                cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Delete: {ex.Message}");
                 throw;
             }

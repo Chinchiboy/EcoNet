@@ -17,37 +17,29 @@ namespace EcoNet.DAL
 
         public List<EtiquetaAnuncio> Select()
         {
-            var etiquetaAnuncioList = new List<EtiquetaAnuncio>();
+            List<EtiquetaAnuncio> etiquetaAnuncioList = new List<EtiquetaAnuncio>();
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT * FROM EtiquetaAnuncio", conn);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    using (var cmd = new SqlCommand("SELECT * FROM EtiquetaAnuncio", conn))
+                    etiquetaAnuncioList.Add(new EtiquetaAnuncio
                     {
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                etiquetaAnuncioList.Add(new EtiquetaAnuncio
-                                {
-                                    IdEtiquetaAnuncio = reader.GetInt32(0),
-                                    Fketiqueta = reader.IsDBNull(1) ? null : reader.GetInt32(1),
-                                    Fkanuncio = reader.IsDBNull(2) ? null : reader.GetInt32(2),
-                                });
-                            }
-                        }
-                    }
+                        IdEtiquetaAnuncio = reader.GetInt32(reader.GetOrdinal("IdEtiquetaAnuncio")),
+                        Fketiqueta = reader.IsDBNull(reader.GetOrdinal("FKEtiqueta")) ? null : reader.GetInt32(reader.GetOrdinal("FKEtiqueta")),
+                        Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
+                    });
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 Console.WriteLine($"Error en Select: {ex.Message}");
                 throw;
             }
-
             return etiquetaAnuncioList;
         }
 
@@ -57,25 +49,19 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT * FROM EtiquetaAnuncio WHERE IdEtiquetaAnuncio = @IdEtiquetaAnuncio", conn);
+                cmd.Parameters.AddWithValue("@IdEtiquetaAnuncio", id);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
                 {
-                    using (var cmd = new SqlCommand("SELECT * FROM EtiquetaAnuncio WHERE IdEtiquetaAnuncio = @IdEtiquetaAnuncio", conn))
+                    etiquetaAnuncio = new EtiquetaAnuncio
                     {
-                        cmd.Parameters.AddWithValue("@IdEtiquetaAnuncio", id);
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                etiquetaAnuncio = new EtiquetaAnuncio
-                                {
-                                    IdEtiquetaAnuncio = reader.GetInt32(0),
-                                    Fketiqueta = reader.IsDBNull(1) ? null : reader.GetInt32(1),
-                                    Fkanuncio = reader.IsDBNull(2) ? null : reader.GetInt32(2),
-                                };
-                            }
-                        }
-                    }
+                        IdEtiquetaAnuncio = reader.GetInt32(reader.GetOrdinal("IdEtiquetaAnuncio")),
+                        Fketiqueta = reader.IsDBNull(reader.GetOrdinal("FKEtiqueta")) ? null : reader.GetInt32(reader.GetOrdinal("FKEtiqueta")),
+                        Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
+                    };
                 }
             }
             catch (Exception ex)
