@@ -258,7 +258,7 @@ namespace EcoNet.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Usuario1)
+                entity.Property(e => e.NombreUsuario)
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("Usuario");

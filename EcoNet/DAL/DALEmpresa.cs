@@ -17,28 +17,24 @@ namespace EcoNet.DAL
 
         public List<Empresa> Select()
         {
-            var empresaList = new List<Empresa>();
+            List<Empresa> empresaList = new List<Empresa>();
 
             using (var conn = dbConnection.GetConnection())
             {
-                using (var cmd = new SqlCommand("SELECT * FROM Empresa", conn))
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Empresa", conn);
+                using var cmd = sqlCommand;
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    conn.Open();
-                    using (var reader = cmd.ExecuteReader())
+                    empresaList.Add(new Empresa
                     {
-                        while (reader.Read())
-                        {
-                            empresaList.Add(new Empresa
-                            {
-                                IdUsuario = reader.GetInt32(0),
-                                Cif = reader.GetString(1),
-                                Nombre = reader.GetString(2),
-                                EsRecicladora = reader.IsDBNull(3) ? (bool?)null : reader.GetBoolean(3),
-                                Direccion = reader.IsDBNull(4) ? null : reader.GetString(4),
-                                // Asumimos que IdUsuarioNavigation se maneja en otro lugar, ya que es una referencia a otra entidad
-                            });
-                        }
-                    }
+                        IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
+                        Cif = reader.GetString(reader.GetOrdinal("Cif")),
+                        Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                        EsRecicladora = reader.IsDBNull(reader.GetOrdinal("EsReciclador")) ? (bool?)null : reader.GetBoolean(reader.GetOrdinal("EsRecicladora")),
+                        Direccion = reader.IsDBNull(reader.GetOrdinal("Direccion")) ? null : reader.GetString(reader.GetOrdinal("Direccion")),
+                    });
                 }
             }
             return empresaList;
@@ -54,20 +50,17 @@ namespace EcoNet.DAL
                 {
                     cmd.Parameters.AddWithValue("@IdUsuario", id);
                     conn.Open();
-                    using (var reader = cmd.ExecuteReader())
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
                     {
-                        if (reader.Read())
+                        empresa = new Empresa
                         {
-                            empresa = new Empresa
-                            {
-                                IdUsuario = reader.GetInt32(0),
-                                Cif = reader.GetString(1),
-                                Nombre = reader.GetString(2),
-                                EsRecicladora = reader.IsDBNull(3) ? (bool?)null : reader.GetBoolean(3),
-                                Direccion = reader.IsDBNull(4) ? null : reader.GetString(4),
-                                // Asumimos que IdUsuarioNavigation se maneja en otro lugar
-                            };
-                        }
+                            IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
+                            Cif = reader.GetString(reader.GetOrdinal("Cif")),
+                            Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                            EsRecicladora = reader.IsDBNull(reader.GetOrdinal("EsRecicladora")) ? (bool?)null : reader.GetBoolean(reader.GetOrdinal("EsRecicladora")),
+                            Direccion = reader.IsDBNull(reader.GetOrdinal("Direccion")) ? null : reader.GetString(reader.GetOrdinal("Direccion")),
+                        };
                     }
                 }
             }
@@ -76,49 +69,37 @@ namespace EcoNet.DAL
 
         public void Add(Empresa empresa)
         {
-            using (var connection = dbConnection.GetConnection())
-            {
-                connection.Open();
-                using (var command = new SqlCommand("INSERT INTO Empresa (IdUsuario, Cif, Nombre, EsRecicladora, Direccion) VALUES (@IdUsuario, @Cif, @Nombre, @EsRecicladora, @Direccion)", connection))
-                {
-                    command.Parameters.AddWithValue("@IdUsuario", empresa.IdUsuario);
-                    command.Parameters.AddWithValue("@Cif", empresa.Cif);
-                    command.Parameters.AddWithValue("@Nombre", empresa.Nombre);
-                    command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora.HasValue ? (object)empresa.EsRecicladora.Value : DBNull.Value);
-                    command.Parameters.AddWithValue("@Direccion", empresa.Direccion ?? (object)DBNull.Value);
-                    command.ExecuteNonQuery();
-                }
-            }
+            using var connection = dbConnection.GetConnection();
+            connection.Open();
+            using var command = new SqlCommand("INSERT INTO Empresa (IdUsuario, Cif, Nombre, EsRecicladora, Direccion) VALUES (@IdUsuario, @Cif, @Nombre, @EsRecicladora, @Direccion)", connection);
+            command.Parameters.AddWithValue("@IdUsuario", empresa.IdUsuario);
+            command.Parameters.AddWithValue("@Cif", empresa.Cif);
+            command.Parameters.AddWithValue("@Nombre", empresa.Nombre);
+            command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora.HasValue ? (object)empresa.EsRecicladora.Value : DBNull.Value);
+            command.Parameters.AddWithValue("@Direccion", empresa.Direccion ?? (object)DBNull.Value);
+            command.ExecuteNonQuery();
         }
 
         public void Update(Empresa empresa)
         {
-            using (var connection = dbConnection.GetConnection())
-            {
-                connection.Open();
-                using (var command = new SqlCommand("UPDATE Empresa SET Cif = @Cif, Nombre = @Nombre, EsRecicladora = @EsRecicladora, Direccion = @Direccion WHERE IdUsuario = @IdUsuario", connection))
-                {
-                    command.Parameters.AddWithValue("@IdUsuario", empresa.IdUsuario);
-                    command.Parameters.AddWithValue("@Cif", empresa.Cif);
-                    command.Parameters.AddWithValue("@Nombre", empresa.Nombre);
-                    command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora.HasValue ? (object)empresa.EsRecicladora.Value : DBNull.Value);
-                    command.Parameters.AddWithValue("@Direccion", empresa.Direccion ?? (object)DBNull.Value);
-                    command.ExecuteNonQuery();
-                }
-            }
+            using var connection = dbConnection.GetConnection();
+            connection.Open();
+            using var command = new SqlCommand("UPDATE Empresa SET Cif = @Cif, Nombre = @Nombre, EsRecicladora = @EsRecicladora, Direccion = @Direccion WHERE IdUsuario = @IdUsuario", connection);
+            command.Parameters.AddWithValue("@IdUsuario", empresa.IdUsuario);
+            command.Parameters.AddWithValue("@Cif", empresa.Cif);
+            command.Parameters.AddWithValue("@Nombre", empresa.Nombre);
+            command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora.HasValue ? (object)empresa.EsRecicladora.Value : DBNull.Value);
+            command.Parameters.AddWithValue("@Direccion", empresa.Direccion ?? (object)DBNull.Value);
+            command.ExecuteNonQuery();
         }
 
         public void Delete(int id)
         {
-            using (var conn = dbConnection.GetConnection())
-            {
-                conn.Open();
-                using (var cmd = new SqlCommand("DELETE FROM Empresa WHERE IdUsuario = @IdUsuario", conn))
-                {
-                    cmd.Parameters.AddWithValue("@IdUsuario", id);
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            using var conn = dbConnection.GetConnection();
+            conn.Open();
+            using var cmd = new SqlCommand("DELETE FROM Empresa WHERE IdUsuario = @IdUsuario", conn);
+            cmd.Parameters.AddWithValue("@IdUsuario", id);
+            cmd.ExecuteNonQuery();
         }
     }
 }
