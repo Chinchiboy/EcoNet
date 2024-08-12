@@ -46,7 +46,6 @@ hr {
     font-size: 1.15rem;
     border: solid 3px #329F5B !important;
     border-radius: 100px !important;
-    width: 100%;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
@@ -120,10 +119,49 @@ hr {
 
 /*Responsive*/
 
-/* Ajustes personalizados */
 @media (max-width: 576px) {
     .navbar-brand {
-        font-size: 1.25rem; /* Reduce el tamaño del texto del logo en pantallas pequeñas */
+        font-size: 1.25rem;
     }
 
+}
+
+
+/* Estilo para pantallas grandes */
+.navbar-expand-lg .navbar-nav {
+    display: flex;
+}
+
+/* Estilo para pantallas pequeñas */
+@media (max-width: 991.98px) {
+    .navbar-expand-lg .navbar-nav {
+        display: block;
+    }
+
+    .navbar-toggler {
+        display: block;
+    }
+
+    .navbar-collapse {
+        display: block;
+    }
+
+        .navbar-collapse .d-flex {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .navbar-collapse form {
+            margin-bottom: 1rem;
+        }
+
+        .navbar-collapse .BotonHeader {
+            width: 100%;
+            margin-top: 1rem;
+        }
+}
+
+.carousel-item img{
+    width: 50rem;
+    height 25rem;
 }

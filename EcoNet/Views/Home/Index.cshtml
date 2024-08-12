@@ -2,43 +2,58 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<div class="container text-center">
     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+        <!-- Indicadores del carrusel -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="#" alt="Alternate Text" />
-                <button>Oferta</button>
+                <img src="https://www.travelandleisure.com/thmb/Ag8nh_g-dqxboIRas-uGLkBUH8g=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/FlowerFieldsinCarlsbadRanch_ChelseaLoren01-61144763f8bc45a4843f1ea7b72434b1.jpg" alt="Slide 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Oferta</h5>
+                    <button class="btn btn-primary">Ver Oferta</button>
+                </div>
             </div>
             <div class="carousel-item">
-                <h1>Hola</h1>
-                <button>Oferta</button>
+                <img src="https://media.istockphoto.com/id/1130636356/es/foto/puesta-de-sol-sobre-la-monta%C3%B1a-con-cosmos-florece.jpg?s=612x612&w=0&k=20&c=J1Mr6EjRCQEEnPUKSDb8MACqp3Y5FOq15wTwsOdq2gA=" alt="Slide 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Hola</h5>
+                    <button class="btn btn-primary">Ver Oferta</button>
+                </div>
             </div>
             <div class="carousel-item">
-                <h1>Adios</h1>
-                <button>Oferta</button>
+                <img src="https://www.travelandleisure.com/thmb/k8XtvMdZYniqxtQYS--CisfbIp0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/TAL-header-wildflowers-crested-butte-colorado-COFLOWERS0424-a35f8aa3de75417ca1a98417835c2a58.jpg" alt="Slide 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Adios</h5>
+                    <button class="btn btn-primary">Ver Oferta</button>
+                </div>
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="ColorCarrousel">Previous</span>
+            <span class="visually-hidden">Previous</span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="ColorCarrousel">Next</span>
+            <span class="visually-hidden">Next</span>
         </button>
     </div>
     <br />
     <div>
         <div class="VerdePrincipal">
-            <a>Div de prueba</a>
+            <a href="#">Div de prueba</a>
         </div>
         <div class="VerdeSecundario">
-            <a>Div de prueba</a>
+            <a href="#">Div de prueba</a>
         </div>
         <div>
-            <a>Div de prueba</a>
+            <a href="#">Div de prueba</a>
         </div>
     </div>
     <hr>
-    <button>Boton prueba</button>
+    <button class="btn btn-secondary">Boton prueba</button>
 </div>
