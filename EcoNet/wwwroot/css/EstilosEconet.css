@@ -60,6 +60,45 @@ hr {
     border-bottom: solid 1px #329F5B;
 }
 
+.form-container-aux {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-left: 35%;
+    margin-top: 40px;
+    width: 30%;
+    border: solid 1px #329F5B;
+    border-radius: 15px;
+    padding-top: 20px;
+}
+
+.form-fields-middle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.form-fields-middle label,
+form-fields-middle p{
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+    width: 100%;
+}
+
+.form-fields-middle input {
+    width: 100%;
+    border-radius: 2px;
+    border: 2px solid #58D687;
+    box-sizing: border-box;
+}
+
+
+
 
 
 
