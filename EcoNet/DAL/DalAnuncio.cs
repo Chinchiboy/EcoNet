@@ -31,7 +31,7 @@ namespace EcoNet
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
-                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(6),
+                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKUsuario")),
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     });
                 }
@@ -67,6 +67,33 @@ namespace EcoNet
             }
 
             return anuncio;
+        }
+
+        public List<Anuncio> SelectByTag(string tag)
+        {
+            AnuncioList = new List<Anuncio>();
+            using (var conn = dbConnection.GetConnection())
+            {
+                using var cmd = new SqlCommand("SELECT * FROM Anuncio JOIN EtiquetaAnuncio ON IdAnuncio = FKAnuncio JOIN Etiqueta ON IdEtiqueta = FKEtiqueta WHERE DescripcionEtiqueta like @Etiqueta", conn);
+                cmd.Parameters.AddWithValue("@Etiqueta", tag);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    AnuncioList.Add(new Anuncio
+                    {
+                        IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
+                        Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
+                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
+                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKUsuario")),
+                        EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
+                    });
+                }
+            }
+            return AnuncioList;
         }
 
         public void Add(Anuncio anuncio)
