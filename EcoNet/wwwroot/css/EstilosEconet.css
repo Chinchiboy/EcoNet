@@ -1,4 +1,6 @@
-﻿﻿html, body {
+﻿/*Etiquetas*/
+
+﻿html, body {
     height: 100%;
     margin: 0;
 }
@@ -12,7 +14,6 @@ main {
     flex: 1;
 }
 
-/* Asegúrate de que el footer tenga un poco de margen o padding */
 footer {
     padding: 1rem 0;
     background-color: #f8f9fa;
@@ -38,34 +39,7 @@ hr {
     border: none;
 }
 
-
-/*Botones*/
-
-.BotonHeader {
-    background-color: #fafaff;
-    font-size: 1.15rem;
-    border: solid 3px #329F5B !important;
-    border-radius: 100px !important;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-    .BotonHeader:hover {
-        background-color: #329F5B;
-        color: #fafaff !important;
-        transform: scale(1.05);
-    }
-
-.Buscador {
-    background-color: #D9D9D9 !important;
-    font-size: 1.1 5rem !important;
-    border-radius: 100px !important;
-    width: 20rem !important;
-}
-
-
 /*Clases*/
-
 .EspaciadoLateral {
     margin-left: 10%;
     margin-right: 10%;
@@ -91,12 +65,63 @@ hr {
     border-bottom: solid 1px #329F5B;
 }
 
+
+
+/*Botones*/
+
+.BotonHeader {
+    background-color: #fafaff;
+    font-size: 1.15rem;
+    border: solid 3px #329F5B;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+    .BotonHeader:hover {
+        background-color: #329F5B;
+        color: #fafaff !important;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+.Buscador {
+    background-color: #D9D9D9;
+    font-size: 1.15rem;
+    border-radius: 100px;
+    width: 20rem;
+}
+
+.BotonFiltro {
+    margin-right: 1.1rem;
+    background-color: #C0D461;
+    font-size: 1.15rem;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .BotonFiltro:hover {
+        background-color: #a3b73a;
+        color: #fafaff;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .BotonFiltro:active {
+        background-color: #fafaff;
+        color: #C0D461;
+        transform: scale(0.98);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduce la sombra para dar un efecto de presión */
+    }
+
+
+/*Boostrap sobreesrcitos*/
 .form-container-aux {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     margin-left: 35%;
     margin-top: 40px;
     width: 30%;
@@ -113,29 +138,20 @@ hr {
     width: 100%;
 }
 
-.form-fields-middle label,
-form-fields-middle p{
-    margin-bottom: 5px;
-    font-weight: bold;
-    text-align: left;
-    width: 100%;
-}
+    .form-fields-middle label,
+    form-fields-middle p {
+        margin-bottom: 5px;
+        font-weight: bold;
+        text-align: left;
+        width: 100%;
+    }
 
-.form-fields-middle input {
-    width: 100%;
-    border-radius: 2px;
-    border: 2px solid #58D687;
-    box-sizing: border-box;
-}
-
-
-
-
-
-
-/*Boostrap sobreesrcitos*/
-
-
+    .form-fields-middle input {
+        width: 100%;
+        border-radius: 2px;
+        border: 2px solid #58D687;
+        box-sizing: border-box;
+    }
 
 .navbar-brand {
     font-size: 2.5rem !important;
@@ -165,12 +181,12 @@ form-fields-middle p{
 }
 
 
-/* Estilo para pantallas grandes */
+/* Estilo para desktop */
 .navbar-expand-lg .navbar-nav {
     display: flex;
 }
 
-/* Estilo para pantallas pequeñas */
+/* Estilo para smartphone */
 @media (max-width: 991.98px) {
     .navbar-expand-lg .navbar-nav {
         display: block;
@@ -200,6 +216,6 @@ form-fields-middle p{
 }
 
 .carousel-item img{
-    width: 50rem;
-    height 25rem;
+    width: 100%;
+    height: 25rem;
 }
