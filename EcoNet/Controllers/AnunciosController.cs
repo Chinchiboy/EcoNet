@@ -13,24 +13,26 @@ namespace EcoNet.Controllers
             _dalAnuncio = dalAnuncio;
         }
 
-        public IActionResult Index(string? descripcionEtiqueta)
+        public IActionResult Index(string? descripcionEtiqueta, [FromQuery] string? titulo)
         {
             List<Anuncio> anuncios;
 
-            if (string.IsNullOrEmpty(descripcionEtiqueta))
+            if (!string.IsNullOrEmpty(titulo))
             {
-                // Obtener todas las ofertas si no se proporciona una etiqueta
-                anuncios = _dalAnuncio.ObtenerTodasLasOfertas();
+                anuncios = _dalAnuncio.SelectByTitle(titulo);
+            }
+            else if (!string.IsNullOrEmpty(descripcionEtiqueta))
+            {
+                anuncios = _dalAnuncio.SelectByTag(descripcionEtiqueta);
             }
             else
             {
-                // Filtrar ofertas por la etiqueta proporcionada
-                anuncios = _dalAnuncio.FiltrarAnunciosPorEtiqueta(descripcionEtiqueta);
+                anuncios = _dalAnuncio.Select();
             }
 
             if (anuncios == null || anuncios.Count == 0)
             {
-                return View("NoResults"); // Vista que puedes crear para cuando no haya resultados
+                return View("NoResults");
             }
 
             return View(anuncios);
