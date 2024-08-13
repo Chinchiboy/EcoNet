@@ -15,17 +15,26 @@ namespace EcoNet.Controllers
             _dalAnuncio = dalAnuncio;
         }
 
-        [HttpGet("filtrar")]
-        public IActionResult FiltrarPorEtiqueta([FromQuery] string descripcionEtiqueta)
+        [HttpGet]
+        public IActionResult ObtenerAnuncios([FromQuery] string? descripcionEtiqueta)
         {
-            List<Anuncio> anunciosFiltrados = _dalAnuncio.SelectByTag(descripcionEtiqueta);
+            List<Anuncio> anuncios;
 
-            if (anunciosFiltrados == null || anunciosFiltrados.Count == 0)
+            if (string.IsNullOrEmpty(descripcionEtiqueta))
             {
-                return NotFound("No se encontraron anuncios con la etiqueta especificada.");
+                anuncios = _dalAnuncio.Select();
+            }
+            else
+            {
+                anuncios = _dalAnuncio.SelectByTag(descripcionEtiqueta);
             }
 
-            return Ok(anunciosFiltrados);
+            if (anuncios == null || anuncios.Count == 0)
+            {
+                return NotFound("No se encontraron anuncios.");
+            }
+
+            return Ok(anuncios);
         }
     }
 }
