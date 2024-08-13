@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Shared\_ChatPartial.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Shared\_ChatPartial.cshtml" />
     <None Include="wwwroot\css\EstilosEconet.css" />
   </ItemGroup>
 
@@ -22,14 +17,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Login\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Shared\_ChatPartial.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Shared\_ChatPartial.cshtml" />
   </ItemGroup>
 
 </Project>
