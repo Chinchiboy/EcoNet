@@ -7,13 +7,11 @@
 
     <!-- Cargar Bootstrap desde CDN o local, pero no ambas -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- O usa la versión local si prefieres -->
-    <!-- <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> -->
-    <!-- Cargar las hojas de estilo locales una vez -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="/css/EstilosEconet.css">
 </head>
 <body>
+    @await Html.PartialAsync("_LoginPartial", new EcoNet.Models.LoginViewModel())
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-white HeaderBorder box-shadow mb-3">
             <div class="container-fluid">
@@ -35,7 +33,7 @@
                             <input type="image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Magnifying_glass_icon.svg/490px-Magnifying_glass_icon.svg.png" class="me-2" alt="Search" width="40" height="40">
                             <input type="search" id="gsearch" name="gsearch" class="Buscador form-control me-3 w-100 w-sm-75 w-md-50 w-lg-25" placeholder="Buscar...">
                         </form>
-                        <button class="BotonHeader box-shadow ms-3 w-100 w-sm-50 w-md-25 w-lg-auto">Login/Registrarse</button>
+                        <button class="BotonHeader box-shadow ms-3 w-100 w-sm-50 w-md-25 w-lg-auto" data-toggle="modal" data-target="#myModal">Login/Registrarse</button>
                     </div>
                 </div>
             </div>
@@ -54,8 +52,13 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+
+    
 </body>
 </html>
