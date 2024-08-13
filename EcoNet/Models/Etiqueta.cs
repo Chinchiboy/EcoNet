@@ -14,5 +14,8 @@ namespace EcoNet.Models
         public string? DescripcionEtiqueta { get; set; }
 
         public virtual ICollection<EtiquetaAnuncio> EtiquetaAnuncios { get; set; }
+
+
+
     }
 }

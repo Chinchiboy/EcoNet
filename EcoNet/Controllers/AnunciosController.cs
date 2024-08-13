@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using EcoNet.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EcoNet.Controllers
 {
-    public class AnunciosController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AnunciosController : ControllerBase
     {
         private readonly DalAnuncio _dalAnuncio;
 
@@ -13,7 +16,8 @@ namespace EcoNet.Controllers
             _dalAnuncio = dalAnuncio;
         }
 
-        public IActionResult Index(string? descripcionEtiqueta, [FromQuery] string? titulo)
+        [HttpGet("filtrar")]
+        public IActionResult ObtenerAnuncios([FromQuery] string? descripcionEtiqueta, [FromQuery] string? titulo)
         {
             List<Anuncio> anuncios;
 
@@ -32,10 +36,12 @@ namespace EcoNet.Controllers
 
             if (anuncios == null || anuncios.Count == 0)
             {
-                return View("NoResults");
+                return NotFound("No se encontraron anuncios.");
             }
 
-            return View(anuncios);
+            var articulosFiltrados = anuncios.Select(a => a.Titulo).ToList(); // Ajusta esto según el campo que desees mostrar
+
+            return Ok(articulosFiltrados);
         }
     }
 }

@@ -11,5 +11,7 @@ namespace EcoNet.Models
 
         public virtual Anuncio? FkanuncioNavigation { get; set; }
         public virtual Etiqueta? FketiquetaNavigation { get; set; }
+
+        public List<String> ArticulosFiltrados { get; set; }
     }
 }
