@@ -15,7 +15,7 @@ namespace EcoNet.Controllers
             _dalAnuncio = dalAnuncio;
         }
 
-        [HttpGet]
+        [HttpGet("filtrar")]
         public IActionResult ObtenerAnuncios([FromQuery] string? descripcionEtiqueta)
         {
             List<Anuncio> anuncios;
