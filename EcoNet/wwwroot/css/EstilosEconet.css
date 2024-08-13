@@ -78,6 +78,19 @@ hr {
     font-size: 0.75rem;
 }
 
+.MinimizedMessages {
+    position: fixed; /* O puedes usar absolute dependiendo del contexto */
+    bottom: 20px; /* Distancia desde la parte inferior de la ventana */
+    right: 20px; /* Distancia desde el lado derecho de la ventana */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 
 
 /*Botones*/
