@@ -7,8 +7,7 @@ namespace EcoNet.Controllers
     {
         public IActionResult Index()
         {
-            var model = new LoginViewModel();
-            return PartialView("_LoginPartial", model);
+            return View();
         }
         public IActionResult Login()
         {
