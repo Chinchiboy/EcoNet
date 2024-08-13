@@ -15,7 +15,8 @@ namespace EcoNet.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            EtiquetaFiltros EQ = new EtiquetaFiltros();
+            return View(EQ);
         }
 
         public IActionResult Privacy()
