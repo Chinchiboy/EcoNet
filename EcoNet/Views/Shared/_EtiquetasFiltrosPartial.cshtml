@@ -1,0 +1,8 @@
+﻿@model EcoNet.Models.EtiquetaFiltros
+
+<div id="RecuadroFiltro" class="d-flex flex-wrap gap-2">
+    @foreach (string filtro in Model.Filtros)
+    {
+        <button class="btn BotonFiltro" value="@filtro" onclick="filterSelection('@filtro')">@filtro</button>
+    }
+</div>

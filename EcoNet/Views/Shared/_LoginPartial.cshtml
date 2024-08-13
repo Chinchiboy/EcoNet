@@ -1,0 +1,39 @@
+﻿@model EcoNet.Models.LoginViewModel
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">¡Bienvenido de nuevo!</h5>
+                <button type="button" class="close BtnClose" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Login" asp-controller="Login" method="post">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control GrisInputs" type="text" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="form-control GrisInputs" type="password" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="Links">
+                        <a href="#" class="text-primary">¿Ha olvidado su password?</a>
+                    </div>
+                    <div class="Links">
+                        <a href="#" class="text-primary">Crear cuenta</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary BtnSubmit VerdeFiltros">Iniciar Sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
