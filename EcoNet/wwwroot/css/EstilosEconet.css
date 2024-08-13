@@ -39,6 +39,10 @@ hr {
     border: none;
 }
 
+a{
+    color: black;
+}
+
 /*Clases*/
 .EspaciadoLateral {
     margin-left: 10%;
