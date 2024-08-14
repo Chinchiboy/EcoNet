@@ -34,6 +34,8 @@ namespace EcoNet.DAL
                         Fkcomprador = reader.IsDBNull(reader.GetOrdinal("FKComprador")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKComprador")),
                     });
                 }
+                conn.Close();
+                reader.Close();
             }
             return ChatList;
         }
@@ -59,6 +61,8 @@ namespace EcoNet.DAL
                         Fkcomprador = reader.IsDBNull(reader.GetOrdinal("FKComprador")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKComprador")),
                     };
                 }
+                conn.Close();
+                reader.Close();
             }
 
             return chat;
@@ -75,6 +79,7 @@ namespace EcoNet.DAL
             command.Parameters.AddWithValue("@Fkvendedor", chat.Fkvendedor.HasValue ? (object)chat.Fkvendedor.Value : DBNull.Value);
             command.Parameters.AddWithValue("@Fkcomprador", chat.Fkcomprador.HasValue ? (object)chat.Fkcomprador.Value : DBNull.Value);
             command.ExecuteNonQuery();
+            connection.Close();
         }
 
         public void Update(Chat chat)
@@ -87,6 +92,7 @@ namespace EcoNet.DAL
             command.Parameters.AddWithValue("@Fkvendedor", chat.Fkvendedor.HasValue ? (object)chat.Fkvendedor.Value : DBNull.Value);
             command.Parameters.AddWithValue("@Fkcomprador", chat.Fkcomprador.HasValue ? (object)chat.Fkcomprador.Value : DBNull.Value);
             command.ExecuteNonQuery();
+            connection.Close();
         }
 
         public void Delete(int id)
@@ -97,6 +103,7 @@ namespace EcoNet.DAL
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@IdChat", id);
             cmd.ExecuteNonQuery();
+            conn.Close();
         }
     }
 }

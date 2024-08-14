@@ -35,6 +35,8 @@ namespace EcoNet.DAL
                         Apellidos = reader.GetString(reader.GetOrdinal("Apellidos")),
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -66,6 +68,8 @@ namespace EcoNet.DAL
                         Apellidos = reader.GetString(reader.GetOrdinal("Apellidos")),
                     };
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -91,6 +95,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Nombre", particular.Nombre);
                 command.Parameters.AddWithValue("@Apellidos", particular.Apellidos);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -114,6 +119,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Nombre", particular.Nombre);
                 command.Parameters.AddWithValue("@Apellidos", particular.Apellidos);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -131,6 +137,7 @@ namespace EcoNet.DAL
                 using var cmd = new SqlCommand("DELETE FROM Particular WHERE IdUsuario = @IdUsuario", conn);
                 cmd.Parameters.AddWithValue("@IdUsuario", id);
                 cmd.ExecuteNonQuery();
+                conn.Close();
             }
             catch (Exception ex)
             {
