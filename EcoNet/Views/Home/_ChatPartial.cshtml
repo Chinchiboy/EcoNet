@@ -1,0 +1,70 @@
+﻿@model EcoNet.Models.LoginViewModel
+
+
+<div id="BarMessages" class="Messages">
+    <div class="HeaderBarMessages">
+        <label>Mensajes</label>
+        <svg id="ArrowUp" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5" />
+        </svg>
+        <svg id="ArrowDown" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1" />
+        </svg>
+
+    </div>
+    <div class="HeaderChat">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+        </svg>
+        <label>Nombre de usuario</label>
+    </div>
+    <div class="HeaderChat">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+        </svg>
+        <label>Nombre de usuario</label>
+    </div>
+    <div class="HeaderChat">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+        </svg>
+        <label>Nombre de usuario</label>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const arrowUp = document.getElementById("ArrowUp");
+        const arrowDown = document.getElementById("ArrowDown");
+        const headerChats = document.querySelectorAll(".HeaderChat");
+        const barMessages = document.getElementById("BarMessages");
+
+        arrowDown.style.display = "none"; // Mostrar inicialmente solo la flecha hacia arriba
+        headerChats.forEach(function (chat) {
+            chat.style.display = "none"; // Esconder todos los divs
+        });
+        barMessages.style.height = "auto";
+
+        arrowUp.addEventListener("click", function () {
+            headerChats.forEach(function (chat) {
+                chat.style.display = "flex"; // Mostrar todos los divs
+            });
+            arrowUp.style.display = "none"; // Esconder flecha hacia arriba
+            arrowDown.style.display = "inline"; // Mostrar flecha hacia abajo
+            barMessages.style.height = "400px";
+        });
+
+        arrowDown.addEventListener("click", function () {
+            headerChats.forEach(function (chat) {
+                chat.style.display = "none"; // Esconder todos los divs
+            });
+            arrowDown.style.display = "none"; // Esconder flecha hacia abajo
+            arrowUp.style.display = "inline"; // Mostrar flecha hacia arriba
+            barMessages.style.height = "auto";
+        });
+    });
+</script>
