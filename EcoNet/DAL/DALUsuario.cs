@@ -13,6 +13,7 @@ namespace EcoNet.DAL
     public class DalUsuario
     {
         private readonly DbConnection dbConnection;
+        private readonly Hash HashSSHA;
 
         public DalUsuario()
         {
@@ -35,7 +36,7 @@ namespace EcoNet.DAL
                     {
                         IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
                         NombreUsuario = reader.GetString(reader.GetOrdinal("Usuario")),
-                        Contraseña = reader.GetString(reader.GetOrdinal("Contraseña")),
+                        Contraseña = reader.GetString(reader.GetOrdinal("Contrasena")),
                         FechaAlta = reader.GetDateTime(reader.GetOrdinal("FechaAlta")),
                         FechaBaja = reader.IsDBNull(reader.GetOrdinal("FechaBaja")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("FechaBaja")),
                         Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString(reader.GetOrdinal("Telefono")),
@@ -56,28 +57,55 @@ namespace EcoNet.DAL
           
             return usuarioList;
         }
-        public string? AutenticationUserDal(string Email, string Password)
+        public string? AutenticationUserDal(string username, string password)
         {
             string? nombreUsuario = null;
+            string? storedHash = null;
 
-            using (var conn = dbConnection.GetConnection())
+            try
             {
-                using var cmd = new SqlCommand("SELECT Usuario FROM Usuario WHERE Email = @Email AND Contrasena = @Password", conn);
-                cmd.Parameters.AddWithValue("@Email", Email);
-                cmd.Parameters.AddWithValue("@Password", Password);
-                conn.Open();
-                using var reader = cmd.ExecuteReader();
-                if (reader.Read())
+                using (var conn = dbConnection.GetConnection())
                 {
-                    nombreUsuario = reader.GetString(reader.GetOrdinal("Usuario"));
+                    conn.Open();
+
+                    // Obtenemos el hash almacenado para el usuario dado
+                    using (var cmd = new SqlCommand("SELECT Usuario, Contrasena FROM Usuario WHERE Usuario = @NombreUsuario", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@NombreUsuario", username);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                nombreUsuario = reader.GetString(reader.GetOrdinal("NombreUsuario"));
+                                storedHash = reader.GetString(reader.GetOrdinal("Contrasena"));
+
+
+                            }
+                            reader.Close();
+
+
+                        }
+                        conn.Close();
+                        // Si encontramos un usuario con ese nombre
+                        if (storedHash != null)
+                        {
+                            // Verificamos la contraseña
+                            if (HashSSHA.VerifySSHA256Hash(password, storedHash))
+                            {
+                                return nombreUsuario; // Autenticación exitosa
+                            }
+                        }
+                    }
                 }
-                reader.Close();
-                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en AutenticationUserDal: {ex.Message}");
+                throw;
             }
 
-
-       
-            return nombreUsuario;
+            return null; // Si falla la autenticación
         }
 
         public Usuario? SelectById(int id)
@@ -97,7 +125,7 @@ namespace EcoNet.DAL
                     {
                         IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
                         NombreUsuario = reader.GetString(reader.GetOrdinal("Usuario")),
-                        Contraseña = reader.GetString(reader.GetOrdinal("Contraseña")),
+                        Contraseña = reader.GetString(reader.GetOrdinal("Contrasena")),
                         FechaAlta = reader.GetDateTime(reader.GetOrdinal("FechaAlta")),
                         FechaBaja = reader.IsDBNull(reader.GetOrdinal("FechaBaja")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("FechaBaja")),
                         Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString(reader.GetOrdinal("Telefono")),
@@ -121,6 +149,8 @@ namespace EcoNet.DAL
 
         public void Add(Usuario usuario)
         {
+            byte[] salt = HashSSHA.GenerateSalt();
+            string hashedPassword = HashSSHA.CreateSSHA256Hash(usuario.Contraseña, salt);
             if (usuario == null)
                 throw new ArgumentNullException(nameof(usuario));
 
@@ -128,7 +158,7 @@ namespace EcoNet.DAL
             {
                 using var connection = dbConnection.GetConnection();
                 connection.Open();
-                using var command = new SqlCommand("INSERT INTO Usuario (Usuario, Contraseña, FechaAlta, FechaBaja, Telefono, Email, Municipio, EsAdmin, FotoPerfil) VALUES (@Usuario1, @Contraseña, @FechaAlta, @FechaBaja, @Telefono, @Email, @Municipio, @EsAdmin, @FotoPerfil)", connection);
+                using var command = new SqlCommand("INSERT INTO Usuario (Usuario, Contrasena, FechaAlta, FechaBaja, Telefono, Email, Municipio, EsAdmin, FotoPerfil) VALUES (@Usuario1, @Contraseña, @FechaAlta, @FechaBaja, @Telefono, @Email, @Municipio, @EsAdmin, @FotoPerfil)", connection);
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
                 command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
@@ -160,10 +190,10 @@ namespace EcoNet.DAL
             {
                 using var connection = dbConnection.GetConnection();
                 connection.Open();
-                using var command = new SqlCommand("UPDATE Usuario SET Usuario = @Usuario1, Contraseña = @Contraseña, FechaAlta = @FechaAlta, FechaBaja = @FechaBaja, Telefono = @Telefono, Email = @Email, Municipio = @Municipio, EsAdmin = @EsAdmin, FotoPerfil = @FotoPerfil WHERE IdUsuario = @IdUsuario", connection);
+                using var command = new SqlCommand("UPDATE Usuario SET Usuario = @Usuario1, Contrasena = @Contraseña, FechaAlta = @FechaAlta, FechaBaja = @FechaBaja, Telefono = @Telefono, Email = @Email, Municipio = @Municipio, EsAdmin = @EsAdmin, FotoPerfil = @FotoPerfil WHERE IdUsuario = @IdUsuario", connection);
                 command.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
-                command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
+                command.Parameters.AddWithValue("@Contrasena", usuario.Contraseña);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
                 command.Parameters.AddWithValue("@FechaBaja", (object)usuario.FechaBaja ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Telefono", (object)usuario.Telefono ?? DBNull.Value);

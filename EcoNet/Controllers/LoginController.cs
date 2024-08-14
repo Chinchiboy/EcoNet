@@ -24,11 +24,13 @@ namespace EcoNet.Controllers
             if (!string.IsNullOrEmpty(userName))
             {
                 ViewBag.Usuario = userName;
+                TempData["NombreUsuario"] = ViewBag.Usuario;
                 return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError("", "Usuario o contraseña incorrectos.");
             return View();
+
         }
     }
 }
