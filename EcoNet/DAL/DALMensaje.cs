@@ -14,7 +14,7 @@ namespace EcoNet.DAL
         {
             dbConnection = new DbConnection();
         }
-        public List<Mensaje> SelectChatUsers(int id)
+        public List<Mensaje> SelectChatWithUsers(int id)
         {
             List<Mensaje> mensajeList = new List<Mensaje>();
 
