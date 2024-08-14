@@ -30,7 +30,7 @@ namespace EcoNet.Controllers
                 anuncios = _dalAnuncio.SelectByTag(descripcionEtiqueta);
             }
             else
-            {
+            { 
                 anuncios = _dalAnuncio.Select();
             }
 

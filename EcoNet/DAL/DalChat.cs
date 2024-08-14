@@ -40,9 +40,38 @@ namespace EcoNet.DAL
             return ChatList;
         }
 
+        public List<Chat> SelectUserChats(int userId)
+        {
+            List<Chat> ChatList = new List<Chat>();
+            using (var conn = dbConnection.GetConnection())
+            {
+                using var cmd = new SqlCommand(@"
+            SELECT * FROM Chat 
+            WHERE FKVendedor = @UserId OR FKComprador = @UserId", conn);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    ChatList.Add(new Chat
+                    {
+                        IdChat = reader.GetInt32(reader.GetOrdinal("IdChat")),
+                        Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
+                        Fkvendedor = reader.IsDBNull(reader.GetOrdinal("FKVendedor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKVendedor")),
+                        Fkcomprador = reader.IsDBNull(reader.GetOrdinal("FKComprador")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKComprador")),
+                    });
+                }
+                conn.Close();
+                reader.Close();
+            }
+            return ChatList;
+        }
+
+
         public Chat SelectById(int id)
         {
-            Chat chat = null;
+            Chat c = null;
 
             using (var conn = dbConnection.GetConnection())
             {
@@ -53,7 +82,7 @@ namespace EcoNet.DAL
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    chat = new Chat
+                    c = new Chat
                     {
                         IdChat = reader.GetInt32(reader.GetOrdinal("IdChat")),
                         Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
@@ -65,7 +94,7 @@ namespace EcoNet.DAL
                 reader.Close();
             }
 
-            return chat;
+            return c;
         }
 
 
