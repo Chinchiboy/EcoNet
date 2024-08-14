@@ -160,7 +160,7 @@ namespace EcoNet.DAL
                 connection.Open();
                 using var command = new SqlCommand("INSERT INTO Usuario (Usuario, Contrasena, FechaAlta, FechaBaja, Telefono, Email, Municipio, EsAdmin, FotoPerfil) VALUES (@Usuario1, @Contraseña, @FechaAlta, @FechaBaja, @Telefono, @Email, @Municipio, @EsAdmin, @FotoPerfil)", connection);
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
-                command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
+                command.Parameters.AddWithValue("@Contraseña", hashedPassword);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
                 command.Parameters.AddWithValue("@FechaBaja", (object)usuario.FechaBaja ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Telefono", (object)usuario.Telefono ?? DBNull.Value);
