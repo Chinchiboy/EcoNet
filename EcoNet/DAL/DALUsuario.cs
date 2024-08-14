@@ -62,14 +62,14 @@ namespace EcoNet.DAL
 
             using (var conn = dbConnection.GetConnection())
             {
-                using var cmd = new SqlCommand("SELECT NombreUsuario FROM Usuario WHERE Email = @Email AND Contrasena = @Password", conn);
+                using var cmd = new SqlCommand("SELECT Usuario FROM Usuario WHERE Email = @Email AND Contrasena = @Password", conn);
                 cmd.Parameters.AddWithValue("@Email", Email);
                 cmd.Parameters.AddWithValue("@Password", Password);
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    nombreUsuario = reader.GetString(reader.GetOrdinal("NombreUsuario"));
+                    nombreUsuario = reader.GetString(reader.GetOrdinal("Usuario"));
                 }
                 reader.Close();
                 conn.Close();
@@ -96,7 +96,7 @@ namespace EcoNet.DAL
                     usuario = new Usuario
                     {
                         IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
-                        NombreUsuario = reader.GetString(reader.GetOrdinal("NombreUsuario")),
+                        NombreUsuario = reader.GetString(reader.GetOrdinal("Usuario")),
                         Contraseña = reader.GetString(reader.GetOrdinal("Contraseña")),
                         FechaAlta = reader.GetDateTime(reader.GetOrdinal("FechaAlta")),
                         FechaBaja = reader.IsDBNull(reader.GetOrdinal("FechaBaja")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("FechaBaja")),
@@ -128,7 +128,7 @@ namespace EcoNet.DAL
             {
                 using var connection = dbConnection.GetConnection();
                 connection.Open();
-                using var command = new SqlCommand("INSERT INTO Usuario (Usuario1, Contraseña, FechaAlta, FechaBaja, Telefono, Email, Municipio, EsAdmin, FotoPerfil) VALUES (@Usuario1, @Contraseña, @FechaAlta, @FechaBaja, @Telefono, @Email, @Municipio, @EsAdmin, @FotoPerfil)", connection);
+                using var command = new SqlCommand("INSERT INTO Usuario (Usuario, Contraseña, FechaAlta, FechaBaja, Telefono, Email, Municipio, EsAdmin, FotoPerfil) VALUES (@Usuario1, @Contraseña, @FechaAlta, @FechaBaja, @Telefono, @Email, @Municipio, @EsAdmin, @FotoPerfil)", connection);
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
                 command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
@@ -160,7 +160,7 @@ namespace EcoNet.DAL
             {
                 using var connection = dbConnection.GetConnection();
                 connection.Open();
-                using var command = new SqlCommand("UPDATE Usuario SET Usuario1 = @Usuario1, Contraseña = @Contraseña, FechaAlta = @FechaAlta, FechaBaja = @FechaBaja, Telefono = @Telefono, Email = @Email, Municipio = @Municipio, EsAdmin = @EsAdmin, FotoPerfil = @FotoPerfil WHERE IdUsuario = @IdUsuario", connection);
+                using var command = new SqlCommand("UPDATE Usuario SET Usuario = @Usuario1, Contraseña = @Contraseña, FechaAlta = @FechaAlta, FechaBaja = @FechaBaja, Telefono = @Telefono, Email = @Email, Municipio = @Municipio, EsAdmin = @EsAdmin, FotoPerfil = @FotoPerfil WHERE IdUsuario = @IdUsuario", connection);
                 command.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
                 command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
