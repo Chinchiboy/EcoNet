@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Shared\_FiltrosMostradosPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Home\_FiltrosMostradosPartial.cshtml" />
     <None Include="wwwroot\css\EstilosEconet.css" />
   </ItemGroup>
 
@@ -22,6 +27,14 @@
 
   <ItemGroup>
     <Folder Include="Views\Login\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Shared\_FiltrosMostradosPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Shared\_FiltrosMostradosPartial.cshtml" />
   </ItemGroup>
 
 </Project>
