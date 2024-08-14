@@ -35,7 +35,10 @@ namespace EcoNet
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
+         
             return AnuncioList;
         }
 
@@ -64,6 +67,8 @@ namespace EcoNet
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     };
                 }
+                reader.Close();
+                conn.Close();
             }
 
             return anuncio;
@@ -94,6 +99,8 @@ namespace EcoNet
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
             return AnuncioList;
         }
@@ -122,6 +129,8 @@ namespace EcoNet
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
             return AnuncioList;
         }
@@ -140,6 +149,7 @@ namespace EcoNet
             command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
             command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
             command.ExecuteNonQuery();
+            connection.Close();
         }
         public void Update(Anuncio anuncio)
         {
@@ -155,6 +165,7 @@ namespace EcoNet
             command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
             command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
             command.ExecuteNonQuery();
+            connection.Close();
         }
         public void Delete(int id)
         {
@@ -166,6 +177,7 @@ namespace EcoNet
                 cmd.Parameters.AddWithValue("@IdAnuncio", id);
                 cmd.ExecuteNonQuery();
             }
+            conn.Close();
         }
     }
 }

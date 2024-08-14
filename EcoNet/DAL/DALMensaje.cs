@@ -36,6 +36,8 @@ namespace EcoNet.DAL
                         HoraMensaje = reader.IsDBNull(reader.GetOrdinal("HoraMensaje")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("HoraMensaje")),
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -67,6 +69,8 @@ namespace EcoNet.DAL
                         Creador = reader.IsDBNull(reader.GetOrdinal("Creador")) ? null : reader.GetInt32(reader.GetOrdinal("Creador")),
                         HoraMensaje = reader.IsDBNull(reader.GetOrdinal("HoraMensaje")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("HoraMensaje")),
                     };
+                    reader.Close();
+                    conn.Close();
                 }
             }
             catch (Exception ex)
@@ -94,6 +98,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Creador", mensaje.Creador ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@HoraMensaje", mensaje.HoraMensaje ?? (object)DBNull.Value);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -118,6 +123,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Creador", mensaje.Creador ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@HoraMensaje", mensaje.HoraMensaje ?? (object)DBNull.Value);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -135,6 +141,7 @@ namespace EcoNet.DAL
                 using var cmd = new SqlCommand("DELETE FROM Mensaje WHERE IdMensaje = @IdMensaje", conn);
                 cmd.Parameters.AddWithValue("@IdMensaje", id);
                 cmd.ExecuteNonQuery();
+                conn.Close();
             }
             catch (Exception ex)
             {

@@ -32,6 +32,8 @@ namespace EcoNet.DAL
                         DescripcionEtiqueta = reader.IsDBNull(reader.GetOrdinal("DescripcionEtiqueta")) ? null : reader.GetString(reader.GetOrdinal("DescripcionEtiqueta")),
                     });
                 }
+                conn.Close();
+                reader.Close();
             }
             return etiquetaList;
         }
@@ -54,6 +56,8 @@ namespace EcoNet.DAL
                         DescripcionEtiqueta = reader.IsDBNull(reader.GetOrdinal("DescripcionEtiqueta")) ? null : reader.GetString(reader.GetOrdinal("DescripcionEtiqueta")),
                     };
                 }
+                conn.Close();
+                reader.Close();
             }
             return etiqueta;
         }
@@ -66,6 +70,7 @@ namespace EcoNet.DAL
             command.Parameters.AddWithValue("@IdEtiqueta", etiqueta.IdEtiqueta);
             command.Parameters.AddWithValue("@DescripcionEtiqueta", etiqueta.DescripcionEtiqueta ?? (object)DBNull.Value);
             command.ExecuteNonQuery();
+            connection.Close();
         }
 
         public void Update(Etiqueta etiqueta)
@@ -76,6 +81,7 @@ namespace EcoNet.DAL
             command.Parameters.AddWithValue("@IdEtiqueta", etiqueta.IdEtiqueta);
             command.Parameters.AddWithValue("@DescripcionEtiqueta", etiqueta.DescripcionEtiqueta ?? (object)DBNull.Value);
             command.ExecuteNonQuery();
+            connection.Close();
         }
 
         public void Delete(int id)
@@ -85,6 +91,7 @@ namespace EcoNet.DAL
             using var cmd = new SqlCommand("DELETE FROM Etiqueta WHERE IdEtiqueta = @IdEtiqueta", conn);
             cmd.Parameters.AddWithValue("@IdEtiqueta", id);
             cmd.ExecuteNonQuery();
+            conn.Close();
         }
     }
 }

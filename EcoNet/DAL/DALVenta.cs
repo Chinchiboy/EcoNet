@@ -34,6 +34,8 @@ namespace EcoNet.DAL
                         Fkoferta = reader.IsDBNull(reader.GetOrdinal("FKOferta")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKOferta"))
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -64,6 +66,8 @@ namespace EcoNet.DAL
                         Fkoferta = reader.IsDBNull(reader.GetOrdinal("FKOferta")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKOferta"))
                     };
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -87,6 +91,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Precio", (object)venta.Precio ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Fkoferta", (object)venta.Fkoferta ?? DBNull.Value);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -109,6 +114,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Precio", (object)venta.Precio ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Fkoferta", (object)venta.Fkoferta ?? DBNull.Value);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -126,6 +132,7 @@ namespace EcoNet.DAL
                 using var cmd = new SqlCommand("DELETE FROM Venta WHERE IdVenta = @IdVenta", conn);
                 cmd.Parameters.AddWithValue("@IdVenta", id);
                 cmd.ExecuteNonQuery();
+                conn.Close();
             }
             catch (Exception ex)
             {

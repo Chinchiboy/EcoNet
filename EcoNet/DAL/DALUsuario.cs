@@ -1,8 +1,12 @@
-﻿using EcoNet.Models;
+﻿
+
+
+
+
+using EcoNet.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
+using System.Collections.Generic;
 
 namespace EcoNet.DAL
 {
@@ -41,14 +45,39 @@ namespace EcoNet.DAL
                         FotoPerfil = reader.IsDBNull(reader.GetOrdinal("FotoPerfil")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("FotoPerfil"))
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en Select: {ex.Message}");
                 throw;
             }
-
+          
             return usuarioList;
+        }
+        public string? AutenticationUserDal(string Email, string Password)
+        {
+            string? nombreUsuario = null;
+
+            using (var conn = dbConnection.GetConnection())
+            {
+                using var cmd = new SqlCommand("SELECT NombreUsuario FROM Usuario WHERE Email = @Email AND Contrasena = @Password", conn);
+                cmd.Parameters.AddWithValue("@Email", Email);
+                cmd.Parameters.AddWithValue("@Password", Password);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    nombreUsuario = reader.GetString(reader.GetOrdinal("NombreUsuario"));
+                }
+                reader.Close();
+                conn.Close();
+            }
+
+
+       
+            return nombreUsuario;
         }
 
         public Usuario? SelectById(int id)
@@ -78,13 +107,15 @@ namespace EcoNet.DAL
                         FotoPerfil = reader.IsDBNull(reader.GetOrdinal("FotoPerfil")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("FotoPerfil"))
                     };
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en SelectById: {ex.Message}");
                 throw;
             }
-
+          
             return usuario;
         }
 
@@ -108,12 +139,16 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@EsAdmin", usuario.EsAdmin);
                 command.Parameters.AddWithValue("@FotoPerfil", (object)usuario.FotoPerfil ?? DBNull.Value);
                 command.ExecuteNonQuery();
+                connection.Close();
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en Add: {ex.Message}");
                 throw;
             }
+
+
         }
 
         public void Update(Usuario usuario)
@@ -137,6 +172,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@EsAdmin", usuario.EsAdmin);
                 command.Parameters.AddWithValue("@FotoPerfil", (object)usuario.FotoPerfil ?? DBNull.Value);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -154,12 +190,14 @@ namespace EcoNet.DAL
                 using var cmd = new SqlCommand("DELETE FROM Usuario WHERE IdUsuario = @IdUsuario", conn);
                 cmd.Parameters.AddWithValue("@IdUsuario", id);
                 cmd.ExecuteNonQuery();
+                conn.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en Delete: {ex.Message}");
                 throw;
             }
+           
         }
     }
 }
