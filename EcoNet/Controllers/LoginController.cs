@@ -21,15 +21,12 @@ namespace EcoNet.Controllers
 
             string? userName = dalUserr.AutenticationUserDal(Email, Password);
 
-            // Verifica si el nombre de usuario no es nulo o vacío
             if (!string.IsNullOrEmpty(userName))
             {
                 ViewBag.Usuario = userName;
-                // Autenticación exitosa, redirige al Index
                 return RedirectToAction("Index", "Home");
             }
 
-            // Si la autenticación falla, muestra un mensaje de error
             ModelState.AddModelError("", "Usuario o contraseña incorrectos.");
             return View();
         }
