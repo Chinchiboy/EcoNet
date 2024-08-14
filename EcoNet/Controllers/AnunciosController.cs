@@ -43,5 +43,18 @@ namespace EcoNet.Controllers
 
             return Ok(articulosFiltrados);
         }
+
+        [HttpGet("{anuncioId}")]
+        public IActionResult ObtenerAnuncioPorId(int id)
+        {
+            Anuncio anuncio = _dalAnuncio.SelectById(id);
+
+            if (anuncio == null)
+            {
+                return NotFound($"No se encontró un anuncio con la ID {id}.");
+            }
+
+            return Ok(anuncio);
+        }
     }
 }
