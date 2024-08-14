@@ -82,17 +82,41 @@ a{
     font-size: 0.75rem;
 }
 
-.MinimizedMessages {
-    position: fixed; /* O puedes usar absolute dependiendo del contexto */
-    bottom: 20px; /* Distancia desde la parte inferior de la ventana */
-    right: 20px; /* Distancia desde el lado derecho de la ventana */
+
+
+.Messages {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px;
+    z-index: 1001;
+}
+
+.HeaderBarMessages {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #58D687;
+    border-bottom: 1px solid grey;
+    border-radius: 5px 5px 0px 0px;
+}
+.HeaderBarMessages svg {
+    border: 1px solid grey;
+    border-radius: 50%;
+}
+.HeaderChat {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     background-color: #f8f9fa;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border-bottom: 1px solid grey;
 }
 
 

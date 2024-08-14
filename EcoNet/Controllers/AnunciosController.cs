@@ -16,8 +16,22 @@ namespace EcoNet.Controllers
             _dalAnuncio = dalAnuncio;
         }
 
+        [HttpGet("todos")]
+        public IActionResult ObtenerTodosLosAnuncios()
+        {
+            List<Anuncio> anuncios = _dalAnuncio.Select();
+
+            if (anuncios == null || anuncios.Count == 0)
+            {
+                return NotFound("No se encontraron anuncios.");
+            }
+
+            return Ok(anuncios);
+        }
+
+        // Método para filtrar anuncios por título o etiqueta
         [HttpGet("filtrar")]
-        public IActionResult ObtenerAnuncios([FromQuery] string? descripcionEtiqueta, [FromQuery] string? titulo)
+        public IActionResult FiltrarAnuncios([FromQuery] string? descripcionEtiqueta, [FromQuery] string? titulo)
         {
             List<Anuncio> anuncios;
 
@@ -30,21 +44,16 @@ namespace EcoNet.Controllers
                 anuncios = _dalAnuncio.SelectByTag(descripcionEtiqueta);
             }
             else
-            { 
-                anuncios = _dalAnuncio.Select();
+            {
+                return BadRequest("Debe proporcionar al menos un título o una etiqueta para filtrar.");
             }
 
             if (anuncios == null || anuncios.Count == 0)
             {
-                return NotFound("No se encontraron anuncios.");
+                return NotFound("No se encontraron anuncios con los criterios especificados.");
             }
 
-            // Aquí asumimos que `ArticulosFiltrados` es una propiedad de tipo List<string> en `EtiquetaAnuncio`.
-            EtiquetaAnuncio EtiQ = new EtiquetaAnuncio();
-            EtiQ.ArticulosFiltrados = anuncios.ToList();
-
-            // Retornamos la lista de títulos
-            return Ok(EtiQ.ArticulosFiltrados);
+            return Ok(anuncios);
         }
 
         [HttpGet("{anuncioId}")]
