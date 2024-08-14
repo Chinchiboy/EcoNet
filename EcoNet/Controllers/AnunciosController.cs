@@ -39,9 +39,12 @@ namespace EcoNet.Controllers
                 return NotFound("No se encontraron anuncios.");
             }
 
-            var articulosFiltrados = anuncios.Select(a => a.Titulo).ToList(); // Ajusta esto según el campo que desees mostrar
+            // Aquí asumimos que `ArticulosFiltrados` es una propiedad de tipo List<string> en `EtiquetaAnuncio`.
+            EtiquetaAnuncio EtiQ = new EtiquetaAnuncio();
+            EtiQ.ArticulosFiltrados = anuncios.ToList();
 
-            return Ok(articulosFiltrados);
+            // Retornamos la lista de títulos
+            return Ok(EtiQ.ArticulosFiltrados);
         }
 
         [HttpGet("{anuncioId}")]
