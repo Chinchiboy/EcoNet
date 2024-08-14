@@ -36,13 +36,15 @@ namespace EcoNet.DAL
                         CreadoPor = reader.IsDBNull(reader.GetOrdinal("CreadoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("CreadorPor")),
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en Select: {ex.Message}");
                 throw;
             }
-
+            
             return ofertaList;
         }
 
@@ -68,6 +70,8 @@ namespace EcoNet.DAL
                         CreadoPor = reader.IsDBNull(reader.GetOrdinal("CreadoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("CreadoPor")),
                     };
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -94,6 +98,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor ?? (object)DBNull.Value);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -118,6 +123,7 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor ?? (object)DBNull.Value);
                 command.ExecuteNonQuery();
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -135,6 +141,7 @@ namespace EcoNet.DAL
                 using var cmd = new SqlCommand("DELETE FROM Oferta WHERE IdOferta = @IdOferta", conn);
                 cmd.Parameters.AddWithValue("@IdOferta", id);
                 cmd.ExecuteNonQuery();
+                conn.Close();
             }
             catch (Exception ex)
             {

@@ -24,23 +24,23 @@ namespace EcoNet
             this.nombreBaseDatos = nombreBaseDatos;
             this.usuario = usuario;
             this.password = password;
-            this.connection = null;
+            this.connection = new SqlConnection(GetConnectionString());
         }
 
 
-        public string Servidor{ get => servidor; set => servidor = value; }
+        public string Servidor { get => servidor; set => servidor = value; }
 
-        public string NombreBaseDatos{ get => nombreBaseDatos; set => nombreBaseDatos = value; }
+        public string NombreBaseDatos { get => nombreBaseDatos; set => nombreBaseDatos = value; }
 
-        public string Usuario{ get => usuario; set => usuario = value; }
+        public string Usuario { get => usuario; set => usuario = value; }
 
-        public string Password{ get => password; set => password = value; }
+        public string Password { get => password; set => password = value; }
 
         private string GetConnectionString()
         {
             return $"Data Source={servidor};Initial Catalog={nombreBaseDatos};User ID={usuario};Password={password};";
         }
-
+        /*
         public void Open()
         {
             try
@@ -80,13 +80,13 @@ namespace EcoNet
 
             }
         }
-
+        */
         public SqlConnection GetConnection()
         {
-            if (connection == null || connection.State == System.Data.ConnectionState.Closed)
-            {
-                throw new InvalidOperationException("La conexión no está abierta.");
-            }
+            //if (connection == null || connection.State == System.Data.ConnectionState.Closed)
+            //{
+            //    throw new InvalidOperationException("La conexión no está abierta.");
+            //}
 
             return connection;
         }

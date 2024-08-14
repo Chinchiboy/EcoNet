@@ -1,4 +1,4 @@
-﻿@model EtiquetaFiltros
+﻿@model IndexViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -6,7 +6,12 @@
 
 <div class="container text-center">
     <div class="d-flex justify-content-start mb-4">
-        @await Html.PartialAsync("_EtiquetasFiltrosPartial", new EcoNet.Models.EtiquetaFiltros())
+        <div id="RecuadroFiltro" class="d-flex flex-wrap gap-2">
+            @foreach (string filtro in Model.EtiquetaFiltros.Filtros)
+            {
+                <button class="btn BotonFiltro" value="@filtro" onclick="ObtenerAnuncios('@filtro')">@filtro</button>
+            }
+        </div>
     </div>  
     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
@@ -48,6 +53,13 @@
     </div>
     <br />
     <div>
+        @foreach(Anuncio an in Model.EtiquetaAnuncio.ArticulosFiltrados)
+        {
+            <div>
+                @an.Titulo
+            </div>
+        }
+
         <div class="VerdePrincipal">
             <a href="#">Div de prueba</a>
         </div>

@@ -34,6 +34,8 @@ namespace EcoNet.DAL
                         Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
                     });
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -63,6 +65,8 @@ namespace EcoNet.DAL
                         Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
                     };
                 }
+                reader.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -91,6 +95,7 @@ namespace EcoNet.DAL
                         command.Parameters.AddWithValue("@Fkanuncio", etiquetaAnuncio.Fkanuncio ?? (object)DBNull.Value);
                         command.ExecuteNonQuery();
                     }
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -118,6 +123,7 @@ namespace EcoNet.DAL
                         command.Parameters.AddWithValue("@Fkanuncio", etiquetaAnuncio.Fkanuncio ?? (object)DBNull.Value);
                         command.ExecuteNonQuery();
                     }
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -140,6 +146,7 @@ namespace EcoNet.DAL
                         cmd.Parameters.AddWithValue("@IdEtiquetaAnuncio", id);
                         cmd.ExecuteNonQuery();
                     }
+                    conn.Close();
                 }
             }
             catch (Exception ex)

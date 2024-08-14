@@ -36,6 +36,8 @@ namespace EcoNet.DAL
                         Direccion = reader.IsDBNull(reader.GetOrdinal("Direccion")) ? null : reader.GetString(reader.GetOrdinal("Direccion")),
                     });
                 }
+                conn.Close();
+                reader.Close();
             }
             return empresaList;
         }
@@ -62,7 +64,10 @@ namespace EcoNet.DAL
                             Direccion = reader.IsDBNull(reader.GetOrdinal("Direccion")) ? null : reader.GetString(reader.GetOrdinal("Direccion")),
                         };
                     }
+                    reader.Close();
                 }
+                conn.Close();
+                
             }
             return empresa;
         }
@@ -78,6 +83,7 @@ namespace EcoNet.DAL
             command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora.HasValue ? (object)empresa.EsRecicladora.Value : DBNull.Value);
             command.Parameters.AddWithValue("@Direccion", empresa.Direccion ?? (object)DBNull.Value);
             command.ExecuteNonQuery();
+            connection.Close();
         }
 
         public void Update(Empresa empresa)
@@ -91,6 +97,8 @@ namespace EcoNet.DAL
             command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora.HasValue ? (object)empresa.EsRecicladora.Value : DBNull.Value);
             command.Parameters.AddWithValue("@Direccion", empresa.Direccion ?? (object)DBNull.Value);
             command.ExecuteNonQuery();
+            connection.Close();
+
         }
 
         public void Delete(int id)
@@ -100,6 +108,8 @@ namespace EcoNet.DAL
             using var cmd = new SqlCommand("DELETE FROM Empresa WHERE IdUsuario = @IdUsuario", conn);
             cmd.Parameters.AddWithValue("@IdUsuario", id);
             cmd.ExecuteNonQuery();
+            conn.Close();
+
         }
     }
 }
