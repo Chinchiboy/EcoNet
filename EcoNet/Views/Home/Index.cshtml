@@ -9,7 +9,10 @@
         <div id="RecuadroFiltro" class="d-flex flex-wrap gap-2">
             @foreach (string filtro in Model.EtiquetaFiltros.Filtros)
             {
-                <button class="btn BotonFiltro" value="@filtro" onclick="ObtenerAnuncios('@filtro')">@filtro</button>
+                <form asp-controller="Home" asp-action="ObtenerAnuncios" method="get">
+                    <input type="hidden" name="filtro" value="@filtro" />
+                    <button type="submit" class="btn BotonFiltro">@filtro</button>
+                </form>
             }
         </div>
     </div>  
