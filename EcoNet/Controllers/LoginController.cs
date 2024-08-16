@@ -28,7 +28,7 @@ namespace EcoNet.Controllers
             }
 
             ModelState.AddModelError("", "Usuario o contraseña incorrectos.");
-            return View();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
