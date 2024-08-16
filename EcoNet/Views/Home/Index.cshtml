@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    int i = 0;
 }
 
 <div class="container text-center">
@@ -54,25 +55,20 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    <br />
-    <div>
+    <br/>
+    <br/>
+    <h2 class="text-start">Lo mas vendido</h2>
+    <hr/>
+    <div class="row">
         @foreach(Anuncio an in Model.EtiquetaAnuncio.ArticulosFiltrados)
         {
-            <div>
-                @an.Titulo
+            <div class="col-md-4 col-sm-6 col-12 mb-3">
+                <div class="VerdePrincipal RecuadroProducto">
+                    <div><img src="https://www.jetscoot.com/pub/media/wysiwyg/alquiler-moto/alquilar-moto-symsr-125cc.png" width="80%" height="80%" /></div>
+                    <div>@an.Titulo</div>
+                    <div>@an.Precio €</div>
+                </div>
             </div>
         }
-
-        <div class="VerdePrincipal">
-            <a href="#">Div de prueba</a>
-        </div>
-        <div class="VerdeSecundario">
-            <a href="#">Div de prueba</a>
-        </div>
-        <div>
-            <a href="#">Div de prueba</a>
-        </div>
     </div>
-    <hr>
-    <button class="btn btn-secondary">Boton prueba</button>
 </div>
