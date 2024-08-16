@@ -14,7 +14,39 @@ namespace EcoNet.DAL
         {
             dbConnection = new DbConnection();
         }
+        public List<Mensaje> SelectChatWithUsers(int id)
+        {
+            List<Mensaje> mensajeList = new List<Mensaje>();
 
+            try
+            {
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand("SELECT m.* FROM Mensaje m INNER JOIN Chat c ON m.FKChat = c.IdChat WHERE c.IdChat = @IdChat", conn);
+                cmd.Parameters.AddWithValue("@IdChat", id);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    mensajeList.Add(new Mensaje
+                    {
+                        IdMensaje = reader.GetInt32(reader.GetOrdinal("IdMensaje")),
+                        Texto = reader.GetString(reader.GetOrdinal("Texto")),
+                        Fkchat = reader.IsDBNull(reader.GetOrdinal("FKChat")) ? null : reader.GetInt32(reader.GetOrdinal("FKChat")),
+                        Creador = reader.IsDBNull(reader.GetOrdinal("Creador")) ? null : reader.GetInt32(reader.GetOrdinal("Creador")),
+                        HoraMensaje = reader.IsDBNull(reader.GetOrdinal("HoraMensaje")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("HoraMensaje")),
+                    });
+                }
+                reader.Close();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en Select: {ex.Message}");
+                throw;
+            }
+
+            return mensajeList;
+        }
         public List<Mensaje> Select()
         {
             List<Mensaje> mensajeList = new List<Mensaje>();
