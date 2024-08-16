@@ -108,11 +108,14 @@ namespace EcoNet
 
         public List<Anuncio> SelectByTag(string tag)
         {
+            if (tag == "Mostrar todo")
+                return Select();
+
             AnuncioList = new List<Anuncio>();
             using (var conn = dbConnection.GetConnection())
             {
                 using var cmd = new SqlCommand("SELECT * FROM Anuncio JOIN EtiquetaAnuncio ON IdAnuncio = FKAnuncio JOIN Etiqueta ON IdEtiqueta = FKEtiqueta WHERE DescripcionEtiqueta like @Etiqueta", conn);
-                cmd.Parameters.AddWithValue("@Etiqueta", tag);
+                cmd.Parameters.AddWithValue("@Etiqueta", "%" + tag + "%");
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
