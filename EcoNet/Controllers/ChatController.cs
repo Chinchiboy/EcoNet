@@ -20,7 +20,8 @@ namespace EcoNet.Controllers
 
             List<Chat> chats = _dalChat.SelectUserChats(userId);
 
-            return View(chats);
+            return RedirectToAction("Index", "Home");
+            //return View(chats);
         }
 
         private int ObtenerUsuarioActivoId()
