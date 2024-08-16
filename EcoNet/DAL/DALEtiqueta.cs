@@ -29,8 +29,9 @@ namespace EcoNet.DAL
                     etiquetaList.Add(new Etiqueta
                     {
                         IdEtiqueta = reader.GetInt32(reader.GetOrdinal("IdEtiqueta")),
-                        DescripcionEtiqueta = reader.IsDBNull(reader.GetOrdinal("DescripcionEtiqueta")) ? null : reader.GetString(reader.GetOrdinal("DescripcionEtiqueta")),
+                        DescripcionEtiqueta = reader.GetString(reader.GetOrdinal("DescripcionEtiqueta")), // Eliminada la verificación de DBNull
                     });
+
                 }
                 conn.Close();
                 reader.Close();
@@ -53,7 +54,7 @@ namespace EcoNet.DAL
                     etiqueta = new Etiqueta
                     {
                         IdEtiqueta = reader.GetInt32(reader.GetOrdinal("IdEtiqueta")),
-                        DescripcionEtiqueta = reader.IsDBNull(reader.GetOrdinal("DescripcionEtiqueta")) ? null : reader.GetString(reader.GetOrdinal("DescripcionEtiqueta")),
+                        DescripcionEtiqueta = reader.GetString(reader.GetOrdinal("DescripcionEtiqueta")), // Eliminada la verificación de DBNull
                     };
                 }
                 conn.Close();
@@ -68,7 +69,7 @@ namespace EcoNet.DAL
             connection.Open();
             using var command = new SqlCommand("INSERT INTO Etiqueta (IdEtiqueta, DescripcionEtiqueta) VALUES (@IdEtiqueta, @DescripcionEtiqueta)", connection);
             command.Parameters.AddWithValue("@IdEtiqueta", etiqueta.IdEtiqueta);
-            command.Parameters.AddWithValue("@DescripcionEtiqueta", etiqueta.DescripcionEtiqueta ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@DescripcionEtiqueta", etiqueta.DescripcionEtiqueta);
             command.ExecuteNonQuery();
             connection.Close();
         }
@@ -79,7 +80,7 @@ namespace EcoNet.DAL
             connection.Open();
             using var command = new SqlCommand("UPDATE Etiqueta SET DescripcionEtiqueta = @DescripcionEtiqueta WHERE IdEtiqueta = @IdEtiqueta", connection);
             command.Parameters.AddWithValue("@IdEtiqueta", etiqueta.IdEtiqueta);
-            command.Parameters.AddWithValue("@DescripcionEtiqueta", etiqueta.DescripcionEtiqueta ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@DescripcionEtiqueta", etiqueta.DescripcionEtiqueta);
             command.ExecuteNonQuery();
             connection.Close();
         }

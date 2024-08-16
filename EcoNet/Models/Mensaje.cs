@@ -7,10 +7,10 @@ namespace EcoNet.Models
     {
         public int IdMensaje { get; set; }
         public string Texto { get; set; } = null!;
-        public int? Fkchat { get; set; }
-        public int? Creador { get; set; }
-        public DateTime? HoraMensaje { get; set; }
+        public int Fkchat { get; set; }
+        public int Creador { get; set; }
+        public DateTime HoraMensaje { get; set; }
 
-        public virtual Chat? FkchatNavigation { get; set; }
+        public virtual Chat FkchatNavigation { get; set; }
     }
 }
