@@ -16,13 +16,13 @@ namespace EcoNet.Controllers
         public IActionResult Index()
         {
             IndexViewModel vm = new IndexViewModel();
+            DalAnuncio dalAnuncio = new DalAnuncio();
 
             vm.EtiquetaFiltros = new EtiquetaFiltros();
 
             vm.EtiquetaAnuncio = new EtiquetaAnuncio();
+            vm.EtiquetaAnuncio.ArticulosFiltrados = TempData["Filtro"] == null ? dalAnuncio.Select() : dalAnuncio.SelectByTag(TempData["Filtro"].ToString());
 
-            List<Anuncio> ListAn = new List<Anuncio>();
-            
             return View(vm);
         }
 
@@ -36,10 +36,17 @@ namespace EcoNet.Controllers
             return View();
         }
 
+        public IActionResult ObtenerAnuncios(string filtro)
+        {
+            TempData["Filtro"] = filtro;
+            return RedirectToAction("Index");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }
