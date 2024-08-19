@@ -19,22 +19,16 @@
     </div>
     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
-            <a href="/Home/Producto">
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            </a>
-            <a href="/Home/Producto">
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            </a>
-            <a href="/Home/Producto">
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            </a>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <img src="https://www.travelandleisure.com/thmb/Ag8nh_g-dqxboIRas-uGLkBUH8g=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/FlowerFieldsinCarlsbadRanch_ChelseaLoren01-61144763f8bc45a4843f1ea7b72434b1.jpg" alt="Slide 1">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Oferta</h5>
-                    <button class="btn btn-primary">Ver Oferta</button>
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Producto", "Home" )'">Ver Oferta</button>
                 </div>
             </div>
             <div class="carousel-item">
