@@ -68,7 +68,7 @@ namespace EcoNet.DAL
          */
         public Chat? SelectById(int id)
         {
-            Chat c = null;
+            Chat? c = null;
             try
             {
                 using var conn = dbConnection.GetConnection();

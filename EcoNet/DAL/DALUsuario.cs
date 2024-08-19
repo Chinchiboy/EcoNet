@@ -112,8 +112,6 @@ namespace EcoNet.DAL
                 Console.WriteLine($"Error en AutenticationUserDal: {ex.Message}");
                 throw;
             }
-
-            return null; // Si falla la autenticación
         }
 
         public Usuario? SelectById(int id)
@@ -170,12 +168,12 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
                 command.Parameters.AddWithValue("@Contraseña", hashedPassword);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
-                command.Parameters.AddWithValue("@FechaBaja", (object)usuario.FechaBaja ?? DBNull.Value);
-                command.Parameters.AddWithValue("@Telefono", (object)usuario.Telefono ?? DBNull.Value);
+                command.Parameters.AddWithValue("@FechaBaja", usuario.FechaBaja);
+                command.Parameters.AddWithValue("@Telefono", usuario.Telefono);
                 command.Parameters.AddWithValue("@Email", usuario.Email);
-                command.Parameters.AddWithValue("@Municipio", (object)usuario.Municipio ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Municipio", usuario.Municipio);
                 command.Parameters.AddWithValue("@EsAdmin", usuario.EsAdmin);
-                command.Parameters.AddWithValue("@FotoPerfil", (object)usuario.FotoPerfil ?? DBNull.Value);
+                command.Parameters.AddWithValue("@FotoPerfil", usuario.FotoPerfil);
                 command.ExecuteNonQuery();
                 connection.Close();
 
@@ -203,12 +201,12 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
                 command.Parameters.AddWithValue("@Contrasena", usuario.Contraseña);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
-                command.Parameters.AddWithValue("@FechaBaja", (object)usuario.FechaBaja ?? DBNull.Value);
-                command.Parameters.AddWithValue("@Telefono", (object)usuario.Telefono ?? DBNull.Value);
+                command.Parameters.AddWithValue("@FechaBaja", usuario.FechaBaja);
+                command.Parameters.AddWithValue("@Telefono", usuario.Telefono);
                 command.Parameters.AddWithValue("@Email", usuario.Email);
-                command.Parameters.AddWithValue("@Municipio", (object)usuario.Municipio ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Municipio", usuario.Municipio);
                 command.Parameters.AddWithValue("@EsAdmin", usuario.EsAdmin);
-                command.Parameters.AddWithValue("@FotoPerfil", (object)usuario.FotoPerfil ?? DBNull.Value);
+                command.Parameters.AddWithValue("@FotoPerfil", usuario.FotoPerfil);
                 command.ExecuteNonQuery();
                 connection.Close();
             }
