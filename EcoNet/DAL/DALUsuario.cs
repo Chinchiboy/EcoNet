@@ -1,9 +1,4 @@
-﻿
-
-
-
-
-using EcoNet.Models;
+﻿using EcoNet.Models;
 using Microsoft.Data.SqlClient;
 using System.Data.Common;
 using System.Collections.Generic;
@@ -39,9 +34,9 @@ namespace EcoNet.DAL
                         Contraseña = reader.GetString(reader.GetOrdinal("Contrasena")),
                         FechaAlta = reader.GetDateTime(reader.GetOrdinal("FechaAlta")),
                         FechaBaja = reader.IsDBNull(reader.GetOrdinal("FechaBaja")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("FechaBaja")),
-                        Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString(reader.GetOrdinal("Telefono")),
+                        Telefono = reader.GetString(reader.GetOrdinal("Telefono")),
                         Email = reader.GetString(reader.GetOrdinal("Email")),
-                        Municipio = reader.IsDBNull(reader.GetOrdinal("Municipio")) ? null : reader.GetString(reader.GetOrdinal("Municipio")),
+                        Municipio = reader.GetString(reader.GetOrdinal("Municipio")),
                         EsAdmin = reader.GetBoolean(reader.GetOrdinal("EsAdmin")),
                         FotoPerfil = reader.IsDBNull(reader.GetOrdinal("FotoPerfil")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("FotoPerfil"))
                     });
@@ -128,9 +123,9 @@ namespace EcoNet.DAL
                         Contraseña = reader.GetString(reader.GetOrdinal("Contrasena")),
                         FechaAlta = reader.GetDateTime(reader.GetOrdinal("FechaAlta")),
                         FechaBaja = reader.IsDBNull(reader.GetOrdinal("FechaBaja")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("FechaBaja")),
-                        Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString(reader.GetOrdinal("Telefono")),
+                        Telefono = reader.GetString(reader.GetOrdinal("Telefono")),
                         Email = reader.GetString(reader.GetOrdinal("Email")),
-                        Municipio = reader.IsDBNull(reader.GetOrdinal("Municipio")) ? null : reader.GetString(reader.GetOrdinal("Municipio")),
+                        Municipio = reader.GetString(reader.GetOrdinal("Municipio")),
                         EsAdmin = reader.GetBoolean(reader.GetOrdinal("EsAdmin")),
                         FotoPerfil = reader.IsDBNull(reader.GetOrdinal("FotoPerfil")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("FotoPerfil"))
                     };
@@ -163,9 +158,9 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Contraseña", hashedPassword);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
                 command.Parameters.AddWithValue("@FechaBaja", (object)usuario.FechaBaja ?? DBNull.Value);
-                command.Parameters.AddWithValue("@Telefono", (object)usuario.Telefono ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Telefono", usuario.Telefono);
                 command.Parameters.AddWithValue("@Email", usuario.Email);
-                command.Parameters.AddWithValue("@Municipio", (object)usuario.Municipio ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Municipio", usuario.Municipio);
                 command.Parameters.AddWithValue("@EsAdmin", usuario.EsAdmin);
                 command.Parameters.AddWithValue("@FotoPerfil", (object)usuario.FotoPerfil ?? DBNull.Value);
                 command.ExecuteNonQuery();
@@ -196,9 +191,9 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Contrasena", usuario.Contraseña);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
                 command.Parameters.AddWithValue("@FechaBaja", (object)usuario.FechaBaja ?? DBNull.Value);
-                command.Parameters.AddWithValue("@Telefono", (object)usuario.Telefono ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Telefono", usuario.Telefono);
                 command.Parameters.AddWithValue("@Email", usuario.Email);
-                command.Parameters.AddWithValue("@Municipio", (object)usuario.Municipio ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Municipio", usuario.Municipio);
                 command.Parameters.AddWithValue("@EsAdmin", usuario.EsAdmin);
                 command.Parameters.AddWithValue("@FotoPerfil", (object)usuario.FotoPerfil ?? DBNull.Value);
                 command.ExecuteNonQuery();
