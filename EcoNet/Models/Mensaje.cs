@@ -11,6 +11,6 @@ namespace EcoNet.Models
         public int Creador { get; set; }
         public DateTime HoraMensaje { get; set; }
 
-        public virtual Chat FkchatNavigation { get; set; }
+        public virtual Chat? FkchatNavigation { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace EcoNet.DAL
          * A list with it's chats if it was succesfull or null if there was an error
          * </returns>
          */
-        public List<Chat> SelectUserChats(int userId)
+        public List<Chat>? SelectUserChats(int userId)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace EcoNet.DAL
          * The header of the chat if it was successfull retriving it or a null if there was an error
          * </returns>
          */
-        public Chat SelectById(int id)
+        public Chat? SelectById(int id)
         {
             Chat c = null;
             try

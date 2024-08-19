@@ -40,9 +40,9 @@ namespace EcoNet.DAL
                     {
                         IdMensaje = reader.GetInt32(reader.GetOrdinal("IdMensaje")),
                         Texto = reader.GetString(reader.GetOrdinal("Texto")),
-                        Fkchat = reader.IsDBNull(reader.GetOrdinal("FKChat")) ? null : reader.GetInt32(reader.GetOrdinal("FKChat")),
-                        Creador = reader.IsDBNull(reader.GetOrdinal("Creador")) ? null : reader.GetInt32(reader.GetOrdinal("Creador")),
-                        HoraMensaje = reader.IsDBNull(reader.GetOrdinal("HoraMensaje")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("HoraMensaje")),
+                        Fkchat = reader.GetInt32(reader.GetOrdinal("FKChat")),
+                        Creador = reader.GetInt32(reader.GetOrdinal("Creador")),
+                        HoraMensaje = reader.GetDateTime(reader.GetOrdinal("HoraMensaje")),
                     });
                 }
                 reader.Close();
@@ -144,9 +144,9 @@ namespace EcoNet.DAL
                 using var command = new SqlCommand("UPDATE Mensaje SET Texto = @Texto, Fkchat = @Fkchat, Creador = @Creador, HoraMensaje = @HoraMensaje WHERE IdMensaje = @IdMensaje", connection);
                 command.Parameters.AddWithValue("@IdMensaje", mensaje.IdMensaje);
                 command.Parameters.AddWithValue("@Texto", mensaje.Texto);
-                command.Parameters.AddWithValue("@Fkchat", mensaje.Fkchat ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@Creador", mensaje.Creador ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@HoraMensaje", mensaje.HoraMensaje ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Fkchat", mensaje.Fkchat);
+                command.Parameters.AddWithValue("@Creador", mensaje.Creador);
+                command.Parameters.AddWithValue("@HoraMensaje", mensaje.HoraMensaje);
                 command.ExecuteNonQuery();
                 connection.Close();
                 
