@@ -18,10 +18,9 @@ namespace EcoNet.DAL
         public List<EtiquetaAnuncio> Select()
         {
             List<EtiquetaAnuncio> etiquetaAnuncioList = new List<EtiquetaAnuncio>();
-
+            using var conn = dbConnection.GetConnection();
             try
             {
-                using var conn = dbConnection.GetConnection();
                 using var cmd = new SqlCommand("SELECT * FROM EtiquetaAnuncio", conn);
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
@@ -30,17 +29,20 @@ namespace EcoNet.DAL
                     etiquetaAnuncioList.Add(new EtiquetaAnuncio
                     {
                         IdEtiquetaAnuncio = reader.GetInt32(reader.GetOrdinal("IdEtiquetaAnuncio")),
-                        Fketiqueta = reader.IsDBNull(reader.GetOrdinal("FKEtiqueta")) ? null : reader.GetInt32(reader.GetOrdinal("FKEtiqueta")),
-                        Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
+                        Fketiqueta = reader.GetInt32(reader.GetOrdinal("FKEtiqueta")),
+                        Fkanuncio = reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
                     });
                 }
                 reader.Close();
-                conn.Close();
+                
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Select: {ex.Message}");
-                throw;
+
+            }
+            finally
+            {
+                conn.Close();
             }
             return etiquetaAnuncioList;
         }
@@ -48,10 +50,10 @@ namespace EcoNet.DAL
         public EtiquetaAnuncio? SelectById(int id)
         {
             EtiquetaAnuncio? etiquetaAnuncio = null;
+            using var conn = dbConnection.GetConnection();
 
             try
             {
-                using var conn = dbConnection.GetConnection();
                 using var cmd = new SqlCommand("SELECT * FROM EtiquetaAnuncio WHERE IdEtiquetaAnuncio = @IdEtiquetaAnuncio", conn);
                 cmd.Parameters.AddWithValue("@IdEtiquetaAnuncio", id);
                 conn.Open();
@@ -61,18 +63,19 @@ namespace EcoNet.DAL
                     etiquetaAnuncio = new EtiquetaAnuncio
                     {
                         IdEtiquetaAnuncio = reader.GetInt32(reader.GetOrdinal("IdEtiquetaAnuncio")),
-                        Fketiqueta = reader.IsDBNull(reader.GetOrdinal("FKEtiqueta")) ? null : reader.GetInt32(reader.GetOrdinal("FKEtiqueta")),
-                        Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
+                        Fketiqueta = reader.GetInt32(reader.GetOrdinal("FKEtiqueta")),
+                        Fkanuncio = reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
                     };
                 }
                 reader.Close();
-                conn.Close();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
-                Console.WriteLine($"Error en SelectById: {ex.Message}");
-                throw;
+
+            }
+            finally
+            {
+                conn.Close();
             }
 
             return etiquetaAnuncio;
@@ -83,26 +86,29 @@ namespace EcoNet.DAL
             if (etiquetaAnuncio == null)
                 throw new ArgumentNullException(nameof(etiquetaAnuncio));
 
+            using var connection = dbConnection.GetConnection();
+
             try
             {
-                using (var connection = dbConnection.GetConnection())
                 {
                     connection.Open();
                     using (var command = new SqlCommand("INSERT INTO EtiquetaAnuncio (IdEtiquetaAnuncio, Fketiqueta, Fkanuncio) VALUES (@IdEtiquetaAnuncio, @Fketiqueta, @Fkanuncio)", connection))
                     {
                         command.Parameters.AddWithValue("@IdEtiquetaAnuncio", etiquetaAnuncio.IdEtiquetaAnuncio);
-                        command.Parameters.AddWithValue("@Fketiqueta", etiquetaAnuncio.Fketiqueta ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@Fkanuncio", etiquetaAnuncio.Fkanuncio ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Fketiqueta", etiquetaAnuncio.Fketiqueta);
+                        command.Parameters.AddWithValue("@Fkanuncio", etiquetaAnuncio.Fkanuncio);
                         command.ExecuteNonQuery();
                     }
-                    connection.Close();
+
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
-                Console.WriteLine($"Error en Add: {ex.Message}");
-                throw;
+
+            }
+            finally
+            {
+                connection.Close();
             }
         }
 
@@ -111,49 +117,48 @@ namespace EcoNet.DAL
             if (etiquetaAnuncio == null)
                 throw new ArgumentNullException(nameof(etiquetaAnuncio));
 
+            using (var connection = dbConnection.GetConnection())
+
             try
-            {
-                using (var connection = dbConnection.GetConnection())
+            { 
                 {
                     connection.Open();
                     using (var command = new SqlCommand("UPDATE EtiquetaAnuncio SET Fketiqueta = @Fketiqueta, Fkanuncio = @Fkanuncio WHERE IdEtiquetaAnuncio = @IdEtiquetaAnuncio", connection))
                     {
                         command.Parameters.AddWithValue("@IdEtiquetaAnuncio", etiquetaAnuncio.IdEtiquetaAnuncio);
-                        command.Parameters.AddWithValue("@Fketiqueta", etiquetaAnuncio.Fketiqueta ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@Fkanuncio", etiquetaAnuncio.Fkanuncio ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Fketiqueta", etiquetaAnuncio.Fketiqueta);
+                        command.Parameters.AddWithValue("@Fkanuncio", etiquetaAnuncio.Fkanuncio);
                         command.ExecuteNonQuery();
                     }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de errores
-                Console.WriteLine($"Error en Update: {ex.Message}");
-                throw;
+                
+            }
+            finally
+            {
+                connection.Close();
             }
         }
 
         public void Delete(int id)
         {
+            using var conn = dbConnection.GetConnection();
             try
             {
-                using (var conn = dbConnection.GetConnection())
-                {
-                    conn.Open();
-                    using (var cmd = new SqlCommand("DELETE FROM EtiquetaAnuncio WHERE IdEtiquetaAnuncio = @IdEtiquetaAnuncio", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@IdEtiquetaAnuncio", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                    conn.Close();
-                }
+                conn.Open();
+                using var cmd = new SqlCommand("DELETE FROM EtiquetaAnuncio WHERE IdEtiquetaAnuncio = @IdEtiquetaAnuncio", conn);
+                cmd.Parameters.AddWithValue("@IdEtiquetaAnuncio", id);
+                cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                // Manejo de errores
-                Console.WriteLine($"Error en Delete: {ex.Message}");
-                throw;
+
+            }
+            finally
+            {
+                conn.Close();
             }
         }
     }

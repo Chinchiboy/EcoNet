@@ -36,7 +36,6 @@ body {
 
 hr {
     color: #329F5B;
-    border: none;
 }
 
 a{
@@ -80,6 +79,16 @@ a{
 .Links {
     text-align: center;
     font-size: 0.75rem;
+}
+
+.RecuadroProducto{
+    border-radius: 50px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1.25rem;
 }
 
 

@@ -18,9 +18,9 @@ namespace EcoNet.Models
         public string Contraseña { get; set; } = null!;
         public DateTime FechaAlta { get; set; }
         public DateTime? FechaBaja { get; set; }
-        public string? Telefono { get; set; }
+        public string Telefono { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string? Municipio { get; set; }
+        public string Municipio { get; set; } = null!;
         public bool EsAdmin { get; set; }
         public byte[]? FotoPerfil { get; set; }
 

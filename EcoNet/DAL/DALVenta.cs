@@ -18,10 +18,10 @@ namespace EcoNet.DAL
         public List<Venta> Select()
         {
             List<Venta> ventaList = new List<Venta>();
+            using var conn = dbConnection.GetConnection();
 
             try
             {
-                using var conn = dbConnection.GetConnection();
                 using var cmd = new SqlCommand("SELECT * FROM Venta", conn);
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
@@ -30,29 +30,30 @@ namespace EcoNet.DAL
                     ventaList.Add(new Venta
                     {
                         IdVenta = reader.GetInt32(reader.GetOrdinal("IdVenta")),
-                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
-                        Fkoferta = reader.IsDBNull(reader.GetOrdinal("FKOferta")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKOferta"))
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Fkoferta = reader.GetInt32(reader.GetOrdinal("FKOferta"))
                     });
                 }
-                reader.Close();
-                conn.Close();
+                reader.Close(); 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Select: {ex.Message}");
-                throw;
+                
             }
-
+            finally
+            {
+                conn.Close();
+            }
             return ventaList;
         }
 
-        public Venta? SelectById(int id)
+        public Venta SelectById(int id)
         {
-            Venta? venta = null;
+            Venta venta = null;
+            using var conn = dbConnection.GetConnection();
 
             try
             {
-                using var conn = dbConnection.GetConnection();
                 using var cmd = new SqlCommand("SELECT * FROM Venta WHERE IdVenta = @IdVenta", conn);
                 cmd.Parameters.AddWithValue("@IdVenta", id);
                 conn.Open();
@@ -62,17 +63,19 @@ namespace EcoNet.DAL
                     venta = new Venta
                     {
                         IdVenta = reader.GetInt32(reader.GetOrdinal("IdVenta")),
-                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
-                        Fkoferta = reader.IsDBNull(reader.GetOrdinal("FKOferta")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKOferta"))
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Fkoferta = reader.GetInt32(reader.GetOrdinal("FKOferta"))
                     };
                 }
                 reader.Close();
-                conn.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en SelectById: {ex.Message}");
-                throw;
+                
+            }
+            finally
+            {
+                conn.Close();
             }
 
             return venta;
@@ -83,20 +86,24 @@ namespace EcoNet.DAL
             if (venta == null)
                 throw new ArgumentNullException(nameof(venta));
 
+            using var connection = dbConnection.GetConnection();
+
             try
             {
-                using var connection = dbConnection.GetConnection();
+                
                 connection.Open();
                 using var command = new SqlCommand("INSERT INTO Venta (Precio, Fkoferta) VALUES (@Precio, @Fkoferta)", connection);
                 command.Parameters.AddWithValue("@Precio", (object)venta.Precio ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Fkoferta", (object)venta.Fkoferta ?? DBNull.Value);
                 command.ExecuteNonQuery();
-                connection.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Add: {ex.Message}");
-                throw;
+                
+            }
+            finally
+            {
+                connection.Close();
             }
         }
 
@@ -105,39 +112,44 @@ namespace EcoNet.DAL
             if (venta == null)
                 throw new ArgumentNullException(nameof(venta));
 
+            using var connection = dbConnection.GetConnection();
+            
             try
             {
-                using var connection = dbConnection.GetConnection();
                 connection.Open();
                 using var command = new SqlCommand("UPDATE Venta SET Precio = @Precio, Fkoferta = @Fkoferta WHERE IdVenta = @IdVenta", connection);
                 command.Parameters.AddWithValue("@IdVenta", venta.IdVenta);
                 command.Parameters.AddWithValue("@Precio", (object)venta.Precio ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Fkoferta", (object)venta.Fkoferta ?? DBNull.Value);
                 command.ExecuteNonQuery();
-                connection.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Update: {ex.Message}");
-                throw;
+               
+            }
+            finally
+            {
+                connection.Close();
             }
         }
 
         public void Delete(int id)
         {
+            using var conn = dbConnection.GetConnection();
             try
             {
-                using var conn = dbConnection.GetConnection();
                 conn.Open();
                 using var cmd = new SqlCommand("DELETE FROM Venta WHERE IdVenta = @IdVenta", conn);
                 cmd.Parameters.AddWithValue("@IdVenta", id);
                 cmd.ExecuteNonQuery();
-                conn.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Delete: {ex.Message}");
-                throw;
+                
+            }
+            finally
+            {
+                conn.Close();
             }
         }
     }

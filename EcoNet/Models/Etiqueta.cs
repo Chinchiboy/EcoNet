@@ -11,11 +11,8 @@ namespace EcoNet.Models
         }
 
         public int IdEtiqueta { get; set; }
-        public string? DescripcionEtiqueta { get; set; }
+        public string DescripcionEtiqueta { get; set; } = null!;
 
         public virtual ICollection<EtiquetaAnuncio> EtiquetaAnuncios { get; set; }
-
-
-
     }
 }

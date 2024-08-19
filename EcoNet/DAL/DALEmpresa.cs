@@ -32,9 +32,10 @@ namespace EcoNet.DAL
                         IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
                         Cif = reader.GetString(reader.GetOrdinal("Cif")),
                         Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
-                        EsRecicladora = reader.IsDBNull(reader.GetOrdinal("EsReciclador")) ? (bool?)null : reader.GetBoolean(reader.GetOrdinal("EsRecicladora")),
-                        Direccion = reader.IsDBNull(reader.GetOrdinal("Direccion")) ? null : reader.GetString(reader.GetOrdinal("Direccion")),
+                        EsRecicladora = reader.GetBoolean(reader.GetOrdinal("EsReciclador")),
+                        Direccion = reader.GetString(reader.GetOrdinal("Direccion"))
                     });
+
                 }
                 conn.Close();
                 reader.Close();
@@ -60,8 +61,8 @@ namespace EcoNet.DAL
                             IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
                             Cif = reader.GetString(reader.GetOrdinal("Cif")),
                             Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
-                            EsRecicladora = reader.IsDBNull(reader.GetOrdinal("EsRecicladora")) ? (bool?)null : reader.GetBoolean(reader.GetOrdinal("EsRecicladora")),
-                            Direccion = reader.IsDBNull(reader.GetOrdinal("Direccion")) ? null : reader.GetString(reader.GetOrdinal("Direccion")),
+                            EsRecicladora = reader.GetBoolean(reader.GetOrdinal("EsReciclador")),
+                            Direccion = reader.GetString(reader.GetOrdinal("Direccion"))
                         };
                     }
                     reader.Close();
@@ -80,8 +81,8 @@ namespace EcoNet.DAL
             command.Parameters.AddWithValue("@IdUsuario", empresa.IdUsuario);
             command.Parameters.AddWithValue("@Cif", empresa.Cif);
             command.Parameters.AddWithValue("@Nombre", empresa.Nombre);
-            command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora.HasValue ? (object)empresa.EsRecicladora.Value : DBNull.Value);
-            command.Parameters.AddWithValue("@Direccion", empresa.Direccion ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora);
+            command.Parameters.AddWithValue("@Direccion", empresa.Direccion);
             command.ExecuteNonQuery();
             connection.Close();
         }
@@ -94,8 +95,8 @@ namespace EcoNet.DAL
             command.Parameters.AddWithValue("@IdUsuario", empresa.IdUsuario);
             command.Parameters.AddWithValue("@Cif", empresa.Cif);
             command.Parameters.AddWithValue("@Nombre", empresa.Nombre);
-            command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora.HasValue ? (object)empresa.EsRecicladora.Value : DBNull.Value);
-            command.Parameters.AddWithValue("@Direccion", empresa.Direccion ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@EsRecicladora", empresa.EsRecicladora);
+            command.Parameters.AddWithValue("@Direccion", empresa.Direccion);
             command.ExecuteNonQuery();
             connection.Close();
 

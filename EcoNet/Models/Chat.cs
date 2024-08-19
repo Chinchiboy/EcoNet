@@ -12,13 +12,13 @@ namespace EcoNet.Models
         }
 
         public int IdChat { get; set; }
-        public int? Fkanuncio { get; set; }
-        public int? Fkvendedor { get; set; }
-        public int? Fkcomprador { get; set; }
+        public int Fkanuncio { get; set; }
+        public int Fkvendedor { get; set; }
+        public int Fkcomprador { get; set; }
 
-        public virtual Anuncio? FkanuncioNavigation { get; set; }
-        public virtual Usuario? FkcompradorNavigation { get; set; }
-        public virtual Usuario? FkvendedorNavigation { get; set; }
+        public virtual Anuncio FkanuncioNavigation { get; set; }
+        public virtual Usuario FkcompradorNavigation { get; set; }
+        public virtual Usuario FkvendedorNavigation { get; set; }
         public virtual ICollection<Mensaje> Mensajes { get; set; }
         public virtual ICollection<Oferta> Oferta { get; set; }
 
