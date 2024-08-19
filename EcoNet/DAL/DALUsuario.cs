@@ -1,9 +1,4 @@
-﻿
-
-
-
-
-using EcoNet.Models;
+﻿using EcoNet.Models;
 using Microsoft.Data.SqlClient;
 using System.Data.Common;
 using System.Collections.Generic;
@@ -41,9 +36,9 @@ namespace EcoNet.DAL
                         Contraseña = reader.GetString(reader.GetOrdinal("Contrasena")),
                         FechaAlta = reader.GetDateTime(reader.GetOrdinal("FechaAlta")),
                         FechaBaja = reader.IsDBNull(reader.GetOrdinal("FechaBaja")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("FechaBaja")),
-                        Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString(reader.GetOrdinal("Telefono")),
+                        Telefono = reader.GetString(reader.GetOrdinal("Telefono")),
                         Email = reader.GetString(reader.GetOrdinal("Email")),
-                        Municipio = reader.IsDBNull(reader.GetOrdinal("Municipio")) ? null : reader.GetString(reader.GetOrdinal("Municipio")),
+                        Municipio = reader.GetString(reader.GetOrdinal("Municipio")),
                         EsAdmin = reader.GetBoolean(reader.GetOrdinal("EsAdmin")),
                         FotoPerfil = reader.IsDBNull(reader.GetOrdinal("FotoPerfil")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("FotoPerfil"))
                     });
@@ -66,46 +61,26 @@ namespace EcoNet.DAL
 
             try
             {
-                using (var conn = dbConnection.GetConnection())
+                using var conn = dbConnection.GetConnection();
+                conn.Open();
+
+                using (var cmd = new SqlCommand("SELECT Usuario, Contrasena FROM Usuario WHERE Email = @NombreUsuario", conn))
                 {
-                    conn.Open();
+                    cmd.Parameters.AddWithValue("@NombreUsuario", username);
 
-                    // Obtenemos el hash almacenado para el usuario dado
-                    using (var cmd = new SqlCommand("SELECT Usuario, Contrasena FROM Usuario WHERE Email = @NombreUsuario", conn))
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@NombreUsuario", username);
-
-                        using (var reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
-                            {
-                                nombreUsuario = reader.GetString(reader.GetOrdinal("Usuario"));
-                                storedHash = reader.GetString(reader.GetOrdinal("Contrasena"));
-
-
-                            }
-                            reader.Close();
-                            Debug.WriteLine("Testing");
-                            Debug.WriteLine("" + nombreUsuario + "   " + storedHash);
-
+                            nombreUsuario = reader.GetString(reader.GetOrdinal("Usuario"));
+                            storedHash = reader.GetString(reader.GetOrdinal("Contrasena"));
                         }
-                        conn.Close();
-                        // Si encontramos un usuario con ese nombre
-                        /*  if (storedHash != null)
-                          {
-                              // Verificamos la contraseña
-                              if (HashSSHA.VerifySSHA256Hash(password, storedHash))
-                              {
-                                  Debug.WriteLine("" + storedHash + " " + nombreUsuario + "  Cprrect");
-                                  // Autenticación exitosa
-                                  //}
-                              }
-                          }
-                          return nombreUsuario;
-                      }*/
-                        return nombreUsuario;
+                        reader.Close();
+                        Debug.WriteLine("Testing");
+                        Debug.WriteLine("" + nombreUsuario + "   " + storedHash);
                     }
-
+                    conn.Close();
+                    return nombreUsuario;
                 }
             }
             catch (Exception ex)
@@ -135,9 +110,9 @@ namespace EcoNet.DAL
                         Contraseña = reader.GetString(reader.GetOrdinal("Contrasena")),
                         FechaAlta = reader.GetDateTime(reader.GetOrdinal("FechaAlta")),
                         FechaBaja = reader.IsDBNull(reader.GetOrdinal("FechaBaja")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("FechaBaja")),
-                        Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString(reader.GetOrdinal("Telefono")),
+                        Telefono = reader.GetString(reader.GetOrdinal("Telefono")),
                         Email = reader.GetString(reader.GetOrdinal("Email")),
-                        Municipio = reader.IsDBNull(reader.GetOrdinal("Municipio")) ? null : reader.GetString(reader.GetOrdinal("Municipio")),
+                        Municipio = reader.GetString(reader.GetOrdinal("Municipio")),
                         EsAdmin = reader.GetBoolean(reader.GetOrdinal("EsAdmin")),
                         FotoPerfil = reader.IsDBNull(reader.GetOrdinal("FotoPerfil")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("FotoPerfil"))
                     };
@@ -234,7 +209,6 @@ namespace EcoNet.DAL
                 Console.WriteLine($"Error en Delete: {ex.Message}");
                 throw;
             }
-           
         }
     }
 }
