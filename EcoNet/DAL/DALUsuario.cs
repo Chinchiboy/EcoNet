@@ -19,6 +19,7 @@ namespace EcoNet.DAL
         public DalUsuario()
         {
             dbConnection = new DbConnection();
+            HashSSHA = new Hash();
         }
 
         public List<Usuario> Select()

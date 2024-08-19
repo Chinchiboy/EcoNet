@@ -83,9 +83,9 @@ namespace EcoNet.DAL
                     c = new Chat
                     {
                         IdChat = reader.GetInt32(reader.GetOrdinal("IdChat")),
-                        Fkanuncio = reader.IsDBNull(reader.GetOrdinal("FKAnuncio")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
-                        Fkvendedor = reader.IsDBNull(reader.GetOrdinal("FKVendedor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKVendedor")),
-                        Fkcomprador = reader.IsDBNull(reader.GetOrdinal("FKComprador")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKComprador")),
+                        Fkanuncio = reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
+                        Fkvendedor = reader.GetInt32(reader.GetOrdinal("FKVendedor")),
+                        Fkcomprador = reader.GetInt32(reader.GetOrdinal("FKComprador")),
                     };
                 }
                 reader.Close();
@@ -106,9 +106,9 @@ namespace EcoNet.DAL
             connection.Open();
             using var command = new SqlCommand("INSERT INTO Chat (IdChat, Fkanuncio, Fkvendedor, Fkcomprador) VALUES (@IdChat, @Fkanuncio, @Fkvendedor, @Fkcomprador)", connection);
             command.Parameters.AddWithValue("@IdChat", chat.IdChat);
-            command.Parameters.AddWithValue("@Fkanuncio", chat.Fkanuncio.HasValue ? (object)chat.Fkanuncio.Value : DBNull.Value);
-            command.Parameters.AddWithValue("@Fkvendedor", chat.Fkvendedor.HasValue ? (object)chat.Fkvendedor.Value : DBNull.Value);
-            command.Parameters.AddWithValue("@Fkcomprador", chat.Fkcomprador.HasValue ? (object)chat.Fkcomprador.Value : DBNull.Value);
+            command.Parameters.AddWithValue("@Fkanuncio", chat.Fkanuncio);
+            command.Parameters.AddWithValue("@Fkvendedor", chat.Fkvendedor);
+            command.Parameters.AddWithValue("@Fkcomprador", chat.Fkcomprador);
             command.ExecuteNonQuery();
             connection.Close();
         }
@@ -119,9 +119,9 @@ namespace EcoNet.DAL
             connection.Open();
             using var command = new SqlCommand("UPDATE Chat SET Fkanuncio = @Fkanuncio, Fkvendedor = @Fkvendedor, Fkcomprador = @Fkcomprador WHERE IdChat = @IdChat", connection);
             command.Parameters.AddWithValue("@IdChat", chat.IdChat);
-            command.Parameters.AddWithValue("@Fkanuncio", chat.Fkanuncio.HasValue ? (object)chat.Fkanuncio.Value : DBNull.Value);
-            command.Parameters.AddWithValue("@Fkvendedor", chat.Fkvendedor.HasValue ? (object)chat.Fkvendedor.Value : DBNull.Value);
-            command.Parameters.AddWithValue("@Fkcomprador", chat.Fkcomprador.HasValue ? (object)chat.Fkcomprador.Value : DBNull.Value);
+            command.Parameters.AddWithValue("@Fkanuncio", chat.Fkanuncio);
+            command.Parameters.AddWithValue("@Fkvendedor", chat.Fkvendedor);
+            command.Parameters.AddWithValue("@Fkcomprador", chat.Fkcomprador);
             command.ExecuteNonQuery();
             connection.Close();
         }

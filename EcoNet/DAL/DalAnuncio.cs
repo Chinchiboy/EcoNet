@@ -27,11 +27,11 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
-                        Imagen = (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
-                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
-                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKUsuario")),
+                        Fkusuario = reader.GetInt32(reader.GetOrdinal("FKUsuario")),
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     });
                 }
@@ -61,9 +61,9 @@ namespace EcoNet
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
                         Imagen = (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
-                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
-                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKUsuario")),
+                        Fkusuario = reader.GetInt32(reader.GetOrdinal("FKUsuario")),
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     };
                 }
@@ -93,9 +93,9 @@ namespace EcoNet
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
                         Imagen = (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
-                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
-                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKUsuario")),
+                        Fkusuario = reader.GetInt32(reader.GetOrdinal("FKUsuario")),
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     });
                 }
@@ -126,9 +126,9 @@ namespace EcoNet
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
                         Imagen = (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
-                        Precio = reader.IsDBNull(reader.GetOrdinal("Precio")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
-                        Fkusuario = reader.IsDBNull(reader.GetOrdinal("FKUsuario")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKUsuario")),
+                        Fkusuario = reader.GetInt32(reader.GetOrdinal("FKUsuario")),
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     });
                 }

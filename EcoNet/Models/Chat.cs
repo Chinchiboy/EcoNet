@@ -9,6 +9,9 @@ namespace EcoNet.Models
         {
             Mensajes = new HashSet<Mensaje>();
             Oferta = new HashSet<Oferta>();
+            Fkanuncio = 0;
+            Fkvendedor = 0;
+            Fkcomprador = 0;
         }
 
         public int IdChat { get; set; }

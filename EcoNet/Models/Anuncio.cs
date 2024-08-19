@@ -13,7 +13,7 @@ namespace EcoNet.Models
 
         public int IdAnuncio { get; set; }
         public string Titulo { get; set; } = null!;
-        public byte[] Imagen { get; set; } = null!;
+        public byte[]? Imagen { get; set; } = null!;
         public string Descripcion { get; set; } = null!;
         public decimal Precio { get; set; }
         public int? FkborradoPor { get; set; }
