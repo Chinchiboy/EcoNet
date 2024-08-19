@@ -8,22 +8,34 @@ namespace EcoNet.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            _logger = logger;
+           
         }
 
         public IActionResult Index()
         {
             IndexViewModel vm = new IndexViewModel();
-
+            DalAnuncio dalAnuncio = new DalAnuncio();
+            
             vm.EtiquetaFiltros = new EtiquetaFiltros();
 
             vm.EtiquetaAnuncio = new EtiquetaAnuncio();
-
-            List<Anuncio> ListAn = new List<Anuncio>();
+            vm.EtiquetaAnuncio.ArticulosFiltrados = TempData["Filtro"] == null ? dalAnuncio.Select() : dalAnuncio.SelectByTag(TempData["Filtro"].ToString());
             
             return View(vm);
+        }
+
+        public IActionResult LOLLOL()
+        {
+
+            return View();
+        }
+
+        public IActionResult ObtenerAnuncios(string filtro)
+        {
+            TempData["Filtro"] = filtro;
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()

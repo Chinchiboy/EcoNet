@@ -17,7 +17,7 @@ namespace EcoNet.Controllers
         }
 
         [HttpGet("todos")]
-        public IActionResult ObtenerTodosLosAnuncios()
+        public IActionResult ObtenerTodosLosAnuncios(EtiquetaAnuncio obj)
         {
             List<Anuncio> anuncios = _dalAnuncio.Select();
 
