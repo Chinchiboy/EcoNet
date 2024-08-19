@@ -110,6 +110,10 @@ a{
     border: 1px solid grey;
     border-radius: 50%;
 }
+.HeaderBarMessages svg:hover {
+    color: white;
+    border: 1px solid white;
+}
 .HeaderChat {
     display: flex;
     justify-content: space-between;
