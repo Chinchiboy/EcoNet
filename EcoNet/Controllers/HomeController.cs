@@ -33,7 +33,14 @@ namespace EcoNet.Controllers
 
         public IActionResult Producto()
         {
-            return View();
+            IndexViewModel vm = new IndexViewModel();
+            DalAnuncio dalAnuncio = new DalAnuncio();
+
+            vm.EtiquetaFiltros = new EtiquetaFiltros();
+
+            vm.EtiquetaAnuncio = new EtiquetaAnuncio();
+            vm.EtiquetaAnuncio.ArticulosFiltrados = TempData["Filtro"] == null ? dalAnuncio.Select() : dalAnuncio.SelectByTag(TempData["Filtro"].ToString());
+            return View(vm);
         }
 
         public IActionResult ObtenerAnuncios(string filtro)

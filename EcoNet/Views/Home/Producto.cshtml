@@ -1,33 +1,47 @@
-﻿@{
+﻿@model IndexViewModel
+
+@{
     ViewData["Title"] = "Producto";
 }
 
-<div class="container text-center PaginaProducto">
+<div class="container PaginaProducto">
     <div class="ProductoElegido">
-        <img src="https://www.travelandleisure.com/thmb/Ag8nh_g-dqxboIRas-uGLkBUH8g=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/FlowerFieldsinCarlsbadRanch_ChelseaLoren01-61144763f8bc45a4843f1ea7b72434b1.jpg" height="500rem" alt="FotoMuestra">
+        <img src="https://www.travelandleisure.com/thmb/Ag8nh_g-dqxboIRas-uGLkBUH8g=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/FlowerFieldsinCarlsbadRanch_ChelseaLoren01-61144763f8bc45a4843f1ea7b72434b1.jpg" class="img-fluid" alt="FotoMuestra">
         <br />
         <h2>250€</h2>
         <hr>
         <h2>Nombre Articulo</h2>
         <h3>Kisaragi</h3>
         <br />
-        <br/>
-        <div>TextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemplo
-            TextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemplo
-            TextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemplo
-            TextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemplo
+        <div>
+        <p>TextoEjemploTextoEjemploTextoEjemploTextoEjemploTexto
+            EjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemplo TextoEjemploTextoEjempl oTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemplo</p>
         </div>
         <br />
         <div>
-            <button class="btn BotonFiltro2">Filtro</button>
-            <button class="btn BotonFiltro2">Filtro</button>
-            <button class="btn BotonFiltro2">Filtro</button>
+            <button class="BotonFiltro2">Filtro</button>
+            <button class="BotonFiltro2">Filtro</button>
+            <button class="BotonFiltro2">Filtro</button>
         </div>
     </div>
     <br />
     <button class="btn BotonComprar">Comprar</button>
-    <hr />
+    <br />
+    <br />
     <div class="ProductosSimilares">
-
+        <div class="row">
+            <h2 class="text-start">Productos</h2>
+            <hr />
+            @foreach (Anuncio an in Model.EtiquetaAnuncio.ArticulosFiltrados)
+            {
+                <div class="col-md-6 col-sm-12 col-12 mb-2">
+                    <div class="VerdePrincipal RecuadroProducto">
+                        <div><img src="https://www.jetscoot.com/pub/media/wysiwyg/alquiler-moto/alquilar-moto-symsr-125cc.png" width="80%" height="80%" /></div>
+                        <div>@an.Titulo</div>
+                        <div>@an.Precio €</div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
