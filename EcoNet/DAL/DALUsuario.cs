@@ -64,10 +64,10 @@ namespace EcoNet.DAL
                 using var conn = dbConnection.GetConnection();
                 conn.Open();
 
-                using (var cmd = new SqlCommand("SELECT Usuario, Contrasena FROM Usuario WHERE Email = @NombreUsuario", conn))
+                using (var cmd = new SqlCommand("SELECT Usuario, Contrasena FROM Usuario WHERE Email = @email AND Contrasena = @password", conn))
                 {
-                    cmd.Parameters.AddWithValue("@NombreUsuario", username);
-
+                    cmd.Parameters.AddWithValue("@email", username);
+                    cmd.Parameters.AddWithValue("@password", password);
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
@@ -132,7 +132,6 @@ namespace EcoNet.DAL
         public void Add(Usuario usuario)
         {
             byte[] salt = HashSSHA.GenerateSalt();
-            string hashedPassword = HashSSHA.CreateSSHA256Hash(usuario.Contraseña, salt);
             if (usuario == null)
                 throw new ArgumentNullException(nameof(usuario));
 
@@ -142,7 +141,7 @@ namespace EcoNet.DAL
                 connection.Open();
                 using var command = new SqlCommand("INSERT INTO Usuario (Usuario, Contrasena, FechaAlta, FechaBaja, Telefono, Email, Municipio, EsAdmin, FotoPerfil) VALUES (@Usuario1, @Contraseña, @FechaAlta, @FechaBaja, @Telefono, @Email, @Municipio, @EsAdmin, @FotoPerfil)", connection);
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
-                command.Parameters.AddWithValue("@Contraseña", hashedPassword);
+                command.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
                 command.Parameters.AddWithValue("@FechaAlta", usuario.FechaAlta);
                 command.Parameters.AddWithValue("@FechaBaja", usuario.FechaBaja);
                 command.Parameters.AddWithValue("@Telefono", usuario.Telefono);
