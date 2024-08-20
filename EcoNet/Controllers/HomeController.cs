@@ -26,12 +26,6 @@ namespace EcoNet.Controllers
             return View(vm);
         }
 
-        public IActionResult LOLLOL()
-        {
-
-            return View();
-        }
-
         public IActionResult ObtenerAnuncios(string filtro)
         {
             TempData["Filtro"] = filtro;
@@ -47,6 +41,15 @@ namespace EcoNet.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult MostrarAnuncio(int id, DalAnuncio dalAnuncio)
+        {
+            Anuncio a = dalAnuncio.SelectById(id);
+
+            if (a == null) return NotFound();
+
+            return View(a);
         }
     }
 }
