@@ -10,6 +10,7 @@ namespace EcoNet.Models
         public int Fkchat { get; set; }
         public bool Aceptada { get; set; }
         public int CreadoPor { get; set; }
+        public DateTime FechaCreacion { get; set; }
 
         public virtual Chat FkchatNavigation { get; set; }
     }
