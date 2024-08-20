@@ -49,6 +49,12 @@ namespace EcoNet.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult AgregarProducto()
+        {
+            IndexViewModel vm = new IndexViewModel();
+            return View(vm);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
