@@ -110,8 +110,7 @@ namespace EcoNet.DAL
                     throw new ArgumentNullException(nameof(mensaje));
 
                 connection.Open();
-                using var command = new SqlCommand("INSERT INTO Mensaje (IdMensaje, Texto, Fkchat, Creador, HoraMensaje) VALUES (@IdMensaje, @Texto, @Fkchat, @Creador, @HoraMensaje)", connection);
-                command.Parameters.AddWithValue("@IdMensaje", mensaje.IdMensaje);
+                using var command = new SqlCommand("INSERT INTO Mensaje (Texto, Fkchat, Creador, HoraMensaje) VALUES (@Texto, @Fkchat, @Creador, @HoraMensaje)", connection);
                 command.Parameters.AddWithValue("@Texto", mensaje.Texto);
                 command.Parameters.AddWithValue("@Fkchat", mensaje.Fkchat);
                 command.Parameters.AddWithValue("@Creador", mensaje.Creador);

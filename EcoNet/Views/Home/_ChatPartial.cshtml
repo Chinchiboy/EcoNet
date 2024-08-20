@@ -1,5 +1,8 @@
 ﻿@model EcoNet.Models.LoginViewModel
 
+<input id="chooseUser"/>
+<button id="confirmChoice">Confirmar</button>
+
 
 <div id="BarMessages" class="Messages">
     <div class="HeaderBarMessages">
@@ -12,36 +15,62 @@
         </svg>
 
     </div>
-    <div class="HeaderChat">
+    <div id="1" class="HeaderChat">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
         </svg>
         <label>Nombre de usuario</label>
     </div>
-    <div class="HeaderChat">
+    <div id="2" class="HeaderChat">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
         </svg>
         <label>Nombre de usuario</label>
     </div>
-    <div class="HeaderChat">
+    <div id="3" class="HeaderChat">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
         </svg>
         <label>Nombre de usuario</label>
     </div>
-
 </div>
 
+<div id="VentanaChat" class="chat-box">
+    <div class="chat-header">
+        <img src="https://via.placeholder.com/40" alt="User">
+        <div class="chat-info">
+            <div class="title">Chat Title</div>
+            <div class="subtitle">Subtitle or status</div>
+        </div>
+        <button type="button" id="closeMessages" class="close BtnClose" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div id="chatBody" class="chat-body">
+    </div>
+    <div class="chat-footer">
+        <input id="messageInput" type="text" placeholder="Type your message...">
+        <button id="sendButton">Send</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.4/signalr.min.js"></script>
+
 <script>
+
+    var chatId = 0;
+    var userLogged = parseInt("1");
     document.addEventListener("DOMContentLoaded", function () {
         const arrowUp = document.getElementById("ArrowUp");
         const arrowDown = document.getElementById("ArrowDown");
         const headerChats = document.querySelectorAll(".HeaderChat");
         const barMessages = document.getElementById("BarMessages");
+        const closeBtn = document.getElementById("closeMessages");
+        const ventanaChat = document.getElementById("VentanaChat");
+        const confirmChoice = document.getElementById("confirmChoice");
 
         arrowDown.style.display = "none"; // Mostrar inicialmente solo la flecha hacia arriba
         headerChats.forEach(function (chat) {
@@ -66,5 +95,80 @@
             arrowUp.style.display = "inline"; // Mostrar flecha hacia arriba
             barMessages.style.height = "auto";
         });
+
+        headerChats.forEach(function (headerChat) {
+            headerChat.addEventListener("click", function (event) {
+                chatId = parseInt(headerChat.id);
+                ventanaChat.style.display = "flex";
+                
+                const chatBody = document.getElementById("chatBody");
+                chatBody.innerHTML = "";
+
+                fetch(`/Chat/GetMessages?chatId=${chatId}`)
+                    .then(response => response.json())
+                    .then(messages => {
+                        messages.forEach(message => {
+                            const div = document.createElement("div");
+                            div.textContent = message.texto;
+                            div.className = message.creador == userLogged ? "message-right" : "message-left";
+                            document.getElementById("chatBody").appendChild(div);
+                        });
+
+                        chatBody.scrollTop = chatBody.scrollHeight;
+                    })
+                    .catch(error => console.error('Error al cargar los mensajes:', error));
+                
+                 
+            });
+        });
+
+        closeBtn.addEventListener("click", function () {
+            ventanaChat.style.display = "none";
+        });
+
+        confirmChoice.addEventListener("click", function () {
+            userLogged = parseInt(document.getElementById("chooseUser").value);
+        });
     });
+
+    
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chathub")
+        .build();
+
+    connection.start().then(() => {
+        console.log("Conexión establecida con éxito.");
+    }).catch(function (err) {
+        console.error("Error al conectar con el Hub:", err.toString());
+    });
+
+    connection.on("ReceiveMessage", function (user, message) {
+        console.log(user, userLogged);
+        const msg = message;
+        const div = document.createElement("div");
+        div.textContent = msg;
+        div.className = user == userLogged ? "message-right" : "message-left";
+        document.getElementById("chatBody").appendChild(div);
+    });
+    
+
+    document.getElementById("sendButton").addEventListener("click", function (event) {
+        
+        const messageInput = document.getElementById("messageInput");
+        console.log("Chat ID:", chatId);
+
+        if (userLogged && messageInput.value && chatId > 0) { // Asegúrate de que chatId es válido
+            connection.invoke("SendMessage", userLogged, messageInput.value, chatId)
+                .then(() => messageInput.value = "")
+                .catch(function (err) {
+                    console.error("Error al enviar el mensaje:", err.toString());
+                });
+        } else {
+            alert("Algo ha ido mal!");
+            console.error("Usuario, mensaje o chatId no son válidos.");
+        }
+        event.preventDefault();
+    });
+
 </script>
