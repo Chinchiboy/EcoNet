@@ -53,6 +53,11 @@ a {
 
 /*Clases*/
 
+.ColorFondoSecundario {
+    background-color: #EDEDF5;
+    padding: 2rem;
+    border-radius: 15px;
+}
 
 .VerdePrincipal {
     background-color: #329F5B;
@@ -111,7 +116,13 @@ a {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-.NombreWebBot{
+.ContenedorCompra {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+.NombreWebBot {
     margin-top: 7.5rem;
     color: #fafaff;
 }
@@ -223,6 +234,9 @@ a {
     }
 
 .BotonFiltro2 {
+    padding: 0.25rem;
+    padding-left:1rem;
+    padding-right:1rem;
     margin-right: 1.1rem;
     background-color: #fafaff;
     border: solid 1px #329F5B;
@@ -253,6 +267,8 @@ a {
 }
 
 .BotonComprar {
+    margin-left: auto;
+    margin-top: 1rem;
     width: 50%;
     height: 5rem;
     background-color: #1B98E0;
@@ -264,9 +280,8 @@ a {
 }
 
     .BotonComprar:hover {
-        background-color: #fafaff;
-        border: solid 3px #1B98E0;
-        color: #1B98E0;
+        background-color: #177AB3;
+        color: #fafaff;
         transform: scale(1.05);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
