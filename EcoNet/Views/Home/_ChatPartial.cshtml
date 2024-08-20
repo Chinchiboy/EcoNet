@@ -58,6 +58,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.4/signalr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
 
 <script>
 
@@ -104,21 +105,26 @@
                 const chatBody = document.getElementById("chatBody");
                 chatBody.innerHTML = "";
 
-                fetch(`/Chat/GetMessages?chatId=${chatId}`)
-                    .then(response => response.json())
-                    .then(messages => {
-                        messages.forEach(message => {
-                            const div = document.createElement("div");
-                            div.textContent = message.texto;
-                            div.className = message.creador == userLogged ? "message-right" : "message-left";
-                            document.getElementById("chatBody").appendChild(div);
-                        });
+                Promise.all([
+                    fetch(`/Chat/GetMessages?chatId=${chatId}`).then(response => response.json()),
+                    fetch(`/Chat/GetOffers?chatId=${chatId}`).then(response => response.json())
+                ])
+                    .then(([messages, offers]) => {
+                        // Combinar y ordenar los mensajes y ofertas por fecha
+                        const combined = [...messages, ...offers].sort((a, b) => new Date(a.horaCreacion) - new Date(b.fechaCreacion));
 
-                        chatBody.scrollTop = chatBody.scrollHeight;
-                    })
-                    .catch(error => console.error('Error al cargar los mensajes:', error));
-                
-                 
+                        combined.forEach(item => {
+                            if (item.idMensaje !== undefined) { // si tiene el campo es un mensaje
+                                const div = document.createElement("div");
+                                div.textContent = item.texto;
+                                div.className = item.creador == userLogged ? "message-right" : "message-left";
+                                chatBody.appendChild(div);
+                            } else {
+                                addOfferToChat(item);
+                            }
+                        });
+                        chatBody.scrollTop = chatBody.scrollHeight; // para que el scroll empiece abajo del todo
+                    });
             });
         });
 
@@ -171,4 +177,57 @@
         event.preventDefault();
     });
 
+
+    function addOfferToChat(item) {
+        const chatBody = document.getElementById("chatBody");
+
+        const offerDiv = document.createElement("div");
+        offerDiv.className = item.creador == userLogged ? "message-right" : "message-left";
+        
+        const priceLabel = document.createElement("label");
+        priceLabel.textContent = `Oferta: ${item.precio}€`;
+        priceLabel.className = "price-label";
+
+        const iconContainer = document.createElement("div");
+        iconContainer.className = "icon-container";
+
+        // Crear el icono de aceptar (check)
+        const acceptIcon = document.createElement("i");
+        acceptIcon.className = "bi bi-check-circle-fill text-success accept-icon";
+        acceptIcon.style.cursor = "pointer";
+        acceptIcon.style.marginRight = "10px";
+        
+
+        // Crear el icono de rechazar (X)
+        const rejectIcon = document.createElement("i");
+        rejectIcon.className = "bi bi-x-circle-fill text-danger reject-icon";
+        rejectIcon.style.cursor = "pointer";
+        
+
+        if (item.aceptada == 0) // si no esta ni aceptada ni rechazada añadimos los eventos
+        {
+            acceptIcon.addEventListener("click", function () {
+                alert("Oferta aceptada");
+            });
+
+            rejectIcon.addEventListener("click", function () {
+                alert("Oferta rechazada");
+            });
+        }
+        else if (item.aceptada == 1) 
+        {
+            rejectIcon.className = "disabled-icon";
+        }
+        else 
+        {
+            acceptIcon.className = "disabled-icon";
+        }
+        
+        offerDiv.appendChild(priceLabel);
+        iconContainer.appendChild(acceptIcon);
+        iconContainer.appendChild(rejectIcon);
+        offerDiv.appendChild(iconContainer);
+
+        chatBody.appendChild(offerDiv);
+    }
 </script>

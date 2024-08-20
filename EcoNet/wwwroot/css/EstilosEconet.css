@@ -134,8 +134,8 @@ a{
 
 
 .chat-box {
-    width: 300px;
-    height: 350px;
+    width: 22rem;
+    height: 25rem;
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
@@ -154,6 +154,7 @@ a{
     background-color: #58D687;
     border-bottom: 1px solid #ccc;
     flex-grow: 1;
+    max-height: 4rem;
 }
 
 .chat-header img {
@@ -194,23 +195,23 @@ a{
     background-color: #f8f9fa;
 }
 
-    .chat-body .message-left,
-    .chat-body .message-right {
-        margin: 5px 0;
-        padding: 8px 12px;
-        border-radius: 16px;
-        max-width: 70%;
-    }
+.chat-body .message-left,
+.chat-body .message-right {
+    margin: 5px 0;
+    padding: 8px 12px;
+    border-radius: 16px;
+    max-width: 70%;
+}
 
-    .chat-body .message-left {
-        background-color: #e1ffc7;
-        align-self: flex-start;
-    }
+.chat-body .message-left {
+    background-color: #e1ffc7;
+    align-self: flex-start;
+}
 
-    .chat-body .message-right {
-        background-color: #d1e7ff;
-        align-self: flex-end;
-    }
+.chat-body .message-right {
+    background-color: #d1e7ff;
+    align-self: flex-end;
+}
 
 .chat-footer {
     display: flex;
@@ -219,23 +220,62 @@ a{
     background-color: #f1f1f1;
 }
 
-    .chat-footer input[type="text"] {
-        flex-grow: 1;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-right: 10px;
-        width: 80%;
-    }
+.chat-footer input[type="text"] {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    width: 80%;
+}
 
-    .chat-footer button {
-        padding: 8px 16px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+.chat-footer button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.price-label {
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.accept-icon,
+.reject-icon {
+    font-size: 24px;
+}
+
+.accept-icon {
+    align-self: flex-start;
+}
+.reject-icon {
+    align-self: flex-end;
+}
+
+.accept-icon:hover, .reject-icon:hover {
+    opacity: 0.8;
+}
+
+.disabled-icon {
+    pointer-events: none;
+    display: hidden;
+}
 
 
 

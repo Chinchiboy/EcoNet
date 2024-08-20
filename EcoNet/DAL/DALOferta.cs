@@ -15,7 +15,7 @@ namespace EcoNet.DAL
             dbConnection = new DbConnection();
         }
 
-        public List<Oferta> Select()
+        public List<Oferta> SelectAll()
         {
             List<Oferta> ofertaList = new List<Oferta>();
 
@@ -32,7 +32,7 @@ namespace EcoNet.DAL
                         IdOferta = reader.GetInt32(reader.GetOrdinal("IdOferta")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         Fkchat = reader.GetInt32(reader.GetOrdinal("FKChat")),
-                        Aceptada = reader.GetBoolean(reader.GetOrdinal("Aceptada")),
+                        Aceptada = reader.GetInt16(reader.GetOrdinal("Aceptada")),
                         CreadoPor = reader.GetInt32(reader.GetOrdinal("CreadoPor")),
                         FechaCreacion = reader.GetDateTime(reader.GetOrdinal("FechaCreacion"))
                     });
@@ -67,7 +67,7 @@ namespace EcoNet.DAL
                         IdOferta = reader.GetInt32(reader.GetOrdinal("IdOferta")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         Fkchat = reader.GetInt32(reader.GetOrdinal("FKChat")),
-                        Aceptada = reader.GetBoolean(reader.GetOrdinal("Aceptada")),
+                        Aceptada = reader.GetInt16(reader.GetOrdinal("Aceptada")),
                         CreadoPor = reader.GetInt32(reader.GetOrdinal("CreadoPor")),
                         FechaCreacion = reader.GetDateTime(reader.GetOrdinal("FechaCreacion"))
                     };
@@ -84,6 +84,51 @@ namespace EcoNet.DAL
             return oferta;
         }
 
+        /**
+         * <summary>Gets all ofertas from a chat</summary>
+         * <returns>A list of Ofertas in case it was successfull a null otherwise</returns>
+         */
+        public List<Oferta>? SelectOfertaByChat(int idChat)
+        {
+            using var conn = dbConnection.GetConnection();
+
+            try
+            {
+                List<Oferta> ofertas = new();
+
+                using var cmd = new SqlCommand("SELECT * FROM Oferta WHERE FkChat = @FkChat ORDER BY FechaCreacion ASC", conn);
+                cmd.Parameters.AddWithValue("@FkChat", idChat);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    Oferta oferta = new ()
+                    {
+                        IdOferta = reader.GetInt32(reader.GetOrdinal("IdOferta")),
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        Fkchat = reader.GetInt32(reader.GetOrdinal("FKChat")),
+                        Aceptada = reader.GetInt16(reader.GetOrdinal("Aceptada")),
+                        CreadoPor = reader.GetInt32(reader.GetOrdinal("CreadoPor")),
+                        FechaCreacion = reader.GetDateTime(reader.GetOrdinal("FechaCreacion"))
+                    };
+                    ofertas.Add(oferta);
+                }
+
+                reader.Close();
+                return ofertas;
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+
         public void Add(Oferta oferta)
         {
             if (oferta == null)
@@ -93,12 +138,13 @@ namespace EcoNet.DAL
             {
                 using var connection = dbConnection.GetConnection();
                 connection.Open();
-                using var command = new SqlCommand("INSERT INTO Oferta (IdOferta, Precio, Fkchat, Aceptada, CreadoPor) VALUES (@IdOferta, @Precio, @Fkchat, @Aceptada, @CreadoPor)", connection);
+                using var command = new SqlCommand("INSERT INTO Oferta (IdOferta, Precio, Fkchat, Aceptada, CreadoPor, FechaCreacion) VALUES (@IdOferta, @Precio, @Fkchat, @Aceptada, @CreadoPor, @FechaCreacion)", connection);
                 command.Parameters.AddWithValue("@IdOferta", oferta.IdOferta);
                 command.Parameters.AddWithValue("@Precio", oferta.Precio);
                 command.Parameters.AddWithValue("@Fkchat", oferta.Fkchat);
                 command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada);
                 command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor);
+                command.Parameters.AddWithValue("@FechaCreacion", oferta.FechaCreacion);
                 command.ExecuteNonQuery();
                 connection.Close();
             }
@@ -109,27 +155,33 @@ namespace EcoNet.DAL
             }
         }
 
-        public void Update(Oferta oferta)
+
+        /**
+         * <summary>Hace un update del campo del estado</summary>
+         * <returns>A bool telling wether it could be updated or not</returns>
+         */
+        public bool UpdateStatus(int idOferta, Int16 acceptada)
         {
-            if (oferta == null)
-                throw new ArgumentNullException(nameof(oferta));
+            if (idOferta > 0)
+                throw new Exception("Incorrect id");
+            if (acceptada != 1 || acceptada != 0 || acceptada != -1)
+                throw new Exception("Valor incorrecto!");
 
             using var connection = dbConnection.GetConnection();
 
             try
             {
                 connection.Open();
-                using var command = new SqlCommand("UPDATE Oferta SET Precio = @Precio, Fkchat = @Fkchat, Aceptada = @Aceptada, CreadoPor = @CreadoPor WHERE IdOferta = @IdOferta", connection);
-                command.Parameters.AddWithValue("@IdOferta", oferta.IdOferta);
-                command.Parameters.AddWithValue("@Precio", oferta.Precio);
-                command.Parameters.AddWithValue("@Fkchat", oferta.Fkchat);
-                command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada);
-                command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor);
+                using var command = new SqlCommand("UPDATE Oferta SET  Aceptada = @Aceptada WHERE IdOferta = @IdOferta", connection);
+                command.Parameters.AddWithValue("@IdOferta", idOferta);
+                command.Parameters.AddWithValue("@Aceptada", acceptada);
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);  
+                Console.WriteLine(ex.Message);
+                return false;
             }
             finally
             {

@@ -8,7 +8,7 @@ namespace EcoNet.Models
         public int IdOferta { get; set; }
         public decimal Precio { get; set; }
         public int Fkchat { get; set; }
-        public bool Aceptada { get; set; }
+        public Int16 Aceptada { get; set; }
         public int CreadoPor { get; set; }
         public DateTime FechaCreacion { get; set; }
 
