@@ -88,14 +88,28 @@ a {
 }
 
 .RecuadroProducto {
-    border-radius: 50px;
+    text-align:left;
+    border-radius: 15px;
     margin-left: 1rem;
     margin-right: 1rem;
     margin-bottom: 1rem;
     margin-top: 1rem;
     padding: 1rem;
     font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
+
+.RecuadroProducto hr{
+    color: #fafaff;
+}
+
+    .RecuadroProducto:hover {
+        color: #fafaff;
+        transform: scale(1.05);
+        background-color: #29894D;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
 .NombreWebBot{
     margin-top: 7.5rem;
@@ -157,16 +171,19 @@ a {
     overflow-wrap: break-word;
 }
 
-
-/*Botones*/
-.BotonHeader {
-    background-color: #fafaff;
-    font-size: 1.25rem;
-    border: solid 3px #329F5B;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+.ProductoElegido img{
+    border-radius: 15px;
 }
+
+    /*Botones*/
+    .BotonHeader {
+        background-color: #fafaff;
+        font-size: 1.25rem;
+        border: solid 3px #329F5B;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
 
     .BotonHeader:hover {
         background-color: #329F5B;
@@ -236,7 +253,7 @@ a {
 }
 
 .BotonComprar {
-    width: 100%;
+    width: 50%;
     height: 5rem;
     background-color: #1B98E0;
     color: #fafaff;
