@@ -34,6 +34,7 @@ namespace EcoNet.DAL
                         Fkchat = reader.GetInt32(reader.GetOrdinal("FKChat")),
                         Aceptada = reader.GetBoolean(reader.GetOrdinal("Aceptada")),
                         CreadoPor = reader.GetInt32(reader.GetOrdinal("CreadoPor")),
+                        FechaCreacion = reader.GetDateTime(reader.GetOrdinal("FechaCreacion"))
                     });
                 }
                 reader.Close();
@@ -68,6 +69,7 @@ namespace EcoNet.DAL
                         Fkchat = reader.GetInt32(reader.GetOrdinal("FKChat")),
                         Aceptada = reader.GetBoolean(reader.GetOrdinal("Aceptada")),
                         CreadoPor = reader.GetInt32(reader.GetOrdinal("CreadoPor")),
+                        FechaCreacion = reader.GetDateTime(reader.GetOrdinal("FechaCreacion"))
                     };
                 }
                 reader.Close();
@@ -127,31 +129,11 @@ namespace EcoNet.DAL
             }
             catch (Exception ex)
             {
-               
+                Console.WriteLine(ex.Message);  
             }
             finally
             {
                 connection.Close();
-            }
-        }
-
-        public void Delete(int id)
-        {
-            using var conn = dbConnection.GetConnection();
-            try
-            {
-                conn.Open();
-                using var cmd = new SqlCommand("DELETE FROM Oferta WHERE IdOferta = @IdOferta", conn);
-                cmd.Parameters.AddWithValue("@IdOferta", id);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                
-            }
-            finally
-            {
-                conn.Close();
             }
         }
     }
