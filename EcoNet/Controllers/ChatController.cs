@@ -26,5 +26,14 @@ namespace EcoNet.Controllers
 
             return Json(mensajes);
         }
+
+        [HttpGet]
+        public IActionResult GetOffers(int chatId) 
+        { 
+            DalOferta aux = new();
+            List<Oferta>? ofertas = aux.SelectOfertaByChat(chatId);
+
+            return Json(ofertas);
+        }
     }
 }
