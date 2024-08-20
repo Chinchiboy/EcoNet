@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Shared\_ChatPartial.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Views\Home\_ChatPartial.cshtml" />
     <Content Remove="Views\Shared\_FiltrosMostradosPartial.cshtml" />
   </ItemGroup>
@@ -30,18 +26,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Login\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Shared\_ChatPartial.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Shared\_ChatPartial.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

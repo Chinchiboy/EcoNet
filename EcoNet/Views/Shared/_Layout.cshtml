@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="/css/EstilosEconet.css">
 </head>
 <body>
-    @await Html.PartialAsync("_LoginPartial", new EcoNet.Models.LoginViewModel())
-    @await Html.PartialAsync("_ChatPartial", new EcoNet.Models.LoginViewModel())
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-white HeaderBorder box-shadow mb-3">
             <div class="container-fluid">
@@ -30,32 +28,49 @@
                             <input type="image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Magnifying_glass_icon.svg/490px-Magnifying_glass_icon.svg.png" class="me-2" alt="Search" width="40" height="40">
                             <input type="search" id="gsearch" name="gsearch" class="Buscador form-control me-3 w-100 w-sm-75 w-md-50 w-lg-25" placeholder="Buscar...">
                         </form>
-                        <button class="BotonHeader box-shadow ms-3 w-100 w-sm-50 w-md-25 w-lg-auto" data-toggle="modal" data-target="#myModal">Login/Registrarse</button>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="ms-3" asp-controller="Profile" asp-action="Index">
+                                <img src="@User.Claims.FirstOrDefault(c => c.Type == "ProfilePictureUrl")?.Value ?? " /images/default-profile.png" alt="Perfil" class="rounded-circle" width="40" height="40" />
+                            </a>
+                            <a class="btn btn-primary ms-3" asp-controller="CrearOferta" asp-action="Index">Crear Oferta</a>
+                        }
+                        else
+                        {
+                            <button class="BotonHeader box-shadow ms-3 w-100 w-sm-50 w-md-25 w-lg-auto" data-bs-toggle="modal" data-bs-target="#myModal">Login/Registrarse</button>
+                        }
                     </div>
                 </div>
             </div>
         </nav>
     </header>
-
     <div class="EspaciadoLateral">
         <main role="main" class="pb-3">
             @RenderBody() @* Aquí se muestra la página *@
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2024 - EcoNet - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- Muestra el formulario de inicio de sesión si hay un error de inicio de sesión -->
+    @if (TempData["LoginError"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["LoginError"]
+        </div>
+    }
+
+    @await Html.PartialAsync("_LoginPartial", new EcoNet.Models.LoginViewModel())
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
-
-    
 </body>
 </html>

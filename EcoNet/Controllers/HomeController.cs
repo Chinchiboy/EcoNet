@@ -1,6 +1,10 @@
-﻿using EcoNet.Models;
+﻿using EcoNet.DAL;
+using EcoNet.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace EcoNet.Controllers
 {

@@ -1,0 +1,10 @@
+﻿@model EcoNet.Models.LoginViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-3">
+    <!-- Aquí incluimos el modal de inicio de sesión -->
+    @await Html.PartialAsync("_LoginPartial", Model)
+</div>
