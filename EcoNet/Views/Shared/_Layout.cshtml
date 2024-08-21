@@ -46,14 +46,44 @@
             </div>
         </nav>
     </header>
-    <div class="EspaciadoLateral">
+
+    <div class="EspaciadoLateral" style="flex: 1 0 auto;">
         <main role="main" class="pb-3">
             @RenderBody() @* Aquí se muestra la página *@
         </main>
     </div>
-    <footer class="border-top footer text-muted">
+
+    <footer class="text-center mt-auto footer">
         <div class="container">
-            &copy; 2024 - EcoNet - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-3">
+                    <h4>Sobre nosotros</h4>
+                    <div>Nosotros</div>
+                </div>
+                <div class="col-3">
+                    <h4>Contactanos</h4>
+                    <div>Gmail</div>
+                    <div>Twitter</div>
+                    <div>Instagram</div>
+                </div>
+                <div class="col-3">
+                    <h4>Legal</h4>
+                    <div>Prueba</div>
+                    <div>Prueba</div>
+                    <div>Prueba</div>
+                </div>
+                <div class="col-3">
+                    <h4>Ayuda</h4>
+                    <div><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></div>
+                    <div>Políticas</div>
+                    <div>Prueba</div>
+                </div>
+            </div>
+            <br />
+            <hr />
+            <img src="https://images.vexels.com/media/users/3/139159/isolated/preview/9cf4b4749278aa9358a826c7150b51a8-c-rculo-redondo.png" width="120" height="120" />
+            <br />
+            <a href="#" class="NombreWebBot">&copy; 2024 - EcoNet</a>
         </div>
     </footer>
 
@@ -74,5 +104,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    
 </body>
 </html>
