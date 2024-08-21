@@ -6,6 +6,8 @@
 
 <div class="container PaginaProducto">
     <div class="ProductoElegido ColorFondoSecundario">
+        <h2>Crear anuncio</h2>
+        <hr />
         <form asp-action="AgregarProducto" asp-controller="Home" method="post">
             <div class="modal-body">
                 @Html.AntiForgeryToken()
@@ -13,10 +15,12 @@
                     <label for="title">Título</label>
                     <input class="form-control GrisInputs" type="text" name="title" id="title" required />
                 </div>
+                <br />
                 <div class="form-group">
                     <label for="description">Descripción</label>
                     <textarea class="form-control GrisInputs" rows="5" cols="50" name="description" id="description" required></textarea>
                 </div>
+                <br />
                 <div class="form-group">
                     <label for="price">Precio</label>
                     <input class="form-control GrisInputs" type="number" step="0.01" name="price" id="price" required />
@@ -29,3 +33,5 @@
         </form>
     </div>
 </div>
+<script>
+</script>

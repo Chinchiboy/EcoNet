@@ -6,6 +6,7 @@
 }
 
 body {
+    height:100vh;
     display: flex;
     flex-direction: column;
 }
@@ -26,6 +27,11 @@ header .container-fluid {
 }
 
 footer {
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+    font-size: 1.5rem;
+    color: #fafaff !important;
+    background-color: #00361E;
     padding-left: 10%;
     padding-right: 10%;
 }
@@ -38,14 +44,20 @@ hr {
     color: #329F5B;
 }
 
-a{
+footer hr{
+    color: #fafaff;
+}
+
+a {
     color: black;
 }
 
 /*Clases*/
-.EspaciadoLateral {
-    margin-left: 10%;
-    margin-right: 10%;
+
+.ColorFondoSecundario {
+    background-color: #EDEDF5;
+    padding: 2rem;
+    border-radius: 15px;
 }
 
 .VerdePrincipal {
@@ -81,17 +93,40 @@ a{
     font-size: 0.75rem;
 }
 
-.RecuadroProducto{
-    border-radius: 50px;
-    margin-left: 2rem;
-    margin-right: 2rem;
+.RecuadroProducto {
+    text-align:left;
+    border-radius: 15px;
+    margin-left: 1rem;
+    margin-right: 1rem;
     margin-bottom: 1rem;
     margin-top: 1rem;
     padding: 1rem;
     font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
+.RecuadroProducto hr{
+    color: #fafaff;
+}
 
+    .RecuadroProducto:hover {
+        color: #fafaff;
+        transform: scale(1.05);
+        background-color: #29894D;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+.ContenedorCompra {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+.NombreWebBot {
+    margin-top: 7.5rem;
+    color: #fafaff;
+}
 
 .Messages {
     position: fixed;
@@ -132,6 +167,20 @@ a{
     border-bottom: 1px solid grey;
 }
 
+.EspaciadoLateral {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.PaginaProducto {
+    padding-left: 15rem;
+    padding-right: 15rem;
+}
+
+.ProductoElegido{
+    font-size: 1.5rem;
+    margin-top:1.5rem;
+}
 
 .chat-box {
     width: 22rem;
@@ -279,16 +328,26 @@ a{
 
 
 
-/*Botones*/
-
-.BotonHeader {
-    background-color: #fafaff;
-    font-size: 1.15rem;
-    border: solid 3px #329F5B;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+.ProductoElegido p {
+    max-width: 100%;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
+
+.ProductoElegido img{
+    border-radius: 15px;
+}
+
+    /*Botones*/
+    .BotonHeader {
+        background-color: #fafaff;
+        font-size: 1.25rem;
+        border: solid 3px #329F5B;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
 
     .BotonHeader:hover {
         background-color: #329F5B;
@@ -327,6 +386,19 @@ a{
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduce la sombra para dar un efecto de presión */
     }
 
+.BotonFiltro2 {
+    padding: 0.25rem;
+    padding-left:1rem;
+    padding-right:1rem;
+    margin-right: 1.1rem;
+    background-color: #fafaff;
+    border: solid 1px #329F5B;
+    font-size: 1.75rem;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .BtnClose {
     border: 0px;
     background-color: inherit;
@@ -347,9 +419,28 @@ a{
     background-color: #C0D461;
 }
 
+.BotonComprar {
+    margin-left: auto;
+    margin-top: 1rem;
+    width: 50%;
+    height: 5rem;
+    background-color: #1B98E0;
+    color: #fafaff;
+    font-size: 2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+    .BotonComprar:hover {
+        background-color: #177AB3;
+        color: #fafaff;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
 
 /*Boostrap sobreesrcitos*/
-
 .navbar-brand {
     font-size: 2.5rem !important;
 }
@@ -381,7 +472,6 @@ a{
     }
 }
 
-
 /* Estilo para desktop */
 .navbar-expand-lg .navbar-nav {
     display: flex;
@@ -389,6 +479,7 @@ a{
 
 /* Estilo para smartphone */
 @media (max-width: 991.98px) {
+
     .navbar-expand-lg .navbar-nav {
         display: block;
     }
@@ -420,3 +511,23 @@ a{
     width: 100%;
     height: 25rem;
 }
+
+@media (max-width: 1200px) {
+    .PaginaProducto {
+        padding-left: 10rem;
+        padding-right: 10rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .PaginaProducto {
+        padding-left: 5rem;
+        padding-right: 5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .PaginaProducto {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
