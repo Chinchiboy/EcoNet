@@ -53,12 +53,6 @@ namespace EcoNet.Controllers
             return View(vm);
         }
 
-        public IActionResult ObtenerAnuncios(string filtro)
-        {
-            TempData["Filtro"] = filtro;
-            return RedirectToAction("Index");
-        }
-
         public IActionResult AgregarProducto()
         {
             IndexViewModel vm = new IndexViewModel();
@@ -78,11 +72,6 @@ namespace EcoNet.Controllers
             if (a == null) return NotFound();
 
             return View(a);
-        }
-
-        public IActionResult AgregarProducto()
-        {
-            return View();
         }
 
         [HttpPost]
