@@ -56,8 +56,12 @@ namespace EcoNet.Controllers
         public IActionResult AgregarProducto()
         {
             IndexViewModel vm = new IndexViewModel();
+            DalEtiqueta dalEtiqueta = new DalEtiqueta();
+            List<Etiqueta> listaE = dalEtiqueta.Select();
+            vm.ListaEtiquetas = listaE;
             return View(vm);
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
