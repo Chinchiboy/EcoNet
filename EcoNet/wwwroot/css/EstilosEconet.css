@@ -162,6 +162,11 @@ a {
     border-bottom: 1px solid grey;
 }
 
+.EspaciadoLateral {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 .PaginaProducto {
     padding-left: 15rem;
     padding-right: 15rem;
