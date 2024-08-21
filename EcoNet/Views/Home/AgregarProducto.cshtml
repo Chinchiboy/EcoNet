@@ -11,24 +11,37 @@
         <form asp-action="AgregarProducto" asp-controller="Home" method="post">
             <div class="modal-body">
                 @Html.AntiForgeryToken()
+
                 <div class="form-group">
                     <label for="title">Título</label>
                     <input class="form-control GrisInputs" type="text" name="title" id="title" required />
                 </div>
                 <br />
+
                 <div class="form-group">
                     <label for="description">Descripción</label>
                     <textarea class="form-control GrisInputs" rows="5" cols="50" name="description" id="description" required></textarea>
                 </div>
                 <br />
+
                 <div class="form-group">
                     <label for="price">Precio</label>
                     <input class="form-control GrisInputs" type="number" step="0.01" name="price" id="price" required />
                 </div>
                 <br />
+
+                <!-- Grupo de checkboxes para selección múltiple de etiquetas -->
                 <div class="form-group">
-                    <label for="tags">Etiquetas</label>
-                    <input class="form-control GrisInputs" type="text" name="tags" id="tags" placeholder="Escribe y presiona Enter..." />
+                    <p>Selecciona una o más etiquetas:</p>
+                    <div>
+                    @foreach (var etiqueta in Model.ListaEtiquetas)
+                    {
+                        
+                            <input type="checkbox" id="etiqueta_@etiqueta.IdEtiqueta" name="selectedEtiquetas" value="@etiqueta.IdEtiqueta">
+                            <label for="etiqueta_@etiqueta.IdEtiqueta" class="EtiquetaDescripcion" >@etiqueta.DescripcionEtiqueta</label>
+                        
+                    }
+                        </div>
                 </div>
             </div>
             <br />
@@ -38,9 +51,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    // Inicializar Tagify en el campo de entrada
-    var input = document.querySelector('#tags');
-    new Tagify(input);
-</script>

@@ -123,6 +123,10 @@ a {
     gap: 10px;
 }
 
+.EtiquetaDescripcion{
+    margin-right: 1rem;
+}
+
 .NombreWebBot {
     margin-top: 7.5rem;
     color: #fafaff;
