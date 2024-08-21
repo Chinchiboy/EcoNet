@@ -64,22 +64,41 @@ namespace EcoNet.Controllers
         [HttpPost]
         public IActionResult AgregarProducto(string title, string description, decimal price)
         {
-            string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-
-            Anuncio nuevoAnuncio = new()
+            try
             {
-                Titulo = title,
-                Descripcion = description,
-                Precio = price,
-                Fkusuario = int.Parse(usuarioId),
-                EstaVendido = false
-            };
+                string usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            DalAnuncio dalAnuncio = new();
-            dalAnuncio.Add(nuevoAnuncio);
+                if (string.IsNullOrEmpty(usuarioIdClaim))
+                {
+                    return RedirectToAction("Error", "Home");
+                }
 
-            return RedirectToAction("Index", "Home");
+                if (!int.TryParse(usuarioIdClaim, out int usuarioId))
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+
+                Anuncio nuevoAnuncio = new()
+                {
+                    Titulo = title,
+                    Descripcion = description,
+                    Precio = price,
+                    Fkusuario = usuarioId,
+                    EstaVendido = false
+                };
+
+                DalAnuncio dalAnuncio = new();
+                dalAnuncio.Add(nuevoAnuncio);
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores, registrar el error y redirigir a una página de error
+                Debug.WriteLine($"Error en AgregarProducto: {ex.Message}");
+                return RedirectToAction("Error", "Home");
+            }
         }
+
     }
 }

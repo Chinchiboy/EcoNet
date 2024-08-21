@@ -54,33 +54,32 @@ namespace EcoNet.DAL
           
             return usuarioList;
         }
-        public string? AutenticationUserDal(string username, string password)
+        public Usuario? AutenticationUserDal(string email, string password)
         {
-            string? nombreUsuario = null;
-            string? storedHash = null;
+            Usuario? usuario = null;
 
             try
             {
                 using var conn = dbConnection.GetConnection();
                 conn.Open();
 
-                using (var cmd = new SqlCommand("SELECT Usuario, Contrasena FROM Usuario WHERE Email = @email AND Contrasena = @password", conn))
+                using (var cmd = new SqlCommand("SELECT IdUsuario, Usuario, Contrasena, Email FROM Usuario WHERE Email = @Email AND Contrasena = @Password", conn))
                 {
-                    cmd.Parameters.AddWithValue("@email", username);
-                    cmd.Parameters.AddWithValue("@password", password);
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@Password", password);
+
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            nombreUsuario = reader.GetString(reader.GetOrdinal("Usuario"));
-                            storedHash = reader.GetString(reader.GetOrdinal("Contrasena"));
+                            usuario = new Usuario
+                            {
+                                IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
+                                NombreUsuario = reader.GetString(reader.GetOrdinal("Usuario")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                            };
                         }
-                        reader.Close();
-                        Debug.WriteLine("Testing");
-                        Debug.WriteLine("" + nombreUsuario + "   " + storedHash);
                     }
-                    conn.Close();
-                    return nombreUsuario;
                 }
             }
             catch (Exception ex)
@@ -88,7 +87,10 @@ namespace EcoNet.DAL
                 Console.WriteLine($"Error en AutenticationUserDal: {ex.Message}");
                 throw;
             }
+
+            return usuario;
         }
+
 
         public Usuario? SelectById(int id)
         {

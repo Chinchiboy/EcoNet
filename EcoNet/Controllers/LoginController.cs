@@ -23,28 +23,28 @@ namespace EcoNet.Controllers
         [HttpPost]
         public IActionResult Login(string Email, string Password)
         {
-            DalUsuario dalUserr = new DalUsuario();
-            string? userName = dalUserr.AutenticationUserDal(Email, Password);
-            //int userId = ;
+            DalUsuario dalUserr = new();
+            Usuario? usuario = dalUserr.AutenticationUserDal(Email, Password);
 
-            if (!string.IsNullOrEmpty(userName))
+            if (usuario != null)
             {
                 List<Claim> claims = new()
                 {
-                    new (ClaimTypes.Name, userName),
-                    new (ClaimTypes.Email, Email),
-                    //new (ClaimTypes.NameIdentifier, userId)
+                    new(ClaimTypes.Name, usuario.NombreUsuario),
+                    new(ClaimTypes.Email, usuario.Email),
+                    new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString())
                 };
 
-                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal principal = new(identity);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
 
-                TempData["NombreUsuario"] = userName;
-                Debug.WriteLine("funcion login " + userName);
+                TempData["NombreUsuario"] = usuario.NombreUsuario;
+                Debug.WriteLine("función login " + usuario.NombreUsuario);
 
                 return RedirectToAction("Index", "Home");
             }
+
             TempData["LoginError"] = "Usuario o contraseña incorrectos.";
             return RedirectToAction("Index", "Home");
         }

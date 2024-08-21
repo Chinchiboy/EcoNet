@@ -13,7 +13,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.LoginPath = "/Home/Login"; // Ruta de login
 
                 });
-
+builder.Environment.EnvironmentName = "Development";
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,3 +37,13 @@ app.MapControllerRoute(
 app.MapHub<ChatHub>("/chathub");
 
 app.Run();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage(); // Muestra detalles completos de la excepción en el navegador
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
