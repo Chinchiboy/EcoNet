@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Globalization;
 
 namespace EcoNet.Controllers
 {
@@ -75,43 +76,37 @@ namespace EcoNet.Controllers
         }
 
         [HttpPost]
-        public IActionResult AgregarProducto(string title, string description, decimal price)
+        public IActionResult AgregarProducto(string title, string description, string price)
         {
-            try
+            // Obtén el ID del usuario desde las claims
+            string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Intenta convertir el valor de price a decimal
+            if (!decimal.TryParse(price, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal precio))
             {
-                string usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(usuarioIdClaim))
-                {
-                    return RedirectToAction("Error", "Home");
-                }
-
-                if (!int.TryParse(usuarioIdClaim, out int usuarioId))
-                {
-                    return RedirectToAction("Error", "Home");
-                }
-
-                Anuncio nuevoAnuncio = new()
-                {
-                    Titulo = title,
-                    Descripcion = description,
-                    Precio = price,
-                    Fkusuario = usuarioId,
-                    EstaVendido = false
-                };
-
-                DalAnuncio dalAnuncio = new();
-                dalAnuncio.Add(nuevoAnuncio);
-
-                return RedirectToAction("Index", "Home");
+                // Maneja el error si la conversión falla
+                ModelState.AddModelError("price", "El precio no es válido.");
+                return View(); // Regresa a la vista actual si la conversión falla
             }
-            catch (Exception ex)
+
+            // Crea un nuevo anuncio con los datos proporcionados
+            Anuncio nuevoAnuncio = new()
             {
-                // Manejo de errores, registrar el error y redirigir a una página de error
-                Debug.WriteLine($"Error en AgregarProducto: {ex.Message}");
-                return RedirectToAction("Error", "Home");
-            }
+                Titulo = title,
+                Descripcion = description,
+                Precio = precio,
+                Fkusuario = int.Parse(usuarioId),
+                EstaVendido = false
+            };
+
+            // Agrega el anuncio a la base de datos
+            DalAnuncio dalAnuncio = new();
+            dalAnuncio.Add(nuevoAnuncio);
+
+            // Redirige al usuario a la página principal
+            return RedirectToAction("Index", "Home");
         }
 
     }
+
 }
