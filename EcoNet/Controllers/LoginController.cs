@@ -25,13 +25,15 @@ namespace EcoNet.Controllers
         {
             DalUsuario dalUserr = new DalUsuario();
             string? userName = dalUserr.AutenticationUserDal(Email, Password);
+            int userId = ;
 
             if (!string.IsNullOrEmpty(userName))
             {
-                List<Claim> claims = new List<Claim>
+                List<Claim> claims = new()
                 {
                     new (ClaimTypes.Name, userName),
-                    new (ClaimTypes.Email, Email)
+                    new (ClaimTypes.Email, Email),
+                    new (ClaimTypes.NameIdentifier, userId)
                 };
 
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

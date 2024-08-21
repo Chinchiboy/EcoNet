@@ -1,7 +1,7 @@
 ﻿@model IndexViewModel
 
 @{
-    ViewData["Title"] = "AgregarProducto";
+    ViewData["Title"] = "Agregar Producto";
 }
 
 <div class="container PaginaProducto">
@@ -11,15 +11,15 @@
                 @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label for="title">Título</label>
-                    <input class="form-control GrisInputs" type="text" name="title" />
+                    <input class="form-control GrisInputs" type="text" name="title" id="title" required />
                 </div>
                 <div class="form-group">
                     <label for="description">Descripción</label>
-                    <textarea class="form-control GrisInputs" rows="5" cols="50 name="description"></textarea>
+                    <textarea class="form-control GrisInputs" rows="5" cols="50" name="description" id="description" required></textarea>
                 </div>
                 <div class="form-group">
                     <label for="price">Precio</label>
-                    <input class="form-control GrisInputs" type="text" name="price" />
+                    <input class="form-control GrisInputs" type="number" step="0.01" name="price" id="price" required />
                 </div>
             </div>
             <br />
@@ -29,5 +29,3 @@
         </form>
     </div>
 </div>
-<script>
-</script>s

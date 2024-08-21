@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EcoNet.Controllers
+public class HomeController : Controller
 {
-    public class CerrarSesionController : Controller
+    public async Task<IActionResult> Logout()
     {
-        public async Task<IActionResult> Index()
-        {
-            await HttpContext.SignOutAsync();
-
-            return RedirectToAction("Index", "Home");
-        }
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
     }
 }

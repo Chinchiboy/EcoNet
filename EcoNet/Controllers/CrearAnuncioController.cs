@@ -1,34 +1,43 @@
 ﻿using EcoNet.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcoNet.Controllers
 {
     public class CrearAnuncioController : Controller
     {
         private readonly DalAnuncio Dalanuncio;
+
+        public CrearAnuncioController()
+        {
+            Dalanuncio = new DalAnuncio();
+        }
+
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult CrearAnuncio()
         {
             return View();
         }
+
         [HttpPost]
-        public IActionResult CrearAnuncio(int idAnuncio,string titulo,byte[]? imagen,string descripcion,decimal precio,int? fkborradoPor, int fkusuario,bool estaVendido)
+        public IActionResult CrearAnuncio(string titulo, string descripcion, decimal precio)
         {
-            Anuncio nuevoAnuncio = new Anuncio
+            string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            Anuncio nuevoAnuncio = new()
             {
-                IdAnuncio = idAnuncio,
                 Titulo = titulo,
-                Imagen = imagen, 
                 Descripcion = descripcion,
                 Precio = precio,
-                FkborradoPor = fkborradoPor, 
-                Fkusuario = fkusuario,
-                EstaVendido = estaVendido
+                Fkusuario = int.Parse(usuarioId), 
+                EstaVendido = false
             };
             Dalanuncio.Add(nuevoAnuncio);
+
             return RedirectToAction("Index", "Home");
         }
     }

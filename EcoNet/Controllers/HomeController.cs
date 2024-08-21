@@ -55,5 +55,31 @@ namespace EcoNet.Controllers
 
             return View(a);
         }
+
+        public IActionResult AgregarProducto()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AgregarProducto(string title, string description, decimal price)
+        {
+            string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+            Anuncio nuevoAnuncio = new()
+            {
+                Titulo = title,
+                Descripcion = description,
+                Precio = price,
+                Fkusuario = int.Parse(usuarioId),
+                EstaVendido = false
+            };
+
+            DalAnuncio dalAnuncio = new();
+            dalAnuncio.Add(nuevoAnuncio);
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
