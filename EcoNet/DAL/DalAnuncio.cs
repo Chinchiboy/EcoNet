@@ -142,13 +142,10 @@ namespace EcoNet
         {
             using var connection = dbConnection.GetConnection();
             connection.Open();
-            using var command = new SqlCommand("INSERT INTO Anuncio (IdAnuncio, Titulo, Imagen, Descripcion, Precio, FkborradoPor, Fkusuario, EstaVendido) VALUES (@IdAnuncio, @Titulo, @Imagen, @Descripcion, @Precio, @FkborradoPor, @Fkusuario, @EstaVendido)", connection);
-            command.Parameters.AddWithValue("@IdAnuncio", anuncio.IdAnuncio);
+            using var command = new SqlCommand("INSERT INTO Anuncio (Titulo, Descripcion, Precio, Fkusuario, EstaVendido) VALUES (@Titulo, @Descripcion, @Precio, @Fkusuario, @EstaVendido)", connection);
             command.Parameters.AddWithValue("@Titulo", anuncio.Titulo);
-            command.Parameters.AddWithValue("@Imagen", anuncio.Imagen);
             command.Parameters.AddWithValue("@Descripcion", anuncio.Descripcion);
             command.Parameters.AddWithValue("@Precio", anuncio.Precio);
-            command.Parameters.AddWithValue("@FkborradoPor", anuncio.FkborradoPor);
             command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
             command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
             command.ExecuteNonQuery();

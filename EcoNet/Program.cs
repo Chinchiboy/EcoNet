@@ -11,7 +11,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Home/Login"; // Ruta de login
-
+                    options.ExpireTimeSpan = TimeSpan.FromDays(30); // Tiempo de expiración de la cookie
+                    options.SlidingExpiration = true; // Si se renueva la expiración en cada solicitud
+                    options.Cookie.HttpOnly = true; // La cookie no está accesible vía JavaScript
+                    options.Cookie.SameSite = SameSiteMode.Lax;
                 });
 builder.Environment.EnvironmentName = "Development";
 var app = builder.Build();
