@@ -31,15 +31,17 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <a class="btn btn-primary ms-3" asp-controller="CrearOferta" asp-action="Index">Crear Oferta</a>
                             <a class="ms-3" asp-controller="Profile" asp-action="Index">
                                 <img src="@User.Claims.FirstOrDefault(c => c.Type == "ProfilePictureUrl")?.Value ?? " /images/default-profile.png" alt="Perfil" class="rounded-circle" width="40" height="40" />
                             </a>
-                            <a class="btn btn-primary ms-3" asp-controller="CrearOferta" asp-action="Index">Crear Oferta</a>
+                            <a class="btn btn-primary ms-3" asp-controller="CerrarSesion" asp-action="Index">Cerrar Sesión</a> <!-- Botón de cerrar sesión -->
                         }
                         else
                         {
                             <button class="BotonHeader box-shadow ms-3 w-100 w-sm-50 w-md-25 w-lg-auto" data-bs-toggle="modal" data-bs-target="#myModal">Login/Registrarse</button>
                         }
+
                     </div>
                 </div>
             </div>

@@ -5,8 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSignalR();  // Agrega SignalR al contenedor de servicios
-
+builder.Services.AddSignalR(); 
 // Configura la autenticación con cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
