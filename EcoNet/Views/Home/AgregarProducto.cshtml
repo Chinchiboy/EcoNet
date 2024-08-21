@@ -1,0 +1,33 @@
+﻿@model IndexViewModel
+
+@{
+    ViewData["Title"] = "AgregarProducto";
+}
+
+<div class="container PaginaProducto">
+    <div class="ProductoElegido ColorFondoSecundario">
+        <form asp-action="AgregarProducto" asp-controller="Home" method="post">
+            <div class="modal-body">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="title">Título</label>
+                    <input class="form-control GrisInputs" type="text" name="title" />
+                </div>
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <textarea class="form-control GrisInputs" rows="5" cols="50 name="description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price">Precio</label>
+                    <input class="form-control GrisInputs" type="text" name="price" />
+                </div>
+            </div>
+            <br />
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary BtnSubmit VerdeFiltros">Crear anuncio</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+</script>s
