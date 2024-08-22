@@ -96,7 +96,11 @@
     }
 
     @await Html.PartialAsync("_LoginPartial", new EcoNet.Models.LoginViewModel())
-    @await Html.PartialAsync("_ChatPartial", new EcoNet.Models.LoginViewModel())
+    @if (User.Identity.IsAuthenticated)
+    {
+        @await Html.PartialAsync("_ChatPartial", new EcoNet.Models.LoginViewModel())
+    }
+    
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -1,8 +1,5 @@
-﻿@model EcoNet.Models.LoginViewModel
-
-<input id="chooseUser"/>
-<button id="confirmChoice">Confirmar</button>
-
+﻿@using System.Security.Claims
+@model EcoNet.Models.LoginViewModel
 
 <div id="BarMessages" class="Messages">
     <div class="HeaderBarMessages">
@@ -14,27 +11,6 @@
             <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1" />
         </svg>
 
-    </div>
-    <div id="1" class="HeaderChat">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-        </svg>
-        <label>Nombre de usuario</label>
-    </div>
-    <div id="2" class="HeaderChat">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-        </svg>
-        <label>Nombre de usuario</label>
-    </div>
-    <div id="3" class="HeaderChat">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-        </svg>
-        <label>Nombre de usuario</label>
     </div>
 </div>
 
@@ -59,27 +35,40 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.4/signalr.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
+@{
+    string userLogged = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+}
 
 <script>
 
     var chatId = 0;
-    var userLogged = parseInt("1");
-    document.addEventListener("DOMContentLoaded", function () {
+    var userLogged = '@userLogged';
+    
+    
+    document.addEventListener("DOMContentLoaded", async function () {
         const arrowUp = document.getElementById("ArrowUp");
         const arrowDown = document.getElementById("ArrowDown");
-        const headerChats = document.querySelectorAll(".HeaderChat");
         const barMessages = document.getElementById("BarMessages");
         const closeBtn = document.getElementById("closeMessages");
         const ventanaChat = document.getElementById("VentanaChat");
         const confirmChoice = document.getElementById("confirmChoice");
 
         arrowDown.style.display = "none"; // Mostrar inicialmente solo la flecha hacia arriba
-        headerChats.forEach(function (chat) {
-            chat.style.display = "none"; // Esconder todos los divs
-        });
-        barMessages.style.height = "auto";
+        
 
+        // Obtener los chats y añadir los encabezados de chat
+        const chats = await fetch(`/Chat/GetChats?`).then(response => response.json());
+        chats.forEach(chat => {
+            console.log(chat.nombreDestinatario)
+            addChatHeader(chat.nombreDestinatario, chat.tituloAnuncio, chat.chat.idChat);
+        });
+
+        barMessages.style.height = "auto";
+        
+        
+        // Manejo de flechas para mostrar y esconder los chats
         arrowUp.addEventListener("click", function () {
+            const headerChats = document.querySelectorAll(".HeaderChat");
             headerChats.forEach(function (chat) {
                 chat.style.display = "flex"; // Mostrar todos los divs
             });
@@ -89,6 +78,7 @@
         });
 
         arrowDown.addEventListener("click", function () {
+            const headerChats = document.querySelectorAll(".HeaderChat");
             headerChats.forEach(function (chat) {
                 chat.style.display = "none"; // Esconder todos los divs
             });
@@ -97,34 +87,38 @@
             barMessages.style.height = "auto";
         });
 
+        
+
+        // Ahora que los chats están en el DOM, podemos asignar los eventos
+        const headerChats = document.querySelectorAll(".HeaderChat");
         headerChats.forEach(function (headerChat) {
-            headerChat.addEventListener("click", function (event) {
+            headerChat.addEventListener("click", async function (event) {
                 chatId = parseInt(headerChat.id);
                 ventanaChat.style.display = "flex";
-                
+
                 const chatBody = document.getElementById("chatBody");
                 chatBody.innerHTML = "";
 
-                Promise.all([
+                const [messages, offers] = await Promise.all([
                     fetch(`/Chat/GetMessages?chatId=${chatId}`).then(response => response.json()),
                     fetch(`/Chat/GetOffers?chatId=${chatId}`).then(response => response.json())
-                ])
-                    .then(([messages, offers]) => {
-                        // Combinar y ordenar los mensajes y ofertas por fecha
-                        const combined = [...messages, ...offers].sort((a, b) => new Date(a.horaCreacion) - new Date(b.fechaCreacion));
+                ]);
 
-                        combined.forEach(item => {
-                            if (item.idMensaje !== undefined) { // si tiene el campo es un mensaje
-                                const div = document.createElement("div");
-                                div.textContent = item.texto;
-                                div.className = item.creador == userLogged ? "message-right" : "message-left";
-                                chatBody.appendChild(div);
-                            } else {
-                                addOfferToChat(item);
-                            }
-                        });
-                        chatBody.scrollTop = chatBody.scrollHeight; // para que el scroll empiece abajo del todo
-                    });
+                // Combinar y ordenar los mensajes y ofertas por fecha
+                const combined = [...messages, ...offers].sort((a, b) => new Date(a.horaCreacion) - new Date(b.fechaCreacion));
+
+                combined.forEach(item => {
+                    if (item.idMensaje !== undefined) { // Si tiene el campo es un mensaje
+                        const div = document.createElement("div");
+                        div.textContent = item.texto;
+                        div.className = item.creador == userLogged ? "message-right" : "message-left";
+                        chatBody.appendChild(div);
+                    } else {
+                        addOfferToChat(item);
+                    }
+                });
+
+                chatBody.scrollTop = chatBody.scrollHeight; // Para que el scroll empiece abajo del todo
             });
         });
 
@@ -137,8 +131,6 @@
         });
     });
 
-    
-
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/chathub")
         .build();
@@ -150,17 +142,14 @@
     });
 
     connection.on("ReceiveMessage", function (user, message) {
-        console.log(user, userLogged);
         const msg = message;
         const div = document.createElement("div");
         div.textContent = msg;
         div.className = user == userLogged ? "message-right" : "message-left";
         document.getElementById("chatBody").appendChild(div);
     });
-    
 
     document.getElementById("sendButton").addEventListener("click", function (event) {
-        
         const messageInput = document.getElementById("messageInput");
         console.log("Chat ID:", chatId);
 
@@ -177,13 +166,12 @@
         event.preventDefault();
     });
 
-
     function addOfferToChat(item) {
         const chatBody = document.getElementById("chatBody");
 
         const offerDiv = document.createElement("div");
         offerDiv.className = item.creador == userLogged ? "message-right" : "message-left";
-        
+
         const priceLabel = document.createElement("label");
         priceLabel.textContent = `Oferta: ${item.precio}€`;
         priceLabel.className = "price-label";
@@ -191,20 +179,16 @@
         const iconContainer = document.createElement("div");
         iconContainer.className = "icon-container";
 
-        // Crear el icono de aceptar (check)
         const acceptIcon = document.createElement("i");
         acceptIcon.className = "bi bi-check-circle-fill text-success accept-icon";
         acceptIcon.style.cursor = "pointer";
         acceptIcon.style.marginRight = "10px";
-        
 
-        // Crear el icono de rechazar (X)
         const rejectIcon = document.createElement("i");
         rejectIcon.className = "bi bi-x-circle-fill text-danger reject-icon";
         rejectIcon.style.cursor = "pointer";
-        
 
-        if (item.aceptada == 0) // si no esta ni aceptada ni rechazada añadimos los eventos
+        if (item.aceptada == 0) // Si no está ni aceptada ni rechazada añadimos los eventos
         {
             acceptIcon.addEventListener("click", function () {
                 alert("Oferta aceptada");
@@ -214,20 +198,53 @@
                 alert("Oferta rechazada");
             });
         }
-        else if (item.aceptada == 1) 
-        {
-            rejectIcon.className = "disabled-icon";
+        else if (item.aceptada == 1) {
+            rejectIcon.classList.add("disabled-icon");
         }
-        else 
-        {
-            acceptIcon.className = "disabled-icon";
+        else {
+            acceptIcon.classList.add("disabled-icon");
         }
-        
+
         offerDiv.appendChild(priceLabel);
         iconContainer.appendChild(acceptIcon);
         iconContainer.appendChild(rejectIcon);
         offerDiv.appendChild(iconContainer);
 
         chatBody.appendChild(offerDiv);
+    }
+
+    function addChatHeader(NombreUsuario, NombreAnuncio, idAnuncio) {
+        const barMessages = document.getElementById("BarMessages");
+
+        const chatHeaderDiv = document.createElement("div");
+        chatHeaderDiv.className = "HeaderChat";
+        chatHeaderDiv.setAttribute("id", idAnuncio);
+
+        const icon = document.createElement("i");
+        icon.className = "bi bi-person-circle";
+        icon.style.fontSize = "2.5rem";
+        
+        const textContainer = document.createElement("div");
+        textContainer.style.display = "flex";
+        textContainer.style.flexDirection = "column";
+        textContainer.style.alignItems = "flex-end"; // Alinea los textos a la derecha
+        textContainer.style.marginLeft = "auto"; // Empuja el contenedor hacia la derecha
+        
+        const anuncioLabel = document.createElement("label");
+        anuncioLabel.textContent = NombreAnuncio;
+        anuncioLabel.style.fontSize = "1rem";
+        anuncioLabel.style.fontWeight = "bold";
+        
+        const usuarioLabel = document.createElement("label");
+        usuarioLabel.textContent = NombreUsuario;
+        usuarioLabel.style.fontSize = "0.8rem";
+        
+        textContainer.appendChild(anuncioLabel);
+        textContainer.appendChild(usuarioLabel);
+
+        chatHeaderDiv.appendChild(icon);
+        chatHeaderDiv.appendChild(textContainer);
+
+        barMessages.appendChild(chatHeaderDiv);
     }
 </script>
