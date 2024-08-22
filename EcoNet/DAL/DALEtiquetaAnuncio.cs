@@ -81,35 +81,16 @@ namespace EcoNet.DAL
             return etiquetaAnuncio;
         }
 
-        public void Add(EtiquetaAnuncio etiquetaAnuncio)
+        public void AsignarEtiquetaAnuncio(int anuncioId, int etiquetaId)
         {
-            if (etiquetaAnuncio == null)
-                throw new ArgumentNullException(nameof(etiquetaAnuncio));
+            using var conn = dbConnection.GetConnection();
+            using var cmd = new SqlCommand("INSERT INTO EtiquetaAnuncio (FkAnuncio, FkEtiqueta) VALUES (@FkAnuncio, @FkEtiqueta)", conn);
+            cmd.Parameters.AddWithValue("@FkAnuncio", anuncioId);
+            cmd.Parameters.AddWithValue("@FkEtiqueta", etiquetaId);
 
-            using var connection = dbConnection.GetConnection();
-
-            try
-            {
-                {
-                    connection.Open();
-                    using (var command = new SqlCommand("INSERT INTO EtiquetaAnuncio (IdEtiquetaAnuncio, Fketiqueta, Fkanuncio) VALUES (@IdEtiquetaAnuncio, @Fketiqueta, @Fkanuncio)", connection))
-                    {
-                        command.Parameters.AddWithValue("@IdEtiquetaAnuncio", etiquetaAnuncio.IdEtiquetaAnuncio);
-                        command.Parameters.AddWithValue("@Fketiqueta", etiquetaAnuncio.Fketiqueta);
-                        command.Parameters.AddWithValue("@Fkanuncio", etiquetaAnuncio.Fkanuncio);
-                        command.ExecuteNonQuery();
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            finally
-            {
-                connection.Close();
-            }
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
         }
 
         public void Update(EtiquetaAnuncio etiquetaAnuncio)

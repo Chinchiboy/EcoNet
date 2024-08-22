@@ -211,19 +211,28 @@ namespace EcoNet
             return AnuncioList;
         }
 
-        public void Add(Anuncio anuncio)
+        public int Add(Anuncio anuncio)
         {
             using var connection = dbConnection.GetConnection();
             connection.Open();
-            using var command = new SqlCommand("INSERT INTO Anuncio (Titulo, Descripcion, Precio, Fkusuario, EstaVendido) VALUES (@Titulo, @Descripcion, @Precio, @Fkusuario, @EstaVendido)", connection);
+
+            using var command = new SqlCommand(
+                "INSERT INTO Anuncio (Titulo, Descripcion, Precio, Fkusuario, EstaVendido) " +
+                "OUTPUT INSERTED.IdAnuncio " +
+                "VALUES (@Titulo, @Descripcion, @Precio, @Fkusuario, @EstaVendido)", connection);
+
             command.Parameters.AddWithValue("@Titulo", anuncio.Titulo);
             command.Parameters.AddWithValue("@Descripcion", anuncio.Descripcion);
             command.Parameters.AddWithValue("@Precio", anuncio.Precio);
             command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
             command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
-            command.ExecuteNonQuery();
+
+            int newId = Convert.ToInt32(command.ExecuteScalar());
             connection.Close();
+
+            return newId;
         }
+
         public void Update(Anuncio anuncio)
         {
             using var connection = dbConnection.GetConnection();
