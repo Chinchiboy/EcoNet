@@ -157,7 +157,6 @@ namespace EcoNet
             {
                 using var cmd = new SqlCommand("SELECT * FROM Anuncio WHERE  LOWER(Titulo) LIKE @textoBusqueda OR LOWER(Descripcion) LIKE @textoBusqueda", conn);
                 cmd.Parameters.AddWithValue("@Titulo", "%" + textobusqueda + "%");
-
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
