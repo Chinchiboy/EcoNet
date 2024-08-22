@@ -141,9 +141,6 @@ namespace EcoNet.Controllers
             }
         }
 
-
-
-
         public IActionResult ProductosRelacionados(int id)
         {
             DalAnuncio dalAnuncio = new();
@@ -170,5 +167,7 @@ namespace EcoNet.Controllers
 
             return View(viewModel);
         }
+
+       
     }
 }
