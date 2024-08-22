@@ -124,7 +124,7 @@ a {
 }
 
 .EtiquetaDescripcion{
-    margin-right: 1rem;
+    margin-right: 1.5rem;
 }
 
 .NombreWebBot {
@@ -366,6 +366,41 @@ a {
     border-radius: 100px;
     width: 20rem;
 }
+
+.LogOut {
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    opacity: 0.75;
+}
+
+    .LogOut:hover {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+.BotonCrear{
+    text-decoration:none;
+    width:12.5rem;
+    border-radius: 25px;
+    text-align: center;
+    padding-top:6px;
+    padding-bottom:6px;
+    padding-left:12px;
+    padding-right:12px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.BotonCrear:hover {
+    color: #fafaff;
+    transform: scale(1.05);
+    background-color: #29894D;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 
 .BotonFiltro {
     margin-right: 1.1rem;

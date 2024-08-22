@@ -150,13 +150,16 @@ namespace EcoNet
             return AnuncioList;
         }
 
-        public List<Anuncio> Search(string textobusqueda)
+        public List<Anuncio> SelectByTag(string tag)
         {
-            var AnuncioList = new List<Anuncio>();
+            if (tag == "Mostrar todo")
+                return Select();
+
+            AnuncioList = new List<Anuncio>();
             using (var conn = dbConnection.GetConnection())
             {
-                using var cmd = new SqlCommand("SELECT * FROM Anuncio WHERE  LOWER(Titulo) LIKE @textoBusqueda OR LOWER(Descripcion) LIKE @textoBusqueda", conn);
-                cmd.Parameters.AddWithValue("@Titulo", "%" + textobusqueda + "%");
+                using var cmd = new SqlCommand("SELECT * FROM Anuncio JOIN EtiquetaAnuncio ON IdAnuncio = FKAnuncio JOIN Etiqueta ON IdEtiqueta = FKEtiqueta WHERE DescripcionEtiqueta like @Etiqueta", conn);
+                cmd.Parameters.AddWithValue("@Etiqueta", "%" + tag + "%");
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -178,16 +181,16 @@ namespace EcoNet
             }
             return AnuncioList;
         }
-        public List<Anuncio> SelectByTag(string tag)
-        {
-            if (tag == "Mostrar todo")
-                return Select();
 
-            AnuncioList = new List<Anuncio>();
+        public List<Anuncio> Search(string textobusqueda)
+        {
+            var AnuncioList = new List<Anuncio>();
+            textobusqueda = textobusqueda?.ToLower() ?? string.Empty;
             using (var conn = dbConnection.GetConnection())
             {
-                using var cmd = new SqlCommand("SELECT * FROM Anuncio JOIN EtiquetaAnuncio ON IdAnuncio = FKAnuncio JOIN Etiqueta ON IdEtiqueta = FKEtiqueta WHERE DescripcionEtiqueta like @Etiqueta", conn);
-                cmd.Parameters.AddWithValue("@Etiqueta", "%" + tag + "%");
+                using var cmd = new SqlCommand("SELECT * FROM Anuncio WHERE  LOWER(Titulo) LIKE @textoBusqueda OR LOWER(Descripcion) LIKE @textoBusqueda", conn);
+                cmd.Parameters.AddWithValue("@textobusqueda", "%" + textobusqueda + "%");
+
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -196,7 +199,7 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
-                        Imagen = (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Imagen = !reader.IsDBNull(reader.GetOrdinal("Imagen")) ? (byte[])reader.GetValue(reader.GetOrdinal("Imagen")) : null,
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),

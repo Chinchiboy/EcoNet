@@ -28,7 +28,7 @@ namespace EcoNet.Controllers
 
             vm.EtiquetaAnuncio = new EtiquetaAnuncio();
             vm.EtiquetaAnuncio.ArticulosFiltrados = TempData["Filtro"] == null ? dalAnuncio.Select() : dalAnuncio.SelectByTag(TempData["Filtro"].ToString());
-
+            
             return View(vm);
         }
 
@@ -37,7 +37,20 @@ namespace EcoNet.Controllers
             TempData["Filtro"] = filtro;
             return RedirectToAction("Index");
         }
+     
+        public IActionResult BuscarAnuncios(string gsearch)
+        {
+            DalAnuncio dalAnuncio = new DalAnuncio();
+            var anuncios = dalAnuncio.Search(gsearch); // Usar tu método DAL para buscar los anuncios
+            var resultado = anuncios.Select(a => new {
+                idAnuncio = a.IdAnuncio,
+                titulo = a.Titulo,
+                imagenBase64 = a.Imagen != null ? Convert.ToBase64String(a.Imagen) : string.Empty,
+                precio = a.Precio
+            });
 
+            return Json(resultado);
+        }
         public IActionResult Privacy()
         {
             return View();
@@ -128,9 +141,6 @@ namespace EcoNet.Controllers
             }
         }
 
-
-
-
         public IActionResult ProductosRelacionados(int id)
         {
             DalAnuncio dalAnuncio = new();
@@ -157,5 +167,7 @@ namespace EcoNet.Controllers
 
             return View(viewModel);
         }
+
+       
     }
 }
