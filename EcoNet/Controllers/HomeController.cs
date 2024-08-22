@@ -128,9 +128,6 @@ namespace EcoNet.Controllers
             }
         }
 
-
-
-
         public IActionResult ProductosRelacionados(int id)
         {
             DalAnuncio dalAnuncio = new();
@@ -156,6 +153,22 @@ namespace EcoNet.Controllers
             };
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult BuscarAnuncios(string gsearch)
+        {
+            if (string.IsNullOrEmpty(gsearch))
+            {
+                return RedirectToAction("Index");
+            }
+
+            DalAnuncio dalAnuncio = new();
+            List<Anuncio> anuncios = dalAnuncio.Search(gsearch);
+            TempData["AnunciosBuscados"] = anuncios;
+            TempData["TextoBusqueda"] = gsearch;
+
+            return RedirectToAction("Index");
         }
     }
 }
