@@ -1,11 +1,17 @@
 ﻿using EcoNet.Models;
+using EcoNet.ViewModels;
 
-public class IndexViewModel
+namespace EcoNet.Models
 {
-    public List<Etiqueta> ListaEtiquetas { get; set; } = new List<Etiqueta>();
+    public class IndexViewModel
+    {
+        public EtiquetaAnuncio EtiquetaAnuncio { get; set; } = new EtiquetaAnuncio();
 
-    // Otras propiedades que la vista necesita
-    public EtiquetaAnuncio EtiquetaAnuncio { get; set; } = new EtiquetaAnuncio();
-    public EtiquetaFiltros EtiquetaFiltros { get; set; } = new EtiquetaFiltros();
-    public Etiqueta Etiqueta { get; set; } = new Etiqueta();
+        public EtiquetaFiltros EtiquetaFiltros { get; set; } = new EtiquetaFiltros();
+        public Anuncio ProductoActual { get; set; }
+        public EtiquetaAnuncioViewModel EtiquetaAnuncioVM { get; set; }
+        public List<Etiqueta> ListaEtiquetas { get; set; } = new List<Etiqueta>();
+        public Etiqueta Etiqueta { get; set; } = new Etiqueta();
+
+    }
 }

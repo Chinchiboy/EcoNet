@@ -74,13 +74,58 @@ namespace EcoNet
             return anuncio;
         }
 
-        public List<Anuncio> SelectByTitle(string title)
+        public List<Anuncio> SelectByEtiquetas(List<Etiqueta> etiquetas)
         {
+            List<Anuncio> anunciosRelacionados = new List<Anuncio>();
+
+            if (etiquetas == null || !etiquetas.Any())
+            {
+                return anunciosRelacionados;
+            }
+
+            try
+            {
+                using var conn = dbConnection.GetConnection();
+                var query = @"
+                SELECT DISTINCT a.*
+                FROM Anuncio a
+                INNER JOIN AnuncioEtiqueta ae ON a.IdAnuncio = ae.IdAnuncio
+                WHERE ae.IdEtiqueta IN (@IdEtiquetas)";
+
+                using var cmd = new SqlCommand(query, conn);
+                var idEtiquetas = string.Join(",", etiquetas.Select(e => e.IdEtiqueta));
+                cmd.Parameters.AddWithValue("@IdEtiquetas", idEtiquetas);
+
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    anunciosRelacionados.Add(new Anuncio
+                    {
+                        IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
+                        Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        // Agrega aquí las demás propiedades necesarias
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en SelectByEtiquetas: {ex.Message}");
+                // Aquí podrías también usar un logger para registrar el error
+            }
+
+            return anunciosRelacionados;
+        }
+
+
+        public List<Anuncio> SelectByTitle(string title)
+            {
             var AnuncioList = new List<Anuncio>();
             using (var conn = dbConnection.GetConnection())
             {
                 using var cmd = new SqlCommand("SELECT * FROM Anuncio WHERE Titulo LIKE @Titulo", conn);
-                // Agregar el parámetro con comodines '%' para la búsqueda parcial
                 cmd.Parameters.AddWithValue("@Titulo", "%" + title + "%");
 
                 conn.Open();

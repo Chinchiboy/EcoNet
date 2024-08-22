@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Globalization;
+using EcoNet.ViewModels;
 
 namespace EcoNet.Controllers
 {
@@ -79,43 +81,55 @@ namespace EcoNet.Controllers
         }
 
         [HttpPost]
-        public IActionResult AgregarProducto(string title, string description, decimal price)
+        public IActionResult AgregarProducto(string title, string description, string price)
         {
-            try
+            string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!decimal.TryParse(price, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal precio))
             {
-                string usuarioIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(usuarioIdClaim))
-                {
-                    return RedirectToAction("Error", "Home");
-                }
-
-                if (!int.TryParse(usuarioIdClaim, out int usuarioId))
-                {
-                    return RedirectToAction("Error", "Home");
-                }
-
-                Anuncio nuevoAnuncio = new()
-                {
-                    Titulo = title,
-                    Descripcion = description,
-                    Precio = price,
-                    Fkusuario = usuarioId,
-                    EstaVendido = false
-                };
-
-                DalAnuncio dalAnuncio = new();
-                dalAnuncio.Add(nuevoAnuncio);
-
-                return RedirectToAction("Index", "Home");
+                ModelState.AddModelError("price", "El precio no es válido.");
             }
-            catch (Exception ex)
+
+            Anuncio nuevoAnuncio = new()
             {
-                // Manejo de errores, registrar el error y redirigir a una página de error
-                Debug.WriteLine($"Error en AgregarProducto: {ex.Message}");
-                return RedirectToAction("Error", "Home");
-            }
+                Titulo = title,
+                Descripcion = description,
+                Precio = precio,
+                Fkusuario = int.Parse(usuarioId),
+                EstaVendido = false
+            };
+
+            DalAnuncio dalAnuncio = new();
+            dalAnuncio.Add(nuevoAnuncio);
+
+            return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult ProductosRelacionados(int id)
+        {
+            DalAnuncio dalAnuncio = new();
+            DalEtiqueta dalEtiqueta = new();
+
+            Anuncio productoActual = dalAnuncio.SelectById(id);
+
+            if (productoActual == null)
+            {
+                return NotFound();
+            }
+
+            List<Etiqueta> etiquetas = dalEtiqueta.SelectEtiquetasByProductoId(id);
+            List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiquetas(etiquetas);
+
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                ProductoActual = productoActual,
+                EtiquetaAnuncioVM = new EtiquetaAnuncioViewModel
+                {
+                    ArticulosFiltrados = productosRelacionados
+                }
+            };
+
+            return View(viewModel);
+        }
     }
 }
