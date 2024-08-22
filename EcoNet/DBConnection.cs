@@ -88,6 +88,9 @@ namespace EcoNet
             //    throw new InvalidOperationException("La conexión no está abierta.");
             //}
 
+            if (string.IsNullOrEmpty(connection.ConnectionString))
+                connection = new SqlConnection(GetConnectionString());
+
             return connection;
         }
     }
