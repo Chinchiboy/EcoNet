@@ -63,6 +63,41 @@ namespace EcoNet.DAL
             return etiqueta;
         }
 
+        public List<Etiqueta> SelectEtiquetasByProductoId(int productoId)
+        {
+            List<Etiqueta> etiquetas = new List<Etiqueta>();
+
+            try
+            {
+                using var conn = dbConnection.GetConnection();
+                using var cmd = new SqlCommand(@"
+                SELECT e.IdEtiqueta, e.DescripcionEtiqueta
+                FROM Etiqueta e
+                INNER JOIN AnuncioEtiqueta ae ON e.IdEtiqueta = ae.IdEtiqueta
+                WHERE ae.IdAnuncio = @IdAnuncio", conn);
+
+                cmd.Parameters.AddWithValue("@IdAnuncio", productoId);
+
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    etiquetas.Add(new Etiqueta
+                    {
+                        IdEtiqueta = reader.GetInt32(reader.GetOrdinal("IdEtiqueta")),
+                        DescripcionEtiqueta = reader.GetString(reader.GetOrdinal("DescripcionEtiqueta"))
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en SelectEtiquetasByProductoId: {ex.Message}");
+            }
+
+            return etiquetas;
+        }
+
+
         public void Add(Etiqueta etiqueta)
         {
             using var connection = dbConnection.GetConnection();
