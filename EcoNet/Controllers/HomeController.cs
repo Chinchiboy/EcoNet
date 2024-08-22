@@ -81,29 +81,55 @@ namespace EcoNet.Controllers
         }
 
         [HttpPost]
-        public IActionResult AgregarProducto(string title, string description, string price)
+        public IActionResult AgregarProducto(string title, string description, string price, List<int> selectedEtiquetas)
         {
             string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!decimal.TryParse(price, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal precio))
             {
                 ModelState.AddModelError("price", "El precio no es válido.");
+                return View();
             }
 
-            Anuncio nuevoAnuncio = new()
+            using var transaction = new System.Transactions.TransactionScope();
+            try
             {
-                Titulo = title,
-                Descripcion = description,
-                Precio = precio,
-                Fkusuario = int.Parse(usuarioId),
-                EstaVendido = false
-            };
+                Anuncio nuevoAnuncio = new()
+                {
+                    Titulo = title,
+                    Descripcion = description,
+                    Precio = precio,
+                    Fkusuario = int.Parse(usuarioId),
+                    EstaVendido = false
+                };
 
-            DalAnuncio dalAnuncio = new();
-            dalAnuncio.Add(nuevoAnuncio);
+                DalAnuncio dalAnuncio = new();
+                nuevoAnuncio.IdAnuncio = dalAnuncio.Add(nuevoAnuncio);
 
-            return RedirectToAction("Index", "Home");
+                if (nuevoAnuncio.IdAnuncio <= 0)
+                {
+                    throw new Exception("Error al insertar el anuncio.");
+                }
+
+                DalEtiquetaAnuncio dalEtiquetaAnuncio = new();
+                foreach (int etiquetaId in selectedEtiquetas)
+                {
+                    dalEtiquetaAnuncio.AsignarEtiquetaAnuncio(nuevoAnuncio.IdAnuncio, etiquetaId);
+                }
+
+                transaction.Complete();
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                transaction.Dispose();
+                ModelState.AddModelError(string.Empty, "Error al agregar el producto: " + ex.Message);
+                return RedirectToAction("Index", "Home");
+            }
         }
+
+
+
 
         public IActionResult ProductosRelacionados(int id)
         {

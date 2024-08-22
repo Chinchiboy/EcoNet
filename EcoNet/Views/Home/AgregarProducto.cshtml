@@ -34,14 +34,12 @@
                 <div class="form-group">
                     <p>Selecciona una o más etiquetas:</p>
                     <div>
-                    @foreach (var etiqueta in Model.ListaEtiquetas)
-                    {
-                        
+                        @foreach (var etiqueta in Model.ListaEtiquetas)
+                        {
                             <input type="checkbox" id="etiqueta_@etiqueta.IdEtiqueta" name="selectedEtiquetas" value="@etiqueta.IdEtiqueta">
-                            <label for="etiqueta_@etiqueta.IdEtiqueta" class="EtiquetaDescripcion" >@etiqueta.DescripcionEtiqueta</label>
-                        
-                    }
-                        </div>
+                            <label for="etiqueta_@etiqueta.IdEtiqueta" class="EtiquetaDescripcion" >@etiqueta.DescripcionEtiqueta</label>   
+                        }
+                    </div>
                 </div>
             </div>
             <br />
