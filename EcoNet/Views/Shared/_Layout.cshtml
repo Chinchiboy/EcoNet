@@ -24,9 +24,9 @@
 
                 <div class="collapse navbar-collapse" id="navbarResponsive">
 					<div class="d-flex ms-auto align-items-center">
-                        <form action="/Home/BuscarAnuncios" method="get" class="d-flex align-items-center mb-2 mb-sm-0 w-100">
+                        <form asp-action="BuscarAnuncios" asp-controller="Home" method="Get" class="d-flex align-items-center mb-2 mb-sm-0 w-100">
                             <input type="image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Magnifying_glass_icon.svg/490px-Magnifying_glass_icon.svg.png" class="me-2" alt="Search" width="40" height="40">
-                            <input type="search" id="gsearch" name="gsearch" class="Buscador form-control me-3 w-100 w-sm-75 w-md-50 w-lg-25" placeholder="Buscar...">
+                            <input type="search" oninput="BuscarAnuncios()" id="gsearch" name="gsearch" class="Buscador form-control me-3 w-100 w-sm-75 w-md-50 w-lg-25" placeholder="Buscar...">
                         </form>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -97,7 +97,7 @@
 
     @await Html.PartialAsync("_LoginPartial", new EcoNet.Models.LoginViewModel())
     @await Html.PartialAsync("_ChatPartial", new EcoNet.Models.LoginViewModel())
-
+    <script src="~/js/Busqueda.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
