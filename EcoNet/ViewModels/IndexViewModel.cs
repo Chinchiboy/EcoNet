@@ -10,6 +10,8 @@ namespace EcoNet.Models
         public EtiquetaFiltros EtiquetaFiltros { get; set; } = new EtiquetaFiltros();
         public Anuncio ProductoActual { get; set; }
         public EtiquetaAnuncioViewModel EtiquetaAnuncioVM { get; set; }
+        public List<Etiqueta> ListaEtiquetas { get; set; } = new List<Etiqueta>();
+        public Etiqueta Etiqueta { get; set; } = new Etiqueta();
 
     }
 }
