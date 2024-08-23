@@ -43,7 +43,8 @@ namespace EcoNet
 
         public SqlConnection GetConnection()
         {
-            
+            if(string.IsNullOrEmpty(connection.ConnectionString))
+                connection = new SqlConnection(GetConnectionString());
 
             return connection;
         }
