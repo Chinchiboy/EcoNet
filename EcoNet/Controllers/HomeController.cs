@@ -54,6 +54,11 @@ namespace EcoNet.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Nosotros()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
