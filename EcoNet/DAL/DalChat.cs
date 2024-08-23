@@ -23,27 +23,47 @@ namespace EcoNet.DAL
          * A list with it's chats if it was succesfull or null if there was an error
          * </returns>
          */
-        public List<Chat>? SelectUserChats(int userId)
+        public List<ChatViewModel>? SelectUserChats(int userId)
         {
             try
             {
                 using var conn = dbConnection.GetConnection();
-                using var cmd = new SqlCommand(@"SELECT * FROM Chat 
-                                    WHERE FKVendedor = @UserId OR FKComprador = @UserId", conn);
+                using var cmd = new SqlCommand(@"SELECT *, 
+                                    u.Usuario as 'NombreDestinatario', 
+                                    a.Titulo as 'TituloAnuncio' 
+                                    FROM Chat as c
+                                    JOIN Usuario as u ON u.IdUsuario = c.FKComprador
+                                    JOIN Anuncio as a ON a.IdAnuncio = c.FkAnuncio
+                                    WHERE c.FKVendedor = @UserId
+                                    UNION
+                                    SELECT *, 
+                                    u.Usuario as 'NombreDestinatario', 
+                                    a.Titulo as 'TituloAnuncio' 
+                                    FROM Chat as c
+                                    JOIN Usuario as u ON u.IdUsuario = c.FKVendedor
+                                    JOIN Anuncio as a ON a.IdAnuncio = c.FkAnuncio
+                                    WHERE c.FKComprador = @UserId
+                                    ", conn);
                 cmd.Parameters.AddWithValue("@UserId", userId);
 
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
                 
-                List<Chat> ChatList = new List<Chat>();
+                List<ChatViewModel> ChatList = new();
                 while (reader.Read())
                 {
-                    ChatList.Add(new Chat
+                    Chat chatAux = new()
                     {
                         IdChat = reader.GetInt32(reader.GetOrdinal("IdChat")),
                         Fkanuncio = reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
                         Fkvendedor = reader.GetInt32(reader.GetOrdinal("FKVendedor")),
                         Fkcomprador = reader.GetInt32(reader.GetOrdinal("FKComprador")),
+                    };
+                    ChatList.Add(new ChatViewModel
+                    {
+                        Chat = chatAux,
+                        NombreDestinatario = reader.GetString(reader.GetOrdinal("NombreDestinatario")),
+                        TituloAnuncio = reader.GetString(reader.GetOrdinal("TituloAnuncio"))
                     });
                 }
 

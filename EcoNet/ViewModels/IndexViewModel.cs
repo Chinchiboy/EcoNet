@@ -12,6 +12,7 @@ namespace EcoNet.Models
         public EtiquetaAnuncioViewModel EtiquetaAnuncioVM { get; set; }
         public List<Etiqueta> ListaEtiquetas { get; set; } = new List<Etiqueta>();
         public Etiqueta Etiqueta { get; set; } = new Etiqueta();
+        public string ImagenBase64 { get; set; } = string.Empty;
 
     }
 }

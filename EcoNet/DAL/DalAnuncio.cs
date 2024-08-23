@@ -185,10 +185,11 @@ namespace EcoNet
         public List<Anuncio> Search(string textobusqueda)
         {
             var AnuncioList = new List<Anuncio>();
+            textobusqueda = textobusqueda?.ToLower() ?? string.Empty;
             using (var conn = dbConnection.GetConnection())
             {
                 using var cmd = new SqlCommand("SELECT * FROM Anuncio WHERE  LOWER(Titulo) LIKE @textoBusqueda OR LOWER(Descripcion) LIKE @textoBusqueda", conn);
-                cmd.Parameters.AddWithValue("@Titulo", "%" + textobusqueda + "%");
+                cmd.Parameters.AddWithValue("@textobusqueda", "%" + textobusqueda + "%");
 
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
@@ -198,7 +199,7 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
-                        Imagen = (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Imagen = !reader.IsDBNull(reader.GetOrdinal("Imagen")) ? (byte[])reader.GetValue(reader.GetOrdinal("Imagen")) : null,
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
@@ -215,22 +216,14 @@ namespace EcoNet
         public int Add(Anuncio anuncio)
         {
             using var connection = dbConnection.GetConnection();
-            connection.Open();
-
-            using var command = new SqlCommand(
-                "INSERT INTO Anuncio (Titulo, Descripcion, Precio, Fkusuario, EstaVendido) " +
-                "OUTPUT INSERTED.IdAnuncio " +
-                "VALUES (@Titulo, @Descripcion, @Precio, @Fkusuario, @EstaVendido)", connection);
-
+            using var command = new SqlCommand("INSERT INTO Anuncio (Titulo, Descripcion, Precio, Fkusuario, EstaVendido) OUTPUT INSERTED.IdAnuncio VALUES (@Titulo, @Descripcion, @Precio, @Fkusuario, @EstaVendido)", connection);
             command.Parameters.AddWithValue("@Titulo", anuncio.Titulo);
             command.Parameters.AddWithValue("@Descripcion", anuncio.Descripcion);
             command.Parameters.AddWithValue("@Precio", anuncio.Precio);
             command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);
             command.Parameters.AddWithValue("@EstaVendido", anuncio.EstaVendido);
-
-            int newId = Convert.ToInt32(command.ExecuteScalar());
-            connection.Close();
-
+            connection.Open();
+            int newId = (int)command.ExecuteScalar();
             return newId;
         }
 

@@ -10,10 +10,10 @@ builder.Services.AddSignalR();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Home/Login"; // Ruta de login
-                    options.ExpireTimeSpan = TimeSpan.FromDays(30); // Tiempo de expiración de la cookie
-                    options.SlidingExpiration = true; // Si se renueva la expiración en cada solicitud
-                    options.Cookie.HttpOnly = true; // La cookie no está accesible vía JavaScript
+                    options.LoginPath = "/Home/Login";
+                    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                    options.SlidingExpiration = true;
+                    options.Cookie.HttpOnly = true;
                     options.Cookie.SameSite = SameSiteMode.Lax;
                 });
 builder.Environment.EnvironmentName = "Development";
@@ -28,7 +28,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// Agrega la autenticación al pipeline
 app.UseAuthentication();
 
 app.UseAuthorization();
@@ -43,7 +42,7 @@ app.Run();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage(); // Muestra detalles completos de la excepción en el navegador
+    app.UseDeveloperExceptionPage();
 }
 else
 {

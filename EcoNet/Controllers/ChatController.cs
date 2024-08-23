@@ -2,12 +2,12 @@
 using EcoNet.Models;
 using System.Collections.Generic;
 using EcoNet.DAL;
+using System.Security.Claims;
 
 namespace EcoNet.Controllers
 {
     public class ChatController : Controller
     {
-        
         public ChatController()
         {
             
@@ -34,6 +34,15 @@ namespace EcoNet.Controllers
             List<Oferta>? ofertas = aux.SelectOfertaByChat(chatId);
 
             return Json(ofertas);
+        }
+
+        [HttpGet]
+        public IActionResult GetChats()
+        {
+            DalChat aux = new();
+
+            List<ChatViewModel>? chats = aux.SelectUserChats(Int32.Parse(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+            return Json(chats);
         }
     }
 }
