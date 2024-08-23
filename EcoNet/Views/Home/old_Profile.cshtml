@@ -1,4 +1,4 @@
-﻿
+﻿@model EcoNet.Views.Home.ProfileModel
 
 <style>
     body {
@@ -96,13 +96,13 @@
         font-weight: bold;
     }
 
-    @@media (max-width: 768px) {
+    @media (max-width: 768px) {
         .product-item {
             width: calc(50% - 20px);
         }
     }
 
-    @@media (max-width: 480px) {
+    @media (max-width: 480px) {
         .profile-header {
             flex-direction: column;
             align-items: center;
@@ -120,11 +120,11 @@
 
 <div class="user-profile">
     <div class="profile-header">
-        <img src="asdasd" alt="a" class="profile-picture" />
+        <img src="@Model.ProfilePictureUrl" alt="@Model.Name" class="profile-picture" />
         <div class="profile-info">
-            <h2>aasd</h2>
-            <p class="email">1l</p>
-            <p class="description">asdsad</p>
+            <h2>@Model.Name</h2>
+            <p class="email">@Model.Email</p>
+            <p class="description">@Model.Description</p>
             <button class="follow-btn">Follow</button>
         </div>
     </div>

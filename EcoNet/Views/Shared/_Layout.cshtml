@@ -33,7 +33,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <a class="BotonCrear ms-3 VerdePrincipal" asp-controller="Home" asp-action="AgregarProducto">Crear oferta</a>
-                            <a class="ms-3" asp-controller="Profile" asp-action="Index" >
+                            <a class="ms-3" asp-controller="Home" asp-action="Profile" >
                                 <img src="@User.Claims.FirstOrDefault(c => c.Type == "ProfilePictureUrl")?.Value ?? " /images/default-profile.png" alt="Perfil" class="" width="40" height="60" />
                             </a>
                             <a class="ms-3 LogOut" asp-controller="Home" asp-action="Logout"><img src="https://www.iconpacks.net/icons/2/free-exit-icon-2860-thumb.png" height="35" width="35" /></a>
