@@ -70,7 +70,6 @@ namespace EcoNet.Controllers
             DalEtiqueta dalEtiqueta = new();
             DalEtiquetaAnuncio dalEtiquetaAnuncio = new();
 
-            // Obtener el producto actual
             Anuncio productoActual = dalAnuncio.SelectById(id);
 
             if (productoActual == null)
@@ -80,37 +79,32 @@ namespace EcoNet.Controllers
 
             List<EtiquetaAnuncio> relacionesEtiquetaAnuncio = dalEtiquetaAnuncio.SelectByFKAnuncio(id);
 
-            // Crear una lista para almacenar las descripciones de las etiquetas
             List<Etiqueta> etiquetasDelAnuncio = new List<Etiqueta>();
 
-            foreach (var relacion in relacionesEtiquetaAnuncio)
+            foreach (EtiquetaAnuncio relacion in relacionesEtiquetaAnuncio)
             {
-                // Obtener la etiqueta completa usando el ID de la relación
-                var etiqueta = dalEtiqueta.SelectById(relacion.Fketiqueta);
+                Etiqueta etiqueta = dalEtiqueta.SelectById(relacion.Fketiqueta);
                 if (etiqueta != null)
                 {
-                    etiquetasDelAnuncio.Add(etiqueta); // Agregar la etiqueta a la lista
+                    etiquetasDelAnuncio.Add(etiqueta);
                 }
             }
 
-            // Obtener productos relacionados usando las etiquetas
             List<int> etiquetaIds = etiquetasDelAnuncio.Select(e => e.IdEtiqueta).ToList();
             List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiquetas(etiquetaIds);
 
-            // Crear el ViewModel
             IndexViewModel vm = new()
             {
                 ProductoActual = productoActual,
                 EtiquetaAnuncioVM = new EtiquetaAnuncioViewModel
                 {
                     ArticulosFiltrados = productosRelacionados ?? new List<Anuncio>(),
-                    EtiquetaAnuncios = etiquetasDelAnuncio // Pasar las etiquetas con la descripción
+                    EtiquetaAnuncios = etiquetasDelAnuncio
                 }
             };
 
             return View(vm);
         }
-
 
         public IActionResult AgregarProducto()
         {
@@ -120,7 +114,6 @@ namespace EcoNet.Controllers
             vm.ListaEtiquetas = listaE;
             return View(vm);
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

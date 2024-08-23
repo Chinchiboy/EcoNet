@@ -22,9 +22,9 @@
         <div>
             @if (Model.EtiquetaAnuncioVM?.EtiquetaAnuncios != null && Model.EtiquetaAnuncioVM.EtiquetaAnuncios.Any())
             {
-                @foreach (Etiqueta etiqueta in Model.EtiquetaAnuncioVM.EtiquetaAnuncios)
+                @foreach (Etiqueta e in Model.EtiquetaAnuncioVM.EtiquetaAnuncios)
                 {
-                    <button class="BotonFiltro2">@etiqueta.DescripcionEtiqueta</button>
+                    <button class="BotonFiltro2">@e.DescripcionEtiqueta</button>
                 }
             }
         </div>
