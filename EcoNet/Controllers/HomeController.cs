@@ -77,20 +77,10 @@ namespace EcoNet.Controllers
                 return NotFound();
             }
 
-            List<EtiquetaAnuncio> relacionesEtiquetaAnuncio = dalEtiquetaAnuncio.SelectByFKAnuncio(id);
+            List<string> descripciones = dalEtiquetaAnuncio.SelectDescriptionsByFKAnuncio(id);
 
-            List<Etiqueta> etiquetasDelAnuncio = new List<Etiqueta>();
+            List<int> etiquetaIds = dalEtiqueta.SelectIdsByDescriptions(descripciones);
 
-            foreach (EtiquetaAnuncio relacion in relacionesEtiquetaAnuncio)
-            {
-                Etiqueta etiqueta = dalEtiqueta.SelectById(relacion.Fketiqueta);
-                if (etiqueta != null)
-                {
-                    etiquetasDelAnuncio.Add(etiqueta);
-                }
-            }
-
-            List<int> etiquetaIds = etiquetasDelAnuncio.Select(e => e.IdEtiqueta).ToList();
             List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiquetas(etiquetaIds);
 
             IndexViewModel vm = new()
@@ -99,12 +89,14 @@ namespace EcoNet.Controllers
                 EtiquetaAnuncioVM = new EtiquetaAnuncioViewModel
                 {
                     ArticulosFiltrados = productosRelacionados ?? new List<Anuncio>(),
-                    EtiquetaAnuncios = etiquetasDelAnuncio
+                    EtiquetaAnuncios = descripciones.Select(d => new Etiqueta { DescripcionEtiqueta = d }).ToList()
                 }
             };
 
             return View(vm);
         }
+
+
 
         public IActionResult AgregarProducto()
         {
