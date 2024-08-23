@@ -37,34 +37,58 @@ namespace EcoNet.Controllers
             TempData["Filtro"] = filtro;
             return RedirectToAction("Index");
         }
-     
+
+        [HttpGet]
         public IActionResult BuscarAnuncios(string gsearch)
         {
-            DalAnuncio dalAnuncio = new DalAnuncio();
-            var anuncios = dalAnuncio.Search(gsearch); // Usar tu método DAL para buscar los anuncios
-            var resultado = anuncios.Select(a => new {
-                idAnuncio = a.IdAnuncio,
-                titulo = a.Titulo,
-                imagenBase64 = a.Imagen != null ? Convert.ToBase64String(a.Imagen) : string.Empty,
-                precio = a.Precio
-            });
+            if (string.IsNullOrEmpty(gsearch))
+            {
+                return RedirectToAction("Index");
+            }
 
-            return Json(resultado);
+            DalAnuncio dalAnuncio = new();
+            List<Anuncio> anuncios = dalAnuncio.Search(gsearch);
+            TempData["AnunciosBuscados"] = anuncios;
+            TempData["TextoBusqueda"] = gsearch;
+
+            return RedirectToAction("Index");
         }
+
         public IActionResult Privacy()
         {
             return View();
         }
 
-        public IActionResult Producto()
+        public IActionResult Producto(int id)
         {
-            IndexViewModel vm = new IndexViewModel();
-            DalAnuncio dalAnuncio = new DalAnuncio();
+            if (id <= 0)
+            {
+                return BadRequest("ID del producto no válido.");
+            }
 
-            vm.EtiquetaFiltros = new EtiquetaFiltros();
+            DalAnuncio dalAnuncio = new();
+            DalEtiqueta dalEtiqueta = new();
 
-            vm.EtiquetaAnuncio = new EtiquetaAnuncio();
-            vm.EtiquetaAnuncio.ArticulosFiltrados = TempData["Filtro"] == null ? dalAnuncio.Select() : dalAnuncio.SelectByTag(TempData["Filtro"].ToString());
+            Anuncio productoActual = dalAnuncio.SelectById(id);
+
+            if (productoActual == null)
+            {
+                return NotFound();
+            }
+
+            List<Etiqueta> etiquetas = dalEtiqueta.SelectEtiquetasByProductoId(id);
+
+            List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiquetas(etiquetas);
+
+            IndexViewModel vm = new()
+            {
+                ProductoActual = productoActual,
+                EtiquetaAnuncioVM = new EtiquetaAnuncioViewModel
+                {
+                    ArticulosFiltrados = productosRelacionados
+                }
+            };
+
             return View(vm);
         }
 
