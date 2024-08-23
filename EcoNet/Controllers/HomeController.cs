@@ -61,14 +61,11 @@ namespace EcoNet.Controllers
 
         public IActionResult Producto(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("ID del producto no válido.");
-            }
-
             DalAnuncio dalAnuncio = new();
             DalEtiqueta dalEtiqueta = new();
+            DalEtiquetaAnuncio dalEtiquetaAnuncio = new();
 
+            // Obtener el producto actual
             Anuncio productoActual = dalAnuncio.SelectById(id);
 
             if (productoActual == null)
@@ -76,21 +73,39 @@ namespace EcoNet.Controllers
                 return NotFound();
             }
 
-            List<Etiqueta> etiquetas = dalEtiqueta.SelectEtiquetasByProductoId(id);
+            List<EtiquetaAnuncio> relacionesEtiquetaAnuncio = dalEtiquetaAnuncio.SelectByFKAnuncio(id);
 
-            List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiquetas(etiquetas);
+            // Crear una lista para almacenar las descripciones de las etiquetas
+            List<Etiqueta> etiquetasDelAnuncio = new List<Etiqueta>();
 
+            foreach (var relacion in relacionesEtiquetaAnuncio)
+            {
+                // Obtener la etiqueta completa usando el ID de la relación
+                var etiqueta = dalEtiqueta.SelectById(relacion.Fketiqueta);
+                if (etiqueta != null)
+                {
+                    etiquetasDelAnuncio.Add(etiqueta); // Agregar la etiqueta a la lista
+                }
+            }
+
+            // Obtener productos relacionados usando las etiquetas
+            List<int> etiquetaIds = etiquetasDelAnuncio.Select(e => e.IdEtiqueta).ToList();
+            List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiquetas(etiquetaIds);
+
+            // Crear el ViewModel
             IndexViewModel vm = new()
             {
                 ProductoActual = productoActual,
                 EtiquetaAnuncioVM = new EtiquetaAnuncioViewModel
                 {
-                    ArticulosFiltrados = productosRelacionados
+                    ArticulosFiltrados = productosRelacionados ?? new List<Anuncio>(),
+                    EtiquetaAnuncios = etiquetasDelAnuncio // Pasar las etiquetas con la descripción
                 }
             };
 
             return View(vm);
         }
+
 
         public IActionResult AgregarProducto()
         {
@@ -191,7 +206,5 @@ namespace EcoNet.Controllers
 
             return View(viewModel);
         }
-
-       
     }
 }

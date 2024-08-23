@@ -1,34 +1,34 @@
 ﻿@model IndexViewModel
+
 @{
     ViewData["Title"] = "Producto";
 }
 
 <div class="container PaginaProducto">
     <div class="ProductoElegido ColorFondoSecundario">
-        <!-- Imagen del producto -->
-        <img src="data:image/png;base64,@Model.ImagenBase64" class="img-fluid" alt="FotoMuestra">
+        <img src="@Model.ProductoActual.Imagen" class="img-fluid" alt="FotoMuestra">
         <br />
         <div class="ContenedorCompra">
-            <!-- Precio del producto -->
             <h1>@Model.ProductoActual.Precio.ToString("F2") €</h1>
             <button class="btn BotonComprar">Comprar</button>
         </div>
         <hr>
-        <!-- Nombre del producto -->
         <h2>@Model.ProductoActual.Titulo</h2>
-        <!-- Descripción del producto -->
-        <p>@Model.ProductoActual.Descripcion</p>
         <br />
         <div>
-            <!-- Botones de filtros relacionados con el producto -->
-            @if (Model.EtiquetaFiltros != null && Model.EtiquetaFiltros.Filtros != null)
+            <p>@Model.ProductoActual.Descripcion</p>
+        </div>
+        <br />
+        <div>
+            @if (Model.EtiquetaAnuncioVM?.EtiquetaAnuncios != null && Model.EtiquetaAnuncioVM.EtiquetaAnuncios.Any())
             {
-                @foreach (var filtro in Model.EtiquetaFiltros.Filtros)
+                @foreach (Etiqueta etiqueta in Model.EtiquetaAnuncioVM.EtiquetaAnuncios)
                 {
-                    <button class="BotonFiltro2">@filtro</button>
+                    <button class="BotonFiltro2">@etiqueta.DescripcionEtiqueta</button>
                 }
             }
         </div>
+
     </div>
     <br />
     <br />
@@ -36,29 +36,22 @@
         <div class="row">
             <h2 class="text-start">Productos relacionados</h2>
             <hr />
-            <!-- Lista de productos similares -->
-            @if (Model.EtiquetaAnuncioVM != null && Model.EtiquetaAnuncioVM.ArticulosFiltrados != null)
+            @if (Model.EtiquetaAnuncioVM?.ArticulosFiltrados != null && Model.EtiquetaAnuncioVM.ArticulosFiltrados.Any())
             {
                 @foreach (Anuncio an in Model.EtiquetaAnuncioVM.ArticulosFiltrados)
                 {
                     <div class="col-md-6 col-sm-12 col-12 mb-2">
                         <div class="VerdePrincipal RecuadroProducto">
-                            <div>
-                                @if (an.Imagen != null && an.Imagen.Length > 0)
-                                {
-                                    var imgBase64 = Convert.ToBase64String(an.Imagen);
-                                    <img src="data:image/png;base64,@imgBase64" width="80%" height="80%" />
-                                }
-                                else
-                                {
-                                    <img src="https://via.placeholder.com/150" width="80%" height="80%" />
-                                }
-                            </div>
+                            <div><img src="@an.Imagen" width="80%" height="80%" alt="@an.Titulo" /></div>
                             <div>@an.Titulo</div>
                             <div>@an.Precio.ToString("F2") €</div>
                         </div>
                     </div>
                 }
+            }
+            else
+            {
+                <p>No se encontraron productos relacionados.</p>
             }
         </div>
     </div>

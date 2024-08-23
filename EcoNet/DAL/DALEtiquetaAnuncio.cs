@@ -81,6 +81,41 @@ namespace EcoNet.DAL
             return etiquetaAnuncio;
         }
 
+        public List<EtiquetaAnuncio?> SelectByFKAnuncio(int id)
+        {
+            List <EtiquetaAnuncio> etiquetaAnuncioList = new();
+            EtiquetaAnuncio? etiquetaAnuncio = null;
+            using var conn = dbConnection.GetConnection();
+
+            try
+            {
+                using var cmd = new SqlCommand("SELECT * FROM EtiquetaAnuncio WHERE FKAnuncio = @IdAnuncio", conn);
+                cmd.Parameters.AddWithValue("@IdAnuncio", id);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    etiquetaAnuncioList.Add(etiquetaAnuncio = new EtiquetaAnuncio
+                    {
+                        IdEtiquetaAnuncio = reader.GetInt32(reader.GetOrdinal("IdEtiquetaAnuncio")),
+                        Fketiqueta = reader.GetInt32(reader.GetOrdinal("FKEtiqueta")),
+                        Fkanuncio = reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return etiquetaAnuncioList;
+        }
+
         public void AsignarEtiquetaAnuncio(int anuncioId, int etiquetaId)
         {
             using var conn = dbConnection.GetConnection();
