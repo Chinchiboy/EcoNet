@@ -32,7 +32,7 @@
                         </form>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a class="BotonCrear ms-3 VerdePrincipal" asp-controller="Home" asp-action="AgregarProducto">Crear oferta</a>
+                            <a class="BotonCrear ms-3 VerdePrincipal" asp-controller="Home" asp-action="AgregarProducto">Crear anuncio</a>
                             <a class="ms-3" asp-controller="Profile" asp-action="Index">
                                 <img src="@User.Claims.FirstOrDefault(c => c.Type == "ProfilePictureUrl")?.Value ?? " /images/default-profile.png" alt="Perfil" class="" width="40" height="60" />
                             </a>
@@ -57,21 +57,15 @@
     <footer class="text-center mt-auto footer">
         <div class="container">
             <div class="row">
-                <div class="col-3">
+                <div class="col-4">
                     <h4>Sobre nosotros</h4>
                     <div>Nosotros</div>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <h4>Contactanos</h4>
                     <div>Gmail</div>
                     <div>Twitter</div>
                     <div>Instagram</div>
-                </div>
-                <div class="col-3">
-                    <h4>Legal</h4>
-                    <div>Prueba</div>
-                    <div>Prueba</div>
-                    <div>Prueba</div>
                 </div>
                 <div class="col-3">
                     <h4>Ayuda</h4>
