@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Views\Home\Profile.cshtml" />
     <None Include="Views\Home\_ChatPartial.cshtml" />
+    <Content Remove="Views\Home\Profile.cshtml" />
     <Content Remove="Views\Shared\_FiltrosMostradosPartial.cshtml" />
   </ItemGroup>
 
@@ -33,7 +35,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Home\Profile.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Shared\_FiltrosMostradosPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Home\Profile.cshtml" />
   </ItemGroup>
 
 </Project>

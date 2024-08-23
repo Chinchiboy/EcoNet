@@ -41,17 +41,15 @@ namespace EcoNet.Controllers
         [HttpGet]
         public IActionResult BuscarAnuncios(string gsearch)
         {
-            if (string.IsNullOrEmpty(gsearch))
+            var dalAnuncio = new DalAnuncio();  // Asegúrate de instanciar correctamente el DAL
+            var anunciosFiltrados = dalAnuncio.Search(gsearch);
+
+            var model = new EtiquetaAnuncio
             {
-                return RedirectToAction("Index");
-            }
+                ArticulosFiltrados = anunciosFiltrados
+            };
 
-            DalAnuncio dalAnuncio = new();
-            List<Anuncio> anuncios = dalAnuncio.Search(gsearch);
-            TempData["AnunciosBuscados"] = anuncios;
-            TempData["TextoBusqueda"] = gsearch;
-
-            return RedirectToAction("Index");
+            return PartialView("_AnunciosParTial", model);
         }
 
         public IActionResult Nosotros()
