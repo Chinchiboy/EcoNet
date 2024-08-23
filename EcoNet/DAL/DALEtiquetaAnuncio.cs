@@ -81,39 +81,36 @@ namespace EcoNet.DAL
             return etiquetaAnuncio;
         }
 
-        public List<EtiquetaAnuncio?> SelectByFKAnuncio(int id)
+        public List<string> SelectDescriptionsByFKAnuncio(int id)
         {
-            List <EtiquetaAnuncio> etiquetaAnuncioList = new();
-            EtiquetaAnuncio? etiquetaAnuncio = null;
+            List<string> descripcionEtiquetaList = new();
             using var conn = dbConnection.GetConnection();
 
             try
             {
-                using var cmd = new SqlCommand("SELECT * FROM EtiquetaAnuncio WHERE FKAnuncio = @IdAnuncio", conn);
+                using var cmd = new SqlCommand("SELECT b.DescripcionEtiqueta " +
+                                                "FROM EtiquetaAnuncio a " +
+                                                "INNER JOIN Etiqueta b ON a.FKEtiqueta = b.IdEtiqueta " +
+                                                "WHERE a.FKAnuncio = @IdAnuncio", conn);
                 cmd.Parameters.AddWithValue("@IdAnuncio", id);
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
-                if (reader.Read())
+                while (reader.Read())
                 {
-                    etiquetaAnuncioList.Add(etiquetaAnuncio = new EtiquetaAnuncio
-                    {
-                        IdEtiquetaAnuncio = reader.GetInt32(reader.GetOrdinal("IdEtiquetaAnuncio")),
-                        Fketiqueta = reader.GetInt32(reader.GetOrdinal("FKEtiqueta")),
-                        Fkanuncio = reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
-                    });
+                    string descripcion = reader.GetString(reader.GetOrdinal("DescripcionEtiqueta"));
+                    descripcionEtiquetaList.Add(descripcion);
                 }
-                reader.Close();
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"Error en SelectDescriptionsByFKAnuncio: {ex.Message}");
             }
             finally
             {
                 conn.Close();
             }
 
-            return etiquetaAnuncioList;
+            return descripcionEtiquetaList;
         }
 
         public void AsignarEtiquetaAnuncio(int anuncioId, int etiquetaId)

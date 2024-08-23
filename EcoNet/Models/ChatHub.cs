@@ -10,6 +10,7 @@ namespace EcoNet.Models
         {
             try
             {
+                
                 var mensaje = new Mensaje
                 {
                     Texto = message,

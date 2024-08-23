@@ -62,5 +62,15 @@
     @await Html.PartialAsync("_AnunciosPartial", Model.EtiquetaAnuncio)
 
 </div>
-
+<script>
+    // Verifica si ViewBag.MostrarModal tiene un valor
+    @if (TempData["MostrarModal"] != null)
+    {
+        <text>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelector('[data-bs-target="#myModal"]').click();
+            });
+        </text>
+    }
+</script>
 <script src="~/js/Busqueda.js"></script>
