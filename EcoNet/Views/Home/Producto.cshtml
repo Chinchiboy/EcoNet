@@ -41,11 +41,13 @@
                 @foreach (Anuncio an in Model.EtiquetaAnuncioVM.ArticulosFiltrados)
                 {
                     <div class="col-md-6 col-sm-12 col-12 mb-2">
-                        <div class="VerdePrincipal RecuadroProducto">
-                            <div><img src="@an.Imagen" width="80%" height="80%" alt="@an.Titulo" /></div>
-                            <div>@an.Titulo</div>
-                            <div>@an.Precio.ToString("F2") €</div>
-                        </div>
+                        <a href="@Url.Action("Producto", "Home", new { id = an.IdAnuncio })" class="text-decoration-none">
+                            <div class="VerdePrincipal RecuadroProducto">
+                                <div><img src="@an.Imagen" width="80%" height="80%" alt="@an.Titulo" /></div>
+                                <div>@an.Titulo</div>
+                                <div>@an.Precio.ToString("F2") €</div>
+                            </div>
+                        </a>
                     </div>
                 }
             }
@@ -54,5 +56,7 @@
                 <p>No se encontraron productos relacionados.</p>
             }
         </div>
+    </div>
+
     </div>
 </div>

@@ -96,8 +96,6 @@ namespace EcoNet.Controllers
             return View(vm);
         }
 
-
-
         public IActionResult AgregarProducto()
         {
             IndexViewModel vm = new IndexViewModel();
