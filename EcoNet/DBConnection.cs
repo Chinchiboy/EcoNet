@@ -40,53 +40,10 @@ namespace EcoNet
         {
             return $"Data Source={servidor};Initial Catalog={nombreBaseDatos};User ID={usuario};Password={password};";
         }
-        /*
-        public void Open()
-        {
-            try
-            {
-                if (connection == null || connection.State == System.Data.ConnectionState.Closed)
-                {
-                    connection = new SqlConnection(GetConnectionString());
-                    connection.Open();
-                }
-                else
-                {
-                    throw new InvalidOperationException("La conexión ya está abierta.");
-                }
-            }
-            catch (Exception ex)
-            {
 
-            }
-        }
-
-        public void Close()
-        {
-            try
-            {
-                if (connection != null && connection.State != System.Data.ConnectionState.Closed)
-                {
-                    connection.Close();
-                    connection = null; // Liberar el recurso.
-                }
-                else
-                {
-                    throw new InvalidOperationException("La conexión ya está cerrada.");
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-        */
         public SqlConnection GetConnection()
         {
-            //if (connection == null || connection.State == System.Data.ConnectionState.Closed)
-            //{
-            //    throw new InvalidOperationException("La conexión no está abierta.");
-            //}
+            
 
             return connection;
         }

@@ -1,30 +1,33 @@
 ﻿@model IndexViewModel
-
 @{
     ViewData["Title"] = "Producto";
 }
 
 <div class="container PaginaProducto">
     <div class="ProductoElegido ColorFondoSecundario">
-        <img src="https://www.travelandleisure.com/thmb/Ag8nh_g-dqxboIRas-uGLkBUH8g=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/FlowerFieldsinCarlsbadRanch_ChelseaLoren01-61144763f8bc45a4843f1ea7b72434b1.jpg" class="img-fluid" alt="FotoMuestra">
+        <!-- Imagen del producto -->
+        <img src="data:image/png;base64,@Model.ImagenBase64" class="img-fluid" alt="FotoMuestra">
         <br />
         <div class="ContenedorCompra">
-            <h1>250€</h1>
+            <!-- Precio del producto -->
+            <h1>@Model.ProductoActual.Precio.ToString("F2") €</h1>
             <button class="btn BotonComprar">Comprar</button>
         </div>
         <hr>
-        <h2>Nombre Articulo</h2>
-        <h3>Kisaragi</h3>
+        <!-- Nombre del producto -->
+        <h2>@Model.ProductoActual.Titulo</h2>
+        <!-- Descripción del producto -->
+        <p>@Model.ProductoActual.Descripcion</p>
         <br />
         <div>
-        <p>TextoEjemploTextoEjemploTextoEjemploTextoEjemploTexto
-            EjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemplo TextoEjemploTextoEjempl oTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemploTextoEjemplo</p>
-        </div>
-        <br />
-        <div>
-            <button class="BotonFiltro2">Filtro</button>
-            <button class="BotonFiltro2">Filtro</button>
-            <button class="BotonFiltro2">Filtro</button>
+            <!-- Botones de filtros relacionados con el producto -->
+            @if (Model.EtiquetaFiltros != null && Model.EtiquetaFiltros.Filtros != null)
+            {
+                @foreach (var filtro in Model.EtiquetaFiltros.Filtros)
+                {
+                    <button class="BotonFiltro2">@filtro</button>
+                }
+            }
         </div>
     </div>
     <br />
@@ -33,18 +36,30 @@
         <div class="row">
             <h2 class="text-start">Productos relacionados</h2>
             <hr />
-            @foreach (Anuncio an in Model.EtiquetaAnuncio.ArticulosFiltrados)
+            <!-- Lista de productos similares -->
+            @if (Model.EtiquetaAnuncioVM != null && Model.EtiquetaAnuncioVM.ArticulosFiltrados != null)
             {
-                <div class="col-md-6 col-sm-12 col-12 mb-2">
-                    <div class="VerdePrincipal RecuadroProducto">
-                        <div><img src="https://www.jetscoot.com/pub/media/wysiwyg/alquiler-moto/alquilar-moto-symsr-125cc.png" width="80%" height="80%" /></div>
-                        <div>@an.Titulo</div>
-                        <div>@an.Precio €</div>
+                @foreach (Anuncio an in Model.EtiquetaAnuncioVM.ArticulosFiltrados)
+                {
+                    <div class="col-md-6 col-sm-12 col-12 mb-2">
+                        <div class="VerdePrincipal RecuadroProducto">
+                            <div>
+                                @if (an.Imagen != null && an.Imagen.Length > 0)
+                                {
+                                    var imgBase64 = Convert.ToBase64String(an.Imagen);
+                                    <img src="data:image/png;base64,@imgBase64" width="80%" height="80%" />
+                                }
+                                else
+                                {
+                                    <img src="https://via.placeholder.com/150" width="80%" height="80%" />
+                                }
+                            </div>
+                            <div>@an.Titulo</div>
+                            <div>@an.Precio.ToString("F2") €</div>
+                        </div>
                     </div>
-                </div>
+                }
             }
         </div>
     </div>
 </div>
-<script>
-</script>
