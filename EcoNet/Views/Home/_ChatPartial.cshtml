@@ -18,8 +18,8 @@
     <div class="chat-header">
         <img src="https://via.placeholder.com/40" alt="User">
         <div class="chat-info">
-            <div class="title">Chat Title</div>
-            <div class="subtitle">Subtitle or status</div>
+            <div id="chat-title" class="title">Chat Title</div>
+            <div id="chat-subtitle" class="subtitle">Subtitle or status</div>
         </div>
         <button type="button" id="closeMessages" class="close BtnClose" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -44,7 +44,56 @@
     var chatId = 0;
     var userLogged = '@userLogged';
     
+    function addOfferToChat(item) {
+        const chatBody = document.getElementById("chatBody");
+
+        const offerDiv = document.createElement("div");
+        offerDiv.className = item.creador == userLogged ? "message-right" : "message-left";
+
+        const priceLabel = document.createElement("label");
+        priceLabel.textContent = `Oferta: ${item.precio}€`;
+        priceLabel.className = "price-label";
+
+        const iconContainer = document.createElement("div");
+        iconContainer.className = "icon-container";
+
+        const acceptIcon = document.createElement("i");
+        acceptIcon.className = "bi bi-check-circle-fill text-success accept-icon";
+        acceptIcon.style.cursor = "pointer";
+        acceptIcon.style.marginRight = "10px";
+
+        const rejectIcon = document.createElement("i");
+        rejectIcon.className = "bi bi-x-circle-fill text-danger reject-icon";
+        rejectIcon.style.cursor = "pointer";
+
+        if (item.aceptada == 0) // Si no está ni aceptada ni rechazada añadimos los eventos
+        {
+            acceptIcon.addEventListener("click", async function () {
+                await fetch(`/Oferta/UpdateOferta?idOferta=${item.idOferta}&aceptada=${1}`);
+            });
+
+            rejectIcon.addEventListener("click", async function () {
+                await fetch(`/Oferta/UpdateOferta?idOferta=${item.idOferta}&aceptada=${-1}`);
+            });
+        }
+        else if (item.aceptada == 1) {
+            rejectIcon.className = "disabled-icon";
+        }
+        else {
+            acceptIcon.className = "disabled-icon";
+        }
+
+        offerDiv.appendChild(priceLabel);
+        iconContainer.appendChild(acceptIcon);
+        iconContainer.appendChild(rejectIcon);
+        offerDiv.appendChild(iconContainer);
+
+        chatBody.appendChild(offerDiv);
+    }
+
     
+
+
     document.addEventListener("DOMContentLoaded", async function () {
         const arrowUp = document.getElementById("ArrowUp");
         const arrowDown = document.getElementById("ArrowDown");
@@ -59,7 +108,6 @@
         // Obtener los chats y añadir los encabezados de chat
         const chats = await fetch(`/Chat/GetChats?`).then(response => response.json());
         chats.forEach(chat => {
-            console.log(chat.nombreDestinatario)
             addChatHeader(chat.nombreDestinatario, chat.tituloAnuncio, chat.chat.idChat);
         });
 
@@ -99,13 +147,21 @@
                 const chatBody = document.getElementById("chatBody");
                 chatBody.innerHTML = "";
 
-                const [messages, offers] = await Promise.all([
+                const [messages, offers, chatHeaderInfo] = await Promise.all([
                     fetch(`/Chat/GetMessages?chatId=${chatId}`).then(response => response.json()),
-                    fetch(`/Chat/GetOffers?chatId=${chatId}`).then(response => response.json())
+                    fetch(`/Chat/GetOffers?chatId=${chatId}`).then(response => response.json()),
+                    fetch(`/Chat/GetChat?chatId=${chatId}`).then(response => response.json())
                 ]);
 
                 // Combinar y ordenar los mensajes y ofertas por fecha
                 const combined = [...messages, ...offers].sort((a, b) => new Date(a.horaCreacion) - new Date(b.fechaCreacion));
+
+                const chatTittle = document.getElementById("chat-title");
+                const chatSubtittle = document.getElementById("chat-subtitle");
+
+                chatTittle.textContent = chatHeaderInfo.tituloAnuncio;
+                chatSubtittle.textContent = chatHeaderInfo.nombreDestinatario;
+
 
                 combined.forEach(item => {
                     if (item.idMensaje !== undefined) { // Si tiene el campo es un mensaje
@@ -124,10 +180,6 @@
 
         closeBtn.addEventListener("click", function () {
             ventanaChat.style.display = "none";
-        });
-
-        confirmChoice.addEventListener("click", function () {
-            userLogged = parseInt(document.getElementById("chooseUser").value);
         });
     });
 
@@ -151,10 +203,14 @@
 
     document.getElementById("sendButton").addEventListener("click", function (event) {
         const messageInput = document.getElementById("messageInput");
-        console.log("Chat ID:", chatId);
+        console.log("Enviando mensaje con los siguientes datos:", {
+            userLogged,
+            message: messageInput.value,
+            chatId
+        });
 
         if (userLogged && messageInput.value && chatId > 0) { // Asegúrate de que chatId es válido
-            connection.invoke("SendMessage", userLogged, messageInput.value, chatId)
+            connection.invoke("SendMessage", parseInt(userLogged), messageInput.value, chatId)
                 .then(() => messageInput.value = "")
                 .catch(function (err) {
                     console.error("Error al enviar el mensaje:", err.toString());
@@ -166,59 +222,14 @@
         event.preventDefault();
     });
 
-    function addOfferToChat(item) {
-        const chatBody = document.getElementById("chatBody");
-
-        const offerDiv = document.createElement("div");
-        offerDiv.className = item.creador == userLogged ? "message-right" : "message-left";
-
-        const priceLabel = document.createElement("label");
-        priceLabel.textContent = `Oferta: ${item.precio}€`;
-        priceLabel.className = "price-label";
-
-        const iconContainer = document.createElement("div");
-        iconContainer.className = "icon-container";
-
-        const acceptIcon = document.createElement("i");
-        acceptIcon.className = "bi bi-check-circle-fill text-success accept-icon";
-        acceptIcon.style.cursor = "pointer";
-        acceptIcon.style.marginRight = "10px";
-
-        const rejectIcon = document.createElement("i");
-        rejectIcon.className = "bi bi-x-circle-fill text-danger reject-icon";
-        rejectIcon.style.cursor = "pointer";
-
-        if (item.aceptada == 0) // Si no está ni aceptada ni rechazada añadimos los eventos
-        {
-            acceptIcon.addEventListener("click", function () {
-                alert("Oferta aceptada");
-            });
-
-            rejectIcon.addEventListener("click", function () {
-                alert("Oferta rechazada");
-            });
-        }
-        else if (item.aceptada == 1) {
-            rejectIcon.classList.add("disabled-icon");
-        }
-        else {
-            acceptIcon.classList.add("disabled-icon");
-        }
-
-        offerDiv.appendChild(priceLabel);
-        iconContainer.appendChild(acceptIcon);
-        iconContainer.appendChild(rejectIcon);
-        offerDiv.appendChild(iconContainer);
-
-        chatBody.appendChild(offerDiv);
-    }
-
+    
     function addChatHeader(NombreUsuario, NombreAnuncio, idAnuncio) {
         const barMessages = document.getElementById("BarMessages");
 
         const chatHeaderDiv = document.createElement("div");
         chatHeaderDiv.className = "HeaderChat";
         chatHeaderDiv.setAttribute("id", idAnuncio);
+        chatHeaderDiv.style.display = 'none'; // para que no se muestren al prinicipio
 
         const icon = document.createElement("i");
         icon.className = "bi bi-person-circle";

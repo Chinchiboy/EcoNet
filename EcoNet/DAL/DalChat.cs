@@ -80,33 +80,48 @@ namespace EcoNet.DAL
 
         /**
          * <summary>
-         * Obtains a chat header by the id of the chat
+         * Obtains a chat header by the id of the chat the user is also needed to know who is the reciver
          * </summary>
          * <returns>
          * The header of the chat if it was successfull retriving it or a null if there was an error
          * </returns>
          */
-        public Chat? SelectById(int id)
+        public ChatViewModel? SelectById(int id, int idUsuario)
         {
-            Chat? c = null;
+            ChatViewModel? c = null;
             try
             {
                 using var conn = dbConnection.GetConnection();
 
-                using var cmd = new SqlCommand("SELECT * FROM Chat WHERE IdChat = @IdChat", conn);
+                using var cmd = new SqlCommand(@"SELECT *, 
+                                    u.Usuario as 'NombreDestinatario', 
+                                    a.Titulo as 'TituloAnuncio' 
+                                    FROM Chat as c
+                                    JOIN Usuario as u ON u.IdUsuario = c.FKVendedor OR u.IdUsuario = c.FKComprador
+                                    JOIN Anuncio as a ON a.IdAnuncio = c.FkAnuncio
+                                    WHERE c.IdChat = @IdChat 
+                                    AND u.IdUsuario != @IdUsuario
+                                    ", conn);
                 cmd.Parameters.AddWithValue("@IdChat", id);
+                cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
                 conn.Open();
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    c = new Chat
+                    Chat aux = new()
                     {
                         IdChat = reader.GetInt32(reader.GetOrdinal("IdChat")),
                         Fkanuncio = reader.GetInt32(reader.GetOrdinal("FKAnuncio")),
                         Fkvendedor = reader.GetInt32(reader.GetOrdinal("FKVendedor")),
                         Fkcomprador = reader.GetInt32(reader.GetOrdinal("FKComprador")),
                     };
+                    c = (new ChatViewModel
+                    {
+                        Chat = aux,
+                        NombreDestinatario = reader.GetString(reader.GetOrdinal("NombreDestinatario")),
+                        TituloAnuncio = reader.GetString(reader.GetOrdinal("TituloAnuncio"))
+                    });
                 }
                 reader.Close();
                 conn.Close();

@@ -162,9 +162,9 @@ namespace EcoNet.DAL
          */
         public bool UpdateStatus(int idOferta, Int16 acceptada)
         {
-            if (idOferta > 0)
+            if (idOferta < 0)
                 throw new Exception("Incorrect id");
-            if (acceptada != 1 || acceptada != 0 || acceptada != -1)
+            if (acceptada != (Int16)1 && acceptada != (Int16)0 && acceptada != -1)
                 throw new Exception("Valor incorrecto!");
 
             using var connection = dbConnection.GetConnection();
