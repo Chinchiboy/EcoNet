@@ -59,13 +59,14 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
-                        Imagen = (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
                         Fkusuario = reader.GetInt32(reader.GetOrdinal("FKUsuario")),
                         EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
                     };
+
                 }
                 reader.Close();
                 conn.Close();
@@ -106,14 +107,53 @@ namespace EcoNet
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
-                        // Agrega aquí las demás propiedades necesarias
                     });
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en SelectByEtiquetas: {ex.Message}");
-                // Aquí podrías también usar un logger para registrar el error
+            }
+
+            return anunciosRelacionados;
+        }
+
+        public List<Anuncio> SelectByEtiquetas(List<int> idEtiquetas)
+        {
+            List<Anuncio> anunciosRelacionados = new List<Anuncio>();
+
+            if (idEtiquetas == null || !idEtiquetas.Any())
+            {
+                return anunciosRelacionados;
+            }
+
+            try
+            {
+                using var conn = dbConnection.GetConnection();
+
+                var query = $@"SELECT DISTINCT a.*
+                            FROM Anuncio a
+                            INNER JOIN EtiquetaAnuncio ae ON a.IdAnuncio = ae.FKAnuncio
+                            WHERE ae.FKEtiqueta IN ({string.Join(",", idEtiquetas)})";
+
+                using var cmd = new SqlCommand(query, conn);
+
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    anunciosRelacionados.Add(new Anuncio
+                    {
+                        IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
+                        Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en SelectByEtiquetas: {ex.Message}");
             }
 
             return anunciosRelacionados;
@@ -168,7 +208,7 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
-                        Imagen = (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                         FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),

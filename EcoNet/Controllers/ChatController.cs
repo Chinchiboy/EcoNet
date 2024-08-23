@@ -44,5 +44,13 @@ namespace EcoNet.Controllers
             List<ChatViewModel>? chats = aux.SelectUserChats(Int32.Parse(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value));
             return Json(chats);
         }
+
+        [HttpGet]
+        public IActionResult GetChat(int chatId)
+        {
+            DalChat aux = new();
+            ChatViewModel? chat = aux.SelectById(chatId, Int32.Parse(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+            return Json(chat);
+        }
     }
 }
