@@ -54,6 +54,11 @@ namespace EcoNet.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Nosotros()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -61,13 +66,9 @@ namespace EcoNet.Controllers
 
         public IActionResult Producto(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("ID del producto no válido.");
-            }
-
             DalAnuncio dalAnuncio = new();
             DalEtiqueta dalEtiqueta = new();
+            DalEtiquetaAnuncio dalEtiquetaAnuncio = new();
 
             Anuncio productoActual = dalAnuncio.SelectById(id);
 
@@ -76,21 +77,26 @@ namespace EcoNet.Controllers
                 return NotFound();
             }
 
-            List<Etiqueta> etiquetas = dalEtiqueta.SelectEtiquetasByProductoId(id);
+            List<string> descripciones = dalEtiquetaAnuncio.SelectDescriptionsByFKAnuncio(id);
 
-            List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiquetas(etiquetas);
+            List<int> etiquetaIds = dalEtiqueta.SelectIdsByDescriptions(descripciones);
+
+            List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiquetas(etiquetaIds);
 
             IndexViewModel vm = new()
             {
                 ProductoActual = productoActual,
                 EtiquetaAnuncioVM = new EtiquetaAnuncioViewModel
                 {
-                    ArticulosFiltrados = productosRelacionados
+                    ArticulosFiltrados = productosRelacionados ?? new List<Anuncio>(),
+                    EtiquetaAnuncios = descripciones.Select(d => new Etiqueta { DescripcionEtiqueta = d }).ToList()
                 }
             };
 
             return View(vm);
         }
+
+
 
         public IActionResult AgregarProducto()
         {
@@ -100,7 +106,6 @@ namespace EcoNet.Controllers
             vm.ListaEtiquetas = listaE;
             return View(vm);
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -191,7 +196,5 @@ namespace EcoNet.Controllers
 
             return View(viewModel);
         }
-
-       
     }
 }

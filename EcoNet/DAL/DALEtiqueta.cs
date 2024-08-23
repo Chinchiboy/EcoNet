@@ -97,6 +97,37 @@ namespace EcoNet.DAL
             return etiquetas;
         }
 
+        public List<int> SelectIdsByDescriptions(List<string> descripciones)
+        {
+            List<int> etiquetaIds = new();
+            using var conn = dbConnection.GetConnection();
+
+            try
+            {
+                var descripcionParams = string.Join(",", descripciones.Select(d => $"'{d}'"));
+
+                var query = $"SELECT IdEtiqueta FROM Etiqueta WHERE DescripcionEtiqueta IN ({descripcionParams})";
+
+                using var cmd = new SqlCommand(query, conn);
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    etiquetaIds.Add(reader.GetInt32(reader.GetOrdinal("IdEtiqueta")));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en SelectIdsByDescriptions: {ex.Message}");
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return etiquetaIds;
+        }
+
 
         public void Add(Etiqueta etiqueta)
         {
