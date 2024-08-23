@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using System.Globalization;
 using EcoNet.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EcoNet.Controllers
 {
@@ -96,9 +97,15 @@ namespace EcoNet.Controllers
 
             return View(vm);
         }
-
+                
         public IActionResult AgregarProducto()
         {
+            if (!User.IsInRole("Logged"))
+            {
+                TempData["MostrarModal"] = true;
+                return RedirectToAction("Index", "Home");
+            }
+
             IndexViewModel vm = new IndexViewModel();
             DalEtiqueta dalEtiqueta = new DalEtiqueta();
             List<Etiqueta> listaE = dalEtiqueta.Select();

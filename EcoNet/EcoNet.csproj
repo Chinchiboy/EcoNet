@@ -15,6 +15,7 @@
   <ItemGroup>
     <None Include="Views\Home\_FiltrosMostradosPartial.cshtml" />
     <None Include="wwwroot\css\EstilosEconet.css" />
+    <None Include="wwwroot\Images\LogoRecicleNet3.0.png" />
   </ItemGroup>
 
   <ItemGroup>

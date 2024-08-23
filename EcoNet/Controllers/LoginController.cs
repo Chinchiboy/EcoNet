@@ -32,7 +32,8 @@ namespace EcoNet.Controllers
                 {
                     new(ClaimTypes.Name, usuario.NombreUsuario),
                     new(ClaimTypes.Email, usuario.Email),
-                    new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString())
+                    new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
+                    new(ClaimTypes.Role, "Logged")
                 };
 
                 ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
