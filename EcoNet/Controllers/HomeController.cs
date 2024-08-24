@@ -130,6 +130,12 @@ namespace EcoNet.Controllers
             return View(a);
         }
 
+        public IActionResult Politicas()
+        {
+            IndexViewModel vm = new IndexViewModel();
+            return View(vm);
+        }
+
         [HttpPost]
         public IActionResult AgregarProducto(string title, string description, string price, List<int> selectedEtiquetas)
         {

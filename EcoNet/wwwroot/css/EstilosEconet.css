@@ -48,6 +48,10 @@ footer hr{
     color: #fafaff;
 }
 
+footer h4{
+    font-size: 2rem;
+}
+
 a {
     color: black;
 }
@@ -100,6 +104,18 @@ h5 {
     background-color: #D9D9D9;
 }
 
+a.ColorEnlace {
+    color: #FAFAFF !important;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+a.ColorEnlace:hover{
+    text-decoration: underline;
+}
+
+
 .Links {
     text-align: center;
     font-size: 0.75rem;
@@ -140,8 +156,13 @@ h5 {
 }
 
 .NombreWebBot {
-    margin-top: 7.5rem;
+    margin-top: 12rem;
+    font-size: 2rem;
     color: #fafaff;
+}
+
+.NombreWebBot:hover {
+    text-decoration: underline;
 }
 
 .Messages {
