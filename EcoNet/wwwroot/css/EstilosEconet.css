@@ -52,6 +52,14 @@ a {
     color: black;
 }
 
+h5 {
+    font-size: 1.3rem;
+    background-color: #FAFAFF;
+    border-radius: 25px;
+    color: black;
+    padding: 5px;
+}
+
 /*Clases*/
 
 .ColorFondoSecundario {
@@ -75,6 +83,10 @@ a {
 
 .AzulDestacado {
     background-color: #1B98E0;
+}
+
+.LogoText{
+    font-size: 3rem !important;
 }
 
 .HeaderBorder {
@@ -344,14 +356,15 @@ a {
 }
 
     /*Botones*/
-    .BotonHeader {
-        background-color: #fafaff;
-        font-size: 1.25rem;
-        border: solid 3px #329F5B;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: background-color 0.2s ease, transform 0.2s ease;
-    }
+
+.BotonHeader {
+    background-color: #fafaff;
+    font-size: 1.60rem;
+    border: solid 3px #329F5B;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
 
     .BotonHeader:hover {
         background-color: #329F5B;
@@ -362,7 +375,7 @@ a {
 
 .Buscador {
     background-color: #D9D9D9;
-    font-size: 1.15rem;
+    font-size: 1.55rem;
     border-radius: 100px;
     width: 20rem;
 }
@@ -378,15 +391,15 @@ a {
         opacity: 1;
     }
 
-.BotonCrear{
-    text-decoration:none;
-    width:12.5rem;
+.BotonCrear {
+    text-decoration: none;
+    width: 12.5rem;
     border-radius: 25px;
     text-align: center;
-    padding-top:6px;
-    padding-bottom:6px;
-    padding-left:12px;
-    padding-right:12px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 12px;
+    padding-right: 12px;
     margin-left: 1rem;
     margin-right: 1rem;
     font-size: 1.15rem;
@@ -437,6 +450,24 @@ a {
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.BotonEnlace {
+    padding-left: 4rem;
+    padding-right: 4rem;
+    font-size: 1.3rem;
+    border-radius: 25px;
+    background-color: #1B98E0;
+    color: #fafaff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+    .BotonEnlace:hover {
+        background-color: #177AB3;
+        color: #fafaff;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
 .BtnClose {
     border: 0px;
@@ -494,6 +525,11 @@ a {
         opacity: 1;
     }
 
+.carousel-item img {
+    width: 100%;
+    height: 500px; /* Ajusta esta altura según tus necesidades */
+    object-fit: cover;
+}
 
 .box-shadow {
     box-shadow: 0 .75rem .75rem rgba(0, 0, 0, .05) !important;
