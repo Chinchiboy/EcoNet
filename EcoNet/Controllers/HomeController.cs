@@ -60,7 +60,16 @@ namespace EcoNet.Controllers
 
         public IActionResult Profile()
         {
-            return View();
+            var nameClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            DalUsuario dalUsuario = new DalUsuario();
+            if (nameClaim != null)
+            {
+                Usuario? usuario = dalUsuario.SelectById(int.Parse(nameClaim));
+                Debug.WriteLine("Usuario " + usuario + " " + nameClaim);
+                return View(usuario);
+            }
+            return RedirectToAction("Index", "Home");
+
         }
 
         public IActionResult Privacy()
