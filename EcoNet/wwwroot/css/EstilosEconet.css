@@ -1,4 +1,15 @@
 ﻿/*Etiquetas*/
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Para Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 
 ﻿html, body {
     height: 100%;
@@ -194,6 +205,7 @@ a.ColorEnlace:hover{
 .HeaderBarMessages svg:hover {
     color: white;
     border: 1px solid white;
+    cursor: pointer;
 }
 .HeaderChat {
     display: flex;
@@ -220,7 +232,7 @@ a.ColorEnlace:hover{
 }
 
 .chat-box {
-    width: 22rem;
+    width: 23rem;
     height: 25rem;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -229,7 +241,7 @@ a.ColorEnlace:hover{
     flex-direction: column;
     position: fixed;
     bottom: 30px;
-    right: 310px;
+    right: calc(22rem + 60px);
     z-index: 1001;
 }
 
@@ -315,13 +327,78 @@ a.ColorEnlace:hover{
     width: 80%;
 }
 
-.chat-footer button {
+.chat-footer button, .oferta-footer button {
     padding: 8px 16px;
     background-color: #4CAF50;
-    color: white;
+    color: black;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.chat-footer button:hover, .oferta-footer button:hover {
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#VentanaOferta {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.oferta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+    margin-bottom: 20px;
+    background-color: #58D687;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.oferta-header label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.oferta-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+.oferta-body input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.oferta-body input[type="number"]:focus {
+    border-color: #007bff;
+}
+
+.oferta-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px;
 }
 
 .price-label {
