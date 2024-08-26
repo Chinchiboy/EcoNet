@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Globalization;
 using EcoNet.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Data.SqlClient;
 
 namespace EcoNet.Controllers
 {
@@ -108,27 +109,45 @@ namespace EcoNet.Controllers
 
             return View(vm);
         }
-                
+
         public IActionResult AgregarProducto()
         {
-            if (!User.IsInRole("Logged"))
+            try
             {
-                TempData["MostrarModal"] = true;
-                return RedirectToAction("Index", "Home");
+                if (!User.IsInRole("Logged"))
+                {
+                    TempData["MostrarModal"] = true;
+                    return RedirectToAction("Index", "Home");
+                }
+
+                IndexViewModel vm = new();
+                DalEtiqueta dalEtiqueta = new();
+
+                try
+                {
+                    List<Etiqueta> listaE = dalEtiqueta.Select();
+                    vm.ListaEtiquetas = listaE;
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine($"SQL Error: {ex.Message}");
+                    return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"General Error: {ex.Message}");
+                    return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                }
+
+                return View(vm);
             }
-
-            IndexViewModel vm = new IndexViewModel();
-            DalEtiqueta dalEtiqueta = new DalEtiqueta();
-            List<Etiqueta> listaE = dalEtiqueta.Select();
-            vm.ListaEtiquetas = listaE;
-            return View(vm);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en AgregarProducto: {ex.Message}");
+                return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
 
         public IActionResult MostrarAnuncio(int id, DalAnuncio dalAnuncio)
         {
@@ -141,55 +160,83 @@ namespace EcoNet.Controllers
 
         public IActionResult Politicas()
         {
-            IndexViewModel vm = new IndexViewModel();
+            IndexViewModel vm = new();
             return View(vm);
         }
 
         [HttpPost]
-        public IActionResult AgregarProducto(string title, string description, string price, List<int> selectedEtiquetas)
+        public IActionResult AgregarProducto(string title, string description, string price, List<int> selectedEtiquetas, IFormFile imagen)
         {
             string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!decimal.TryParse(price, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal precio))
+            byte[] imageBytes = null;
+            if (imagen != null && imagen.Length > 0)
             {
-                ModelState.AddModelError("price", "El precio no es válido.");
-                return View();
+                using (var memoryStream = new MemoryStream())
+                {
+                    imagen.CopyTo(memoryStream);
+                    imageBytes = memoryStream.ToArray();
+                }
             }
 
             using var transaction = new System.Transactions.TransactionScope();
             try
             {
+                if (!decimal.TryParse(price, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal precio))
+                {
+                    ModelState.AddModelError("price", "El precio no es válido.");
+                    return View();
+                }
+
                 Anuncio nuevoAnuncio = new()
                 {
                     Titulo = title,
                     Descripcion = description,
                     Precio = precio,
                     Fkusuario = int.Parse(usuarioId),
-                    EstaVendido = false
+                    EstaVendido = false,
+                    Imagen = imageBytes
                 };
 
                 DalAnuncio dalAnuncio = new();
-                nuevoAnuncio.IdAnuncio = dalAnuncio.Add(nuevoAnuncio);
 
-                if (nuevoAnuncio.IdAnuncio <= 0)
+                try
                 {
-                    throw new Exception("Error al insertar el anuncio.");
+                    nuevoAnuncio.IdAnuncio = dalAnuncio.Add(nuevoAnuncio);
+
+                    if (nuevoAnuncio.IdAnuncio <= 0)
+                    {
+                        throw new Exception("Error al insertar el anuncio.");
+                    }
+
+                    DalEtiquetaAnuncio dalEtiquetaAnuncio = new();
+                    foreach (int etiquetaId in selectedEtiquetas)
+                    {
+                        dalEtiquetaAnuncio.AsignarEtiquetaAnuncio(nuevoAnuncio.IdAnuncio, etiquetaId);
+                    }
+
+                    transaction.Complete();
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine($"SQL Error: {ex.Message}");
+                    transaction.Dispose();
+                    return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"General Error: {ex.Message}");
+                    transaction.Dispose();
+                    return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
                 }
 
-                DalEtiquetaAnuncio dalEtiquetaAnuncio = new();
-                foreach (int etiquetaId in selectedEtiquetas)
-                {
-                    dalEtiquetaAnuncio.AsignarEtiquetaAnuncio(nuevoAnuncio.IdAnuncio, etiquetaId);
-                }
-
-                transaction.Complete();
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {
                 transaction.Dispose();
-                ModelState.AddModelError(string.Empty, "Error al agregar el producto: " + ex.Message);
-                return RedirectToAction("Index", "Home");
+                Console.WriteLine($"Error en AgregarProducto: {ex.Message}");
+                return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
         }
 
@@ -219,5 +266,30 @@ namespace EcoNet.Controllers
 
             return View(viewModel);
         }
+
+        public IActionResult ProductosPorEtiqueta(int etiquetaId)
+        {
+            DalAnuncio dalAnuncio = new();
+            DalEtiqueta dalEtiqueta = new();
+            List<Anuncio> productosRelacionados = dalAnuncio.SelectByEtiqueta(etiquetaId);
+            Etiqueta etiquetaSeleccionada = dalEtiqueta.SelectById(etiquetaId);
+
+            if (etiquetaSeleccionada == null)
+            {
+                return NotFound();
+            }
+
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                EtiquetaAnuncioVM = new EtiquetaAnuncioViewModel
+                {
+                    ArticulosFiltrados = productosRelacionados,
+                    EtiquetaAnuncios = new List<Etiqueta> { etiquetaSeleccionada }
+                }
+            };
+
+            return View(viewModel);
+        }
+
     }
 }
