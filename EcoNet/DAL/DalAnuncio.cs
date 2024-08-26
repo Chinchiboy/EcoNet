@@ -105,6 +105,7 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                     });
@@ -146,6 +147,7 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                     });
