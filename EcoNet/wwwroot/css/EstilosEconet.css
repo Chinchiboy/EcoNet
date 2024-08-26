@@ -214,7 +214,13 @@ a.ColorEnlace:hover{
     padding: 10px 20px 10px 20px;
     background-color: #f8f9fa;
     border-bottom: 1px solid grey;
+    cursor: pointer;
 }
+    .HeaderChat:hover {
+        transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        transform: scale(1.05);
+        border-radius: 5px;
+    }
 
 .EspaciadoLateral {
     margin-left: 10%;
