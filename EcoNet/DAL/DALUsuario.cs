@@ -173,7 +173,7 @@ namespace EcoNet.DAL
             {
                 using var connection = dbConnection.GetConnection();
                 connection.Open();
-                using var command = new SqlCommand("UPDATE Usuario SET Usuario = @Usuario1, Contrasena = @Contraseña, FechaAlta = @FechaAlta, FechaBaja = @FechaBaja, Telefono = @Telefono, Email = @Email, Municipio = @Municipio, EsAdmin = @EsAdmin, FotoPerfil = @FotoPerfil WHERE IdUsuario = @IdUsuario", connection);
+                using var command = new SqlCommand("UPDATE Usuario SET Usuario = @Usuario1, Contrasena = @Contrasena, FechaAlta = @FechaAlta, FechaBaja = @FechaBaja, Telefono = @Telefono, Email = @Email, Municipio = @Municipio, EsAdmin = @EsAdmin, FotoPerfil = @FotoPerfil WHERE IdUsuario = @IdUsuario", connection);
                 command.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
                 command.Parameters.AddWithValue("@Usuario1", usuario.NombreUsuario);
                 command.Parameters.AddWithValue("@Contrasena", usuario.Contraseña);
@@ -183,6 +183,28 @@ namespace EcoNet.DAL
                 command.Parameters.AddWithValue("@Email", usuario.Email);
                 command.Parameters.AddWithValue("@Municipio", usuario.Municipio);
                 command.Parameters.AddWithValue("@EsAdmin", usuario.EsAdmin);
+                command.Parameters.AddWithValue("@FotoPerfil", usuario.FotoPerfil);
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en Update: {ex.Message}");
+                throw;
+            }
+        }
+
+        public void UpdateImagen(Usuario usuario)
+        {
+            if (usuario == null)
+                throw new ArgumentNullException(nameof(usuario));
+
+            try
+            {
+                using var connection = dbConnection.GetConnection();
+                connection.Open();
+                using var command = new SqlCommand("UPDATE Usuario SET FotoPerfil = @FotoPerfil WHERE IdUsuario = @IdUsuario", connection);
+                command.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);               
                 command.Parameters.AddWithValue("@FotoPerfil", usuario.FotoPerfil);
                 command.ExecuteNonQuery();
                 connection.Close();
