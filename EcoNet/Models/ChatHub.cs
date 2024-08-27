@@ -28,5 +28,28 @@ namespace EcoNet.Models
                 Console.WriteLine(ex.Message);
             }
         }
+
+        public async Task SendOffer(float precioOferta, int user, int chatId)
+        {
+            try
+            {
+                Oferta oferta = new()
+                {
+                    Precio = (decimal)precioOferta,
+                    Fkchat = chatId,
+                    Aceptada = 0,
+                    CreadoPor = user,
+                    FechaCreacion = DateTime.UtcNow
+                };
+                DalOferta d = new();
+                var item = d.Add(oferta);
+
+                await Clients.All.SendAsync("ReciveOffer", chatId, item);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
+        }
     }
 }

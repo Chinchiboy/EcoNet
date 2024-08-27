@@ -2,11 +2,16 @@
 
 @{
     ViewData["Title"] = "Producto";
+
+    string ConvertirImagenABase64(byte[] imagenBytes)
+    {
+        return imagenBytes != null ? $"data:image/jpeg;base64,{Convert.ToBase64String(imagenBytes)}" : null;
+    }
 }
 
 <div class="container PaginaProducto">
     <div class="ProductoElegido ColorFondoSecundario">
-        <img src="@Model.ProductoActual.Imagen" class="img-fluid" alt="FotoMuestra">
+        <img src="@ConvertirImagenABase64(Model.ProductoActual.Imagen)" class="img-fluid" alt="FotoMuestra">
         <br />
         <div class="ContenedorCompra">
             <h1>@Model.ProductoActual.Precio.ToString("F2") €</h1>
@@ -43,8 +48,8 @@
                     <div class="col-md-6 col-sm-12 col-12 mb-2">
                         <a href="@Url.Action("Producto", "Home", new { id = an.IdAnuncio })" class="text-decoration-none">
                             <div class="VerdePrincipal RecuadroProducto">
-                                <div><img src="@an.Imagen" width="80%" height="80%" alt="@an.Titulo" /></div>
-                                <hr />
+                                <div><img src="@ConvertirImagenABase64(an.Imagen)" width="80%" height="80%" alt="@an.Titulo" /></div>
+                                <hr>
                                 <div><strong>@an.Titulo</strong></div>
                                 <div><strong>@an.Precio.ToString("F2") €</strong></div>
                             </div>

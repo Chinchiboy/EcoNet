@@ -3,10 +3,22 @@
 <div class="row" id="AnuncioContainer">
     @foreach (Anuncio an in Model.ArticulosFiltrados)
     {
+        string a = "";
+        if (an.Imagen != null)
+            a = "lol";
+
         <div onclick="location.href='@Url.Action("Producto", "Home", new { id = an.IdAnuncio })'" class="col-md-4 col-sm-6 col-12 mb-3">
             <div class="VerdePrincipal RecuadroProducto">
-                <div><img src="@an.Imagen" width="80%" height="80%" /></div>
-                <hr/>
+                <div>
+                    @if (an.Imagen != null && an.Imagen.Length > 0)
+                    {
+                        var base64Image = Convert.ToBase64String(an.Imagen);
+                        var imageSrc = string.Format("data:image/png;base64,{0}", base64Image);
+                        <img src="@imageSrc" width="80%" height="80%" alt="@an.Titulo" />
+                    }
+
+                </div>
+                <hr />
                 <div class="Titulo"><strong>@an.Titulo</strong></div>
                 <div class="Precio"><strong>@an.Precio.ToString("F2") €</strong></div>
             </div>

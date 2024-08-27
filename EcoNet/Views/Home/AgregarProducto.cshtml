@@ -8,7 +8,7 @@
     <div class="ProductoElegido ColorFondoSecundario">
         <h2>Crear anuncio</h2>
         <hr />
-        <form asp-action="AgregarProducto" asp-controller="Home" method="post">
+        <form asp-action="AgregarProducto" asp-controller="Home" method="post" enctype="multipart/form-data">
             <div class="modal-body">
                 @Html.AntiForgeryToken()
 
@@ -30,14 +30,19 @@
                 </div>
                 <br />
 
-                <!-- Grupo de checkboxes para selección múltiple de etiquetas -->
+                <div class="form-group">
+                    <label for="imagen">Imagen del Producto</label>
+                    <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required />
+                </div>
+                <br />
+
                 <div class="form-group">
                     <p>Selecciona una o más etiquetas:</p>
                     <div>
-                        @foreach (var etiqueta in Model.ListaEtiquetas)
+                        @foreach (Etiqueta etiqueta in Model.ListaEtiquetas)
                         {
                             <input type="checkbox" id="etiqueta_@etiqueta.IdEtiqueta" name="selectedEtiquetas" value="@etiqueta.IdEtiqueta">
-                            <label for="etiqueta_@etiqueta.IdEtiqueta" class="EtiquetaDescripcion" >@etiqueta.DescripcionEtiqueta</label>   
+                            <label for="etiqueta_@etiqueta.IdEtiqueta" class="EtiquetaDescripcion">@etiqueta.DescripcionEtiqueta</label>
                         }
                     </div>
                 </div>

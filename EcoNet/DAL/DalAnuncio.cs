@@ -105,6 +105,7 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                     });
@@ -146,6 +147,7 @@ namespace EcoNet
                     {
                         IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
                         Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
                         Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
                         Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
                     });
@@ -159,6 +161,46 @@ namespace EcoNet
             return anunciosRelacionados;
         }
 
+        public List<Anuncio> SelectByEtiqueta(int etiquetaId)
+        {
+            List<Anuncio> anunciosRelacionados = new List<Anuncio>();
+
+            using var conn = dbConnection.GetConnection();
+            try
+            {
+                var query = @"
+                        SELECT a.*
+                        FROM Anuncio a
+                        INNER JOIN AnuncioEtiqueta ae ON a.IdAnuncio = ae.IdAnuncio
+                        WHERE ae.IdEtiqueta = @IdEtiqueta";
+
+                using var cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@IdEtiqueta", etiquetaId);
+
+                conn.Open();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    anunciosRelacionados.Add(new Anuncio
+                    {
+                        IdAnuncio = reader.GetInt32(reader.GetOrdinal("IdAnuncio")),
+                        Titulo = reader.GetString(reader.GetOrdinal("Titulo")),
+                        Imagen = reader.IsDBNull(reader.GetOrdinal("Imagen")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Imagen")),
+                        Descripcion = reader.GetString(reader.GetOrdinal("Descripcion")),
+                        Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                        FkborradoPor = reader.IsDBNull(reader.GetOrdinal("FKBorradoPor")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("FKBorradoPor")),
+                        Fkusuario = reader.GetInt32(reader.GetOrdinal("FKUsuario")),
+                        EstaVendido = reader.GetBoolean(reader.GetOrdinal("EstaVendido"))
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en SelectByEtiqueta: {ex.Message}");
+            }
+
+            return anunciosRelacionados;
+        }
 
         public List<Anuncio> SelectByTitle(string title)
             {
@@ -256,8 +298,9 @@ namespace EcoNet
         public int Add(Anuncio anuncio)
         {
             using var connection = dbConnection.GetConnection();
-            using var command = new SqlCommand("INSERT INTO Anuncio (Titulo, Descripcion, Precio, Fkusuario, EstaVendido) OUTPUT INSERTED.IdAnuncio VALUES (@Titulo, @Descripcion, @Precio, @Fkusuario, @EstaVendido)", connection);
+            using var command = new SqlCommand("INSERT INTO Anuncio (Titulo, Imagen, Descripcion, Precio, Fkusuario, EstaVendido) OUTPUT INSERTED.IdAnuncio VALUES (@Titulo, @Imagen, @Descripcion, @Precio, @Fkusuario, @EstaVendido)", connection);
             command.Parameters.AddWithValue("@Titulo", anuncio.Titulo);
+            command.Parameters.AddWithValue("@Imagen", anuncio.Imagen);
             command.Parameters.AddWithValue("@Descripcion", anuncio.Descripcion);
             command.Parameters.AddWithValue("@Precio", anuncio.Precio);
             command.Parameters.AddWithValue("@Fkusuario", anuncio.Fkusuario);

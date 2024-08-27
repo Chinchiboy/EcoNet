@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Text.Json;
 
 namespace EcoNet.DAL
 {
@@ -100,7 +101,7 @@ namespace EcoNet.DAL
                 cmd.Parameters.AddWithValue("@FkChat", idChat);
                 conn.Open();
                 using var reader = cmd.ExecuteReader();
-                if (reader.Read())
+                while (reader.Read())
                 {
                     Oferta oferta = new ()
                     {
@@ -129,7 +130,7 @@ namespace EcoNet.DAL
         }
 
 
-        public void Add(Oferta oferta)
+        public string Add(Oferta oferta)
         {
             if (oferta == null)
                 throw new ArgumentNullException(nameof(oferta));
@@ -138,15 +139,48 @@ namespace EcoNet.DAL
             {
                 using var connection = dbConnection.GetConnection();
                 connection.Open();
-                using var command = new SqlCommand("INSERT INTO Oferta (IdOferta, Precio, Fkchat, Aceptada, CreadoPor, FechaCreacion) VALUES (@IdOferta, @Precio, @Fkchat, @Aceptada, @CreadoPor, @FechaCreacion)", connection);
-                command.Parameters.AddWithValue("@IdOferta", oferta.IdOferta);
+                using var command = new SqlCommand(
+                    "INSERT INTO Oferta (Precio, Fkchat, Aceptada, CreadoPor, FechaCreacion) " +
+                    "OUTPUT Inserted.IdOferta, Inserted.Precio, Inserted.Fkchat, Inserted.Aceptada, Inserted.CreadoPor, Inserted.FechaCreacion " +
+                    "VALUES (@Precio, @Fkchat, @Aceptada, @CreadoPor, @FechaCreacion)", connection);
+
+                // Añadiendo los parámetros
                 command.Parameters.AddWithValue("@Precio", oferta.Precio);
                 command.Parameters.AddWithValue("@Fkchat", oferta.Fkchat);
                 command.Parameters.AddWithValue("@Aceptada", oferta.Aceptada);
                 command.Parameters.AddWithValue("@CreadoPor", oferta.CreadoPor);
                 command.Parameters.AddWithValue("@FechaCreacion", oferta.FechaCreacion);
-                command.ExecuteNonQuery();
-                connection.Close();
+
+                // Ejecutar la consulta y leer el resultado
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        // Crear un objeto Oferta con los valores retornados
+                        var createdOferta = new Oferta
+                        {
+                            IdOferta = reader.GetInt32(reader.GetOrdinal("IdOferta")),
+                            Precio = reader.GetDecimal(reader.GetOrdinal("Precio")),
+                            Fkchat = reader.GetInt32(reader.GetOrdinal("Fkchat")),
+                            Aceptada = reader.GetInt16(reader.GetOrdinal("Aceptada")),
+                            CreadoPor = reader.GetInt32(reader.GetOrdinal("CreadoPor")),
+                            FechaCreacion = reader.GetDateTime(reader.GetOrdinal("FechaCreacion"))
+                        };
+
+                        // hacemos que coja el formato camel case ya que es nuestro estandard
+                        var options = new JsonSerializerOptions
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                        };
+
+                        // Convertir el objeto Oferta a JSON
+                        return JsonSerializer.Serialize(createdOferta, options);
+                    }
+                    else
+                    {
+                        throw new Exception("No se pudo insertar la oferta.");
+                    }
+                }
             }
             catch (Exception ex)
             {
