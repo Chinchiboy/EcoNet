@@ -122,14 +122,15 @@ a.ColorEnlace:hover{
 }
 
 .RecuadroProducto {
-    text-align:left;
+    color: #fafaff;
+    text-align: left;
     border-radius: 15px;
     margin-left: 1rem;
     margin-right: 1rem;
     margin-bottom: 1rem;
     margin-top: 1rem;
     padding: 1rem;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
@@ -515,7 +516,7 @@ a.ColorEnlace:hover{
     margin-top: 1rem;
     width: 50%;
     height: 5rem;
-    background-color: #1B98E0;
+    background-color: #ff4500;
     color: #fafaff;
     font-size: 2rem;
     border-radius: 50px;
@@ -524,7 +525,7 @@ a.ColorEnlace:hover{
 }
 
     .BotonComprar:hover {
-        background-color: #177AB3;
+        background-color: #CC3700;
         color: #fafaff;
         transform: scale(1.05);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
