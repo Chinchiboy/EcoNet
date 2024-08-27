@@ -9,6 +9,7 @@ using System.Globalization;
 using EcoNet.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
+using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Authorization;
 
 namespace EcoNet.Controllers
@@ -62,16 +63,57 @@ namespace EcoNet.Controllers
 
         public IActionResult Profile()
         {
+            //SubirImagen();
             var nameClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             DalUsuario dalUsuario = new DalUsuario();
             if (nameClaim != null)
             {
                 Usuario? usuario = dalUsuario.SelectById(int.Parse(nameClaim));
+                byte[] imageBytes = null;
                 Debug.WriteLine("Usuario " + usuario + " " + nameClaim);
                 return View(usuario);
             }
             return RedirectToAction("Index", "Home");
 
+        }
+
+        public void SubirImagen(string rutaImagenPC)
+        {
+            IFormFile imagen = CreateFormFileFromPath(rutaImagenPC);
+
+            byte[] imageBytes = null;
+            if (imagen != null && imagen.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    imagen.CopyTo(memoryStream);
+                    imageBytes = memoryStream.ToArray();
+                }
+            }
+
+            var nameClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            DalUsuario dalUsuario = new DalUsuario();
+
+            Usuario? usuario = dalUsuario.SelectById(int.Parse(nameClaim));
+            usuario.FotoPerfil = imageBytes;
+
+            dalUsuario.UpdateImagen(usuario);
+
+        }
+
+        public static IFormFile CreateFormFileFromPath(string filePath)
+        {
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            var fileName = Path.GetFileName(filePath);
+            var contentType = "application/octet-stream"; // Puedes ajustar el tipo de contenido según el archivo
+
+            var formFile = new FormFile(fileStream, 0, fileStream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = contentType
+            };
+
+            return formFile;
         }
 
         public IActionResult Privacy()

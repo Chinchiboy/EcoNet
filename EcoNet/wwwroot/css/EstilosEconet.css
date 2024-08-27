@@ -713,7 +713,7 @@ a.ColorEnlace {
 }
 
 
-
+/*Profile*/
 
 .user-profile {
     width: 80%;
@@ -822,3 +822,117 @@ a.ColorEnlace {
     .product-item {
         width: 100%;
     }
+
+
+
+    .user-profile {
+        width: 80%;
+        max-width: 900px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .profile-picture {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin-right: 20px;
+    }
+
+    .profile-info {
+        flex-grow: 1;
+    }
+
+        .profile-info h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+    .email, .description {
+        color: #666;
+        margin: 5px 0;
+    }
+
+    .follow-btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .follow-btn:hover {
+            background-color: #0056b3;
+        }
+
+    .products-for-sale {
+        margin-top: 30px;
+    }
+
+        .products-for-sale h3 {
+            margin-bottom: 20px;
+        }
+
+    .product-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .product-item {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        width: calc(33.333% - 20px);
+        text-align: center;
+    }
+
+    .product-image {
+        max-width: 100%;
+        border-radius: 5px;
+    }
+
+    .product-info h4 {
+        margin: 10px 0 5px;
+        font-size: 18px;
+    }
+
+    .price {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .profile-label {
+        font-weight:bold;
+    }
+
+    @@media (max-width: 768px) {
+        .product-item {
+            width: calc(50% - 20px);
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .profile-header {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-picture {
+            margin-bottom: 20px;
+        }
+
+        .product-item {
+            width: 100%;
+        }
