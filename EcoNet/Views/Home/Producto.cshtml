@@ -44,8 +44,9 @@
                         <a href="@Url.Action("Producto", "Home", new { id = an.IdAnuncio })" class="text-decoration-none">
                             <div class="VerdePrincipal RecuadroProducto">
                                 <div><img src="@an.Imagen" width="80%" height="80%" alt="@an.Titulo" /></div>
-                                <div>@an.Titulo</div>
-                                <div>@an.Precio.ToString("F2") €</div>
+                                <hr />
+                                <div><strong>@an.Titulo</strong></div>
+                                <div><strong>@an.Precio.ToString("F2") €</strong></div>
                             </div>
                         </a>
                     </div>

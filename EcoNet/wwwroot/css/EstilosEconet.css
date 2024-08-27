@@ -73,7 +73,7 @@ h5 {
 }
 
 .VerdePrincipal {
-    background-color: #329F5B;
+    background-color: #C8E3D6;
 }
 
 .VerdeSecundario {
@@ -121,8 +121,12 @@ a.ColorEnlace:hover{
     font-size: 0.75rem;
 }
 
+
+.RecuadroProducto hr {
+    color: #329F5B;
+}
+
 .RecuadroProducto {
-    color: #fafaff;
     text-align: left;
     border-radius: 15px;
     margin-left: 1rem;
@@ -135,11 +139,7 @@ a.ColorEnlace:hover{
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.RecuadroProducto hr{
-    color: #fafaff;
-}
-
-    .RecuadroProducto:hover {
+    .RecuadroProducto:hover{
         color: #fafaff;
         transform: scale(1.05);
         background-color: #29894D;

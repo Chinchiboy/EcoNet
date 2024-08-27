@@ -6,9 +6,9 @@
         <div onclick="location.href='@Url.Action("Producto", "Home", new { id = an.IdAnuncio })'" class="col-md-4 col-sm-6 col-12 mb-3">
             <div class="VerdePrincipal RecuadroProducto">
                 <div><img src="@an.Imagen" width="80%" height="80%" /></div>
-                <hr />
-                <div class="Titulo">@an.Titulo</div>
-                <div class="Precio">@an.Precio.ToString("F2") €</div>
+                <hr/>
+                <div class="Titulo"><strong>@an.Titulo</strong></div>
+                <div class="Precio"><strong>@an.Precio.ToString("F2") €</strong></div>
             </div>
         </div>
     }
